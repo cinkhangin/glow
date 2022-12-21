@@ -1,0 +1,27 @@
+package com.naulian.glow
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val textView = findViewById<TextView>(R.id.textMain)
+        val source = getString(R.string.code)
+        val highlighted = Glow().highlight(source)
+        textView.text = highlighted
+    }
+}
+
+//comment
+object Col {
+    const val string = "#54B33E"
+    const val comment = "#7EC3E6"
+    const val method = "#FFC66D"
+    const val number = "#00AAFF"
+    const val property = "#ED94FF"
+    const val keyword = "#ED864A"
+}
