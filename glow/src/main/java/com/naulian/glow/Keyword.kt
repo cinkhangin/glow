@@ -9,6 +9,17 @@ object Keyword {
         "import", "package",
         "class", //"override",
         "object", //"data",
-        "private", "public"
+        "private", "public",
+    )
+
+    val lists = listOf(
+        "listOf\\(",
+        "arrayListOf\\(",
+        "sortedMapOf\\(",
+        "hashMapOf\\(",
+        "mapOf\\(",
+        "arrayOf\\(",
+        "emptyList\\(",
+        "emptyArray\\("
     )
 }
