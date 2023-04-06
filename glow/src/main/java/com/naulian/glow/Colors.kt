@@ -6,4 +6,5 @@ object Colors {
     const val gray = "#CACACA"
     const val orange = "#ED864A"
     const val lightBlue = "#7EC3E6"
+    const val purple = "#871094"
 }

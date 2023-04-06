@@ -9,6 +9,7 @@ class Car : Vehicle {
     var int = 3
     val float = 1.0f
     const val long = 1000L
+    val username = User.name
 
     private val colors = listOf(
         "red",

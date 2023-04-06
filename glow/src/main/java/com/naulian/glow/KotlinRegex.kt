@@ -1,6 +1,6 @@
 package com.naulian.glow
 
-object Rex {
+object KotlinRegex {
     val punctuations = "[+,=\\-|*&:;{}]".toRegex()
     val lists = "\\b(${Keyword.lists.joinToString("|")})\\b".toRegex()
     val keywords = "\\b(${Keyword.kotlin.joinToString("|")})\\b".toRegex()
@@ -11,4 +11,6 @@ object Rex {
     //val properties = "[^\\.]*\\.([^\\.]*)".toRegex()
     val comments = "//[^\n]*".toRegex()
     val documentations = "/\\*[\\s\\S]*?\\*/".toRegex()
+
+    val instanceProperty = Regex("(?<=\\.)[a-z][\\w\\s)},\\]]*\n")
 }
