@@ -2,19 +2,24 @@ package com.naulian.glow
 
 import com.library.*
 
+/* multiline
+   comment */
 class Car : Vehicle {
-  private val name = "Car"
-  private var number = 3
-  private val colors = listOf(
-    "red",
-    "white",
-    "black"
-  )
+    val string = "Car"
+    var int = 3
+    val float = 1.0f
+    const val long = 1000L
 
-  //comment
-  fun drive(){
-    println("driving...")
-    print()
-  }
+    private val colors = listOf(
+        "red",
+        "white",
+        "black"
+    )
+
+    //comment
+    fun drive(){
+        println("driving...")
+        print()
+    }
 }
 

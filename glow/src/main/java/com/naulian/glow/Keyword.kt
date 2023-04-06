@@ -5,21 +5,21 @@ object Keyword {
         "fun", "val", "var",
         "if", "else", "for",
         "in", "while",
-        "return", //"const"
+        "return", "const",
         "import", "package",
-        "class", //"override",
-        "object", //"data",
+        "class", "override",
+        "object", "data",
         "private", "public",
     )
 
     val lists = listOf(
-        "listOf\\(",
-        "arrayListOf\\(",
-        "sortedMapOf\\(",
-        "hashMapOf\\(",
-        "mapOf\\(",
-        "arrayOf\\(",
-        "emptyList\\(",
-        "emptyArray\\("
+        "listOf",
+        "arrayListOf",
+        "sortedMapOf",
+        "hashMapOf",
+        "mapOf",
+        "arrayOf",
+        "emptyListOf",
+        "emptyArrayOf"
     )
 }

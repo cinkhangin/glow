@@ -11,8 +11,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textView = findViewById<TextView>(R.id.textMain)
-        val source = this.readStringAsset("code")
-        val highlighted = Glow().highlight(source)
-        textView.text = highlighted
+        readStringAsset("code") { result ->
+            result.onSuccess {
+                val highlighted = Glow.highlight(it, CodeTheme.kotlinLight)
+                textView.setCodeTheme(CodeTheme.kotlinLight.normal)
+                textView.text = highlighted.spanned
+            }
+            result.onFailure {
+                textView.text = it.message
+            }
+        }
     }
 }

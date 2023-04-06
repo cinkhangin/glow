@@ -1,7 +1,16 @@
 package com.naulian.glow
 
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import androidx.core.text.HtmlCompat
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+private fun color(hex: String): Int {
+    return android.graphics.Color.parseColor(hex)
+}
 
 private fun String.color(color: String) =
     "<font color=$color>$this</font>"
@@ -22,21 +31,28 @@ private fun String.color2(rex: Regex, color: String) =
     replace(rex) { "${it.groups[1]?.value} ${it.groups[2]?.value?.color(color)}" }
 
 
-class Glow {
-    fun highlight(source: String): Spanned {
+object Glow {
+    fun highlight(source: String, theme: Theme = Theme()): Colored {
         //order matter
         val output = source.italic(Rex.lists)
-            .color(Rex.punctuations, Color.keyword)
-            .color2(Rex.variables, Color.variable)
-            .color(Rex.keywords, Color.keyword)
-            .color(Rex.strings, Color.string)
-            .color(Rex.numbers, Color.number)
+            //color punctuations
+            .color(Rex.punctuations, theme.keyword)
+            .color2(Rex.variables, theme.variable)
+            .color(Rex.keywords, theme.keyword)
+            .color(Rex.strings, theme.string)
+            .color(Rex.numbers, theme.number)
             //.replace(Rex.properties, Color.property)
-            .color(Rex.methods, Color.method)
-            .color(Rex.comments, Color.comment)
-            .color(Rex.documentations, Color.comment)
+            //.color(Rex.methods, Color.method)
+            .color(Rex.comments, theme.comment)
+            //resolve /* for multiline comment
+            .replace("/<font color=${theme.keyword}>*</font>", "/*")
+            .replace("<font color=${theme.keyword}>*</font>/", "*/")
+            //highlight multiline comment
+            .color(Rex.documentations, theme.comment)
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
-        return HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+
+        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        return Colored(spanned, output)
     }
 }
