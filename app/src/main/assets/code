@@ -11,6 +11,8 @@ class Car : Vehicle {
     const val long = 1000L
     val username = User.name
 
+    App.reset()
+
     private val colors = listOf(
         "red",
         "white",
