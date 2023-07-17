@@ -2,11 +2,11 @@ package com.naulian.glow.tokens
 
 import com.naulian.anhance.logDebug
 
-object KTokens {
-    private val TAG = KTokens::class.java.simpleName
+object JsTokens {
+    private val TAG = JsTokens::class.java.simpleName
 
     fun tokenize(input: String): List<Token> {
-        val lexer = KLexer(input)
+        val lexer = JsLexer(input)
         val tokens = mutableListOf<Token>()
         var token = lexer.nextToken()
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
@@ -84,16 +84,13 @@ object KTokens {
     }
 }
 
-private class KLexer(private val input: String) {
+private class JsLexer(private val input: String) {
     private var position: Int = 0
     private val keywords = listOf(
-        "abstract", "annotation", "as", "break", "by", "catch", "class", "companion", "const",
-        "constructor", "continue", "crossinline", "data", "do", "else", "enum", "external", "false",
-        "final", "finally", "for", "fun", "if", "in", "infix", "init", "inline", "inner",
-        "interface", "internal", "is", "it", "lateinit", "noinline", "null", "object", "open",
-        "operator", "out", "import", "override", "package", "private", "protected", "public",
-        "reified", "return", "sealed", "super", "suspend", "this", "throw", "to", "true", "try",
-        "typealias", "typeof", "val", "var", "when", "where", "while"
+        "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default",
+        "delete", "do", "else", "export", "extends", "false", "finally", "for", "function", "if",
+        "import", "in", "instanceof", "new", "null", "return", "super", "switch", "this", "throw",
+        "true", "try", "typeof", "var", "void", "while", "with", "yield"
     )
 
     private fun currentChar() = if (position < input.length) input[position] else Char.MIN_VALUE
@@ -190,8 +187,10 @@ private class KLexer(private val input: String) {
         }
 
         return when (val identifier = input.substring(start, position)) {
-            "var", "val"  -> Token(Type.VARIABLE, identifier)
-            "fun" -> Token(Type.FUNCTION, identifier)
+            "var" -> Token(Type.VARIABLE, identifier)
+            "const" -> Token(Type.VARIABLE, identifier)
+            "let" -> Token(Type.VARIABLE, identifier)
+            "function" -> Token(Type.FUNCTION, identifier)
             "class" -> Token(Type.CLASS, identifier)
             in keywords -> Token(Type.KEYWORD, identifier)
             else -> Token(Type.IDENTIFIER, identifier)

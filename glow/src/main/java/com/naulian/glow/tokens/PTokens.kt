@@ -36,7 +36,7 @@ object PTokens {
                 Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
-                Type.VAL, Type.VAR -> token.copy(type = Type.VAR_NAME)
+                Type.VARIABLE -> token.copy(type = Type.VAR_NAME)
                 else -> token
             }
 
@@ -87,10 +87,10 @@ object PTokens {
 private class PLexer(private val input: String) {
     private var position: Int = 0
     private val keywords = listOf(
-        "and", "as", "assert", "async", "await", "break", "class", "continue", "def", "del",
-        "elif", "else", "except", "False", "finally", "for", "from", "global", "if", "import",
-        "in", "is", "lambda", "None", "nonlocal", "not", "or", "pass", "raise", "return",
-        "True", "try", "while", "with", "yield"
+        "and", "as", "assert", "async", "await", "break", "class", "continue", "def", "del", "elif",
+        "else", "except", "False", "finally", "for", "from", "global", "if", "import", "in", "is",
+        "lambda", "None", "nonlocal", "not", "or", "pass", "raise", "return", "True", "try",
+        "while", "with", "yield"
     )
 
     private fun currentChar() = if (position < input.length) input[position] else Char.MIN_VALUE
@@ -109,6 +109,7 @@ private class PLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, char.toString())
             '^' -> createToken(Type.POW, char.toString())
             '&' -> createToken(Type.AND, char.toString())
+            '?' -> createToken(Type.QUESTION_MARK, char.toString())
             '|' -> createToken(Type.OR, char.toString())
             '\\' -> createToken(Type.ESCAPE, char.toString())
             '!' -> createToken(Type.BANG, char.toString())

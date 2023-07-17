@@ -1,22 +1,22 @@
-def is_prime(num):
-    if num <= 1:
-        return False
-    elif num == 2:
-        return True
-    elif num % 2 == 0:
-        return False
+import random
 
-    for i in range(3, int(num**0.5) + 1, 2):
-        if num % i == 0:
-            return False
+def flip_coin():
+    return random.choice(["Heads", "Tails"])
 
-    return True
+def main():
+    print("Coin Flipping Game")
+    print("Press Enter to flip the coin. Type 'exit' to quit.")
+
+    while True:
+        user_input = input()
+        if user_input.lower() == "exit":
+            print("Game over!")
+            break
+        elif user_input == "":
+            result = flip_coin()
+            print("Flipping the coin...")
+            print(f"The coin shows: {result}")
+            print("Press Enter to flip again or type 'exit' to quit.")
 
 if __name__ == "__main__":
-    print("Prime Number Checker")
-    num = int(input("Enter a number: "))
-
-    if is_prime(num):
-        print(f"{num} is a prime number.")
-    else:
-        print(f"{num} is not a prime number.")
+    main()

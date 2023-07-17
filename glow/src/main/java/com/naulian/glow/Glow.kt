@@ -3,6 +3,8 @@
 package com.naulian.glow
 
 import androidx.core.text.HtmlCompat
+import com.naulian.glow.tokens.JTokens
+import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.KTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow.tokens.Type
@@ -38,6 +40,66 @@ object Glow {
         return highLightKotlin(source, theme)
     }
 
+    fun hlJava(input: String, theme: Theme = Theme()): HighLight {
+        val tokens = JTokens.tokenize(input)
+
+        val builder = StringBuilder()
+        tokens.forEach {
+            val code = when (it.type) {
+                Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.VARIABLE -> it.value.color(theme.keyword)
+                Type.VAR_NAME -> it.value.color(theme.variable)
+                Type.CLASS -> it.value.color(theme.keyword)
+                Type.FUNCTION -> it.value.color(theme.keyword)
+                Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.NUMBER -> it.value.color(theme.number)
+                Type.CHAR -> it.value.color(theme.string)
+                Type.STRING -> it.value.color(theme.string)
+                Type.COMMENT_MULTI -> it.value.color(theme.comment)
+                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                else -> it.value
+            }
+            builder.append(code)
+        }
+
+        val output = builder.toString()
+            .replace("  ", "&nbsp;&nbsp;")
+            .replace("\n", "<br>")
+
+        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        return HighLight(spanned, output)
+    }
+
+    fun hlJavaScript(input: String, theme: Theme = Theme()): HighLight {
+        val tokens = JsTokens.tokenize(input)
+
+        val builder = StringBuilder()
+        tokens.forEach {
+            val code = when (it.type) {
+                Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.VARIABLE -> it.value.color(theme.keyword)
+                Type.VAR_NAME -> it.value.color(theme.variable)
+                Type.CLASS -> it.value.color(theme.keyword)
+                Type.FUNCTION -> it.value.color(theme.keyword)
+                Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.NUMBER -> it.value.color(theme.number)
+                Type.CHAR -> it.value.color(theme.string)
+                Type.STRING -> it.value.color(theme.string)
+                Type.COMMENT_MULTI -> it.value.color(theme.comment)
+                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                else -> it.value
+            }
+            builder.append(code)
+        }
+
+        val output = builder.toString()
+            .replace("  ", "&nbsp;&nbsp;")
+            .replace("\n", "<br>")
+
+        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        return HighLight(spanned, output)
+    }
+
     fun hlPython(input: String, theme: Theme = Theme()): HighLight {
         val tokens = PTokens.tokenize(input)
 
@@ -71,8 +133,7 @@ object Glow {
         tokens.forEach {
             val code = when (it.type) {
                 Type.KEYWORD -> it.value.color(theme.keyword)
-                Type.VAL -> it.value.color(theme.keyword)
-                Type.VAR -> it.value.color(theme.keyword)
+                Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
                 Type.CLASS -> it.value.color(theme.keyword)
                 Type.FUNCTION -> it.value.color(theme.keyword)
