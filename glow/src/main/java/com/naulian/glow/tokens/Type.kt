@@ -1,8 +1,9 @@
-package com.naulian.glow.klexer
+package com.naulian.glow.tokens
 
-enum class TokenType {
+enum class Type {
     GT,
     LT,
+    AT,
     DOT,
     VAR,
     VAL,
@@ -11,7 +12,6 @@ enum class TokenType {
     CHAR,
     DASH,
     BANG,
-    AT,
     HASH,
     DOLLAR,
     MODULO,
@@ -39,7 +39,7 @@ enum class TokenType {
     VALUE_INT,
     VALUE_LONG,
     VALUE_FLOAT,
-//    FUNC_CALL,
+    //    FUNC_CALL,
     DATA_TYPE,
     CLASS_NAME,
     IDENTIFIER,

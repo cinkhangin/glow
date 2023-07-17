@@ -3,9 +3,9 @@
 package com.naulian.glow
 
 import androidx.core.text.HtmlCompat
-import com.naulian.anhance.logDebug
-import com.naulian.glow.klexer.TokenType
-import com.naulian.glow.klexer.Tokenizer
+import com.naulian.glow.tokens.KTokens
+import com.naulian.glow.tokens.PTokens
+import com.naulian.glow.tokens.Type
 import java.lang.StringBuilder
 
 private fun color(hex: String): Int {
@@ -38,26 +38,50 @@ object Glow {
         return highLightKotlin(source, theme)
     }
 
-    fun highlight2(input: String, theme: Theme = Theme()): HighLight {
-        val tokenizer = Tokenizer()
-        val tokens = tokenizer.tokenize(input)
-        logDebug(TAG, tokens)
+    fun hlPython(input: String, theme: Theme = Theme()): HighLight {
+        val tokens = PTokens.tokenize(input)
 
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
-                TokenType.KEYWORD -> it.value.color(theme.keyword)
-                TokenType.VAL -> it.value.color(theme.keyword)
-                TokenType.VAR -> it.value.color(theme.keyword)
-                TokenType.VAR_NAME -> it.value.color(theme.variable)
-                TokenType.CLASS -> it.value.color(theme.keyword)
-                TokenType.FUNCTION -> it.value.color(theme.keyword)
-                TokenType.FUNC_NAME -> it.value.color(theme.method)
-                TokenType.NUMBER -> it.value.color(theme.number)
-                TokenType.CHAR -> it.value.color(theme.string)
-                TokenType.STRING -> it.value.color(theme.string)
-                TokenType.COMMENT_MULTI -> it.value.color(theme.comment)
-                TokenType.COMMENT_SINGLE -> it.value.color(theme.comment)
+                Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.CLASS -> it.value.color(theme.keyword)
+                Type.FUNCTION -> it.value.color(theme.keyword)
+                Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.NUMBER -> it.value.color(theme.number)
+                Type.STRING -> it.value.color(theme.string)
+                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                else -> it.value
+            }
+            builder.append(code)
+        }
+
+        val output = builder.toString()
+            .replace("  ", "&nbsp;&nbsp;")
+            .replace("\n", "<br>")
+
+        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        return HighLight(spanned, output)
+    }
+
+    fun hlKotlin(input: String, theme: Theme = Theme()): HighLight {
+        val tokens = KTokens.tokenize(input)
+
+        val builder = StringBuilder()
+        tokens.forEach {
+            val code = when (it.type) {
+                Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.VAL -> it.value.color(theme.keyword)
+                Type.VAR -> it.value.color(theme.keyword)
+                Type.VAR_NAME -> it.value.color(theme.variable)
+                Type.CLASS -> it.value.color(theme.keyword)
+                Type.FUNCTION -> it.value.color(theme.keyword)
+                Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.NUMBER -> it.value.color(theme.number)
+                Type.CHAR -> it.value.color(theme.string)
+                Type.STRING -> it.value.color(theme.string)
+                Type.COMMENT_MULTI -> it.value.color(theme.comment)
+                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
