@@ -6,4 +6,6 @@
     <color name="orange">#ED864A</color>
     <color name="lightBlue">#7EC3E6</color>
     <color name="purple">#871094</color>
+
+    <color name="check">#FF9B00</color>
 </resources>

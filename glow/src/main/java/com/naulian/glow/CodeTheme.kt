@@ -5,6 +5,7 @@ object CodeTheme {
     val kotlinLight = Theme(
         keyword = "#0033B3",
         string = "#067D17",
-        variable = "#871094"
+        variable = "#871094",
+        method = "#FF9B00"
     )
 }

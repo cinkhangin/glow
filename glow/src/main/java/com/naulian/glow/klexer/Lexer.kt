@@ -1,31 +1,3 @@
-package com.naulian.glow
-
-import com.library.*
-
-/* multiline
-   comment */
-class Car : Vehicle {
-    val string = "Car"
-    var int = 3
-    val float = 1.0f
-    const val long = 1000L
-    val username = User.name
-
-    App.reset()
-
-    private val colors = listOf(
-        "red",
-        "white",
-        "black"
-    )
-
-    //comment
-    fun drive(){
-        println("driving...")
-        print()
-    }
-}
-
 package com.naulian.glow.klexer
 
 class Lexer(private val input: String) {
@@ -52,6 +24,16 @@ class Lexer(private val input: String) {
         return when (val char = currentChar()) {
             '*' -> createToken(TokenType.ASTERISK, char.toString())
             '.' -> createToken(TokenType.DOT, char.toString())
+            '-' -> createToken(TokenType.DASH, char.toString())
+            '@' -> createToken(TokenType.AT, char.toString())
+            '#' -> createToken(TokenType.HASH, char.toString())
+            '$' -> createToken(TokenType.DOLLAR, char.toString())
+            '%' -> createToken(TokenType.MODULO, char.toString())
+            '^' -> createToken(TokenType.POW, char.toString())
+            '&' -> createToken(TokenType.AND, char.toString())
+            '|' -> createToken(TokenType.OR, char.toString())
+            '\\' -> createToken(TokenType.ESCAPE, char.toString())
+            '!' -> createToken(TokenType.BANG, char.toString())
             '{' -> createToken(TokenType.LEFT_BRACE, char.toString())
             '}' -> createToken(TokenType.RIGHT_BRACE, char.toString())
             '(' -> createToken(TokenType.LEFT_PARENTHESES, char.toString())
@@ -59,9 +41,12 @@ class Lexer(private val input: String) {
             ',' -> createToken(TokenType.COMMA, char.toString())
             ':' -> createToken(TokenType.COLON, char.toString())
             '>' -> createToken(TokenType.GT, char.toString())
+            '<' -> createToken(TokenType.LT, char.toString())
             ';' -> createToken(TokenType.SEMICOLON, char.toString())
             '+' -> createToken(TokenType.PLUS, char.toString())
             '=' -> createToken(TokenType.ASSIGNMENT, char.toString())
+            '[' -> createToken(TokenType.LEFT_BRACKET, char.toString())
+            ']' -> createToken(TokenType.RIGHT_BRACKET, char.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
@@ -69,6 +54,7 @@ class Lexer(private val input: String) {
                     else -> createToken(TokenType.SLASH_FORWARD, char.toString())
                 }
             }
+            '\'' -> readChar()
             '\"' -> readString()
             in 'a'..'z', in 'A'..'Z', '_' -> readIdentifier()
             in '0'..'9' -> readNumber()
@@ -116,7 +102,7 @@ class Lexer(private val input: String) {
 
     private fun readIdentifier(): Token {
         val start = position
-        while (currentChar().isLetter() || currentChar() == '_') {
+        while (currentChar().isLetter() || currentChar() == '_' || currentChar().isDigit()) {
             position++
         }
 
@@ -141,6 +127,17 @@ class Lexer(private val input: String) {
         return Token(TokenType.STRING, identifier)
     }
 
+    private fun readChar(): Token {
+        val start = position
+        position++
+        while (currentChar() != '\'') {
+            position++
+        }
+        position++
+        val identifier = input.substring(start, position)
+        return Token(TokenType.CHAR, identifier)
+    }
+
     private fun readNumber(): Token {
         val start = position
 
@@ -154,96 +151,3 @@ class Lexer(private val input: String) {
         return Token(TokenType.NUMBER, input.substring(start, position))
     }
 }
-
-package com.naulian.glow
-
-import androidx.core.text.HtmlCompat
-import com.naulian.anhance.logDebug
-import com.naulian.glow.klexer.TokenType
-import com.naulian.glow.klexer.Tokenizer
-import java.lang.StringBuilder
-
-private fun color(hex: String): Int {
-    return android.graphics.Color.parseColor(hex)
-}
-
-private fun String.color(color: String) =
-    "<font color=$color>$this</font>"
-
-private fun String.italic() = "<i>$this</i>"
-private fun String.bold() = "<b>$this</b>"
-
-private fun String.italic(rex: Regex) =
-    replace(rex) { it.value.italic() }
-
-private fun String.bold(rex: Regex) =
-    replace(rex) { it.value.bold() }
-
-private fun String.color(rex: Regex, color: String) =
-    replace(rex) { it.value.color(color) }
-
-private fun String.color2(rex: Regex, color: String) =
-    replace(rex) { "${it.groups[1]?.value} ${it.groups[2]?.value?.color(color)}" }
-
-
-object Glow {
-    private val TAG = Glow::class.java.simpleName
-
-    fun highlight(source: String, theme: Theme = Theme()): HighLight {
-        return highLightKotlin(source, theme)
-    }
-
-    fun highlight2(input: String, theme: Theme = Theme()): HighLight {
-        val tokenizer = Tokenizer()
-        val tokens = tokenizer.tokenize(input)
-        logDebug(TAG, tokens)
-
-        val builder = StringBuilder()
-        tokens.forEach {
-            val code = when (it.type) {
-                TokenType.KEYWORD -> it.value.color(theme.keyword)
-                TokenType.VAL -> it.value.color(theme.keyword)
-                TokenType.VAR -> it.value.color(theme.keyword)
-                TokenType.VAR_NAME -> it.value.color(theme.variable)
-                TokenType.CLASS -> it.value.color(theme.keyword)
-                TokenType.FUNCTION -> it.value.color(theme.keyword)
-                TokenType.NUMBER -> it.value.color(theme.number)
-                TokenType.STRING -> it.value.color(theme.string)
-                TokenType.COMMENT_MULTI -> it.value.color(theme.comment)
-                TokenType.COMMENT_SINGLE -> it.value.color(theme.comment)
-                else -> it.value
-            }
-            builder.append(code)
-        }
-
-        val output = builder.toString()
-
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
-        return HighLight(spanned, output)
-    }
-
-    private fun highLightKotlin(source: String, theme: Theme): HighLight {
-        //order matter
-        val output = source.italic(KotlinRegex.lists)
-            //color punctuations
-            .color(KotlinRegex.punctuations, theme.keyword)
-            .color(KotlinRegex.numbers, theme.number)
-            .color2(KotlinRegex.variables, theme.variable)
-            .color(KotlinRegex.keywords, theme.keyword)
-            .color(KotlinRegex.strings, theme.string)
-            .color(KotlinRegex.instanceProperty, theme.instanceProperty)
-            //.replace(Rex.properties, Color.property)
-            //.color(Rex.methods, Color.method)
-            .color(KotlinRegex.comments, theme.comment)
-            //resolve /* for multiline comment
-            .replace("/<font color=${theme.keyword}>*</font>", "/*")
-            .replace("<font color=${theme.keyword}>*</font>/", "*/")
-            //highlight multiline comment
-            .color(KotlinRegex.documentations, theme.comment)
-
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
-        return HighLight(spanned, output)
-    }
-}
-
-

@@ -1,6 +1,12 @@
+@file:Suppress("unused")
+
 package com.naulian.glow
 
 import androidx.core.text.HtmlCompat
+import com.naulian.anhance.logDebug
+import com.naulian.glow.klexer.TokenType
+import com.naulian.glow.klexer.Tokenizer
+import java.lang.StringBuilder
 
 private fun color(hex: String): Int {
     return android.graphics.Color.parseColor(hex)
@@ -26,8 +32,43 @@ private fun String.color2(rex: Regex, color: String) =
 
 
 object Glow {
+    private val TAG = Glow::class.java.simpleName
+
     fun highlight(source: String, theme: Theme = Theme()): HighLight {
         return highLightKotlin(source, theme)
+    }
+
+    fun highlight2(input: String, theme: Theme = Theme()): HighLight {
+        val tokenizer = Tokenizer()
+        val tokens = tokenizer.tokenize(input)
+        logDebug(TAG, tokens)
+
+        val builder = StringBuilder()
+        tokens.forEach {
+            val code = when (it.type) {
+                TokenType.KEYWORD -> it.value.color(theme.keyword)
+                TokenType.VAL -> it.value.color(theme.keyword)
+                TokenType.VAR -> it.value.color(theme.keyword)
+                TokenType.VAR_NAME -> it.value.color(theme.variable)
+                TokenType.CLASS -> it.value.color(theme.keyword)
+                TokenType.FUNCTION -> it.value.color(theme.keyword)
+                TokenType.FUNC_NAME -> it.value.color(theme.method)
+                TokenType.NUMBER -> it.value.color(theme.number)
+                TokenType.CHAR -> it.value.color(theme.string)
+                TokenType.STRING -> it.value.color(theme.string)
+                TokenType.COMMENT_MULTI -> it.value.color(theme.comment)
+                TokenType.COMMENT_SINGLE -> it.value.color(theme.comment)
+                else -> it.value
+            }
+            builder.append(code)
+        }
+
+        val output = builder.toString()
+            .replace("  ", "&nbsp;&nbsp;")
+            .replace("\n", "<br>")
+
+        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        return HighLight(spanned, output)
     }
 
     private fun highLightKotlin(source: String, theme: Theme): HighLight {

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.textMain)
         readStringAsset("code") { result ->
             result.onSuccess {
-                val highlighted = Glow.highlight(it, CodeTheme.kotlinLight)
+                val highlighted = Glow.highlight2(it, CodeTheme.kotlinLight)
                 textView.setCodeTheme(CodeTheme.kotlinLight.normal)
                 textView.text = highlighted.spanned
             }
