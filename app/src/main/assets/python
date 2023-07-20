@@ -4,7 +4,7 @@ def flip_coin():
     return random.choice(["Heads", "Tails"])
 
 def main():
-    print("Coin Flipping Game")
+    print('Coin Flipping Game')
     print("Press Enter to flip the coin. Type 'exit' to quit.")
 
     while True:

@@ -194,7 +194,7 @@ private class PLexer(private val input: String) {
         }
         position++
         val identifier = input.substring(start, position)
-        return Token(Type.CHAR, identifier)
+        return Token(Type.STRING, identifier)
     }
 
     private fun readNumber(): Token {

@@ -11,9 +11,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textView = findViewById<TextView>(R.id.textMain)
-        readStringAsset("java") { result ->
+        readStringAsset("python") { result ->
             result.onSuccess {
-                val highlighted = Glow.hlJava(it, CodeTheme.kotlinLight)
+                val highlighted = glowSyntax(it,"py", CodeTheme.kotlinLight)
                 textView.setCodeTheme(CodeTheme.kotlinLight.normal)
                 textView.text = highlighted.spanned
             }

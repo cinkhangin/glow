@@ -33,11 +33,28 @@ private fun String.color2(rex: Regex, color: String) =
     replace(rex) { "${it.groups[1]?.value} ${it.groups[2]?.value?.color(color)}" }
 
 
+fun glowSyntax(
+    source: String,
+    language: String = "kotlin",
+    theme: Theme = Theme(),
+) = Glow.highlight(source, language, theme)
+
+
 object Glow {
     private val TAG = Glow::class.java.simpleName
 
     fun highlight(source: String, theme: Theme = Theme()): HighLight {
         return highLightKotlin(source, theme)
+    }
+
+    fun highlight(source: String, language: String, theme: Theme = Theme()): HighLight {
+        return when (language.lowercase()) {
+            "java" -> hlJava(source, theme)
+            "python", "py" -> hlPython(source, theme)
+            "kotlin", "kt" -> hlKotlin(source, theme)
+            "javascript", "js" -> hlJavaScript(source, theme)
+            else -> hlKotlin(source, theme)
+        }
     }
 
     fun hlJava(input: String, theme: Theme = Theme()): HighLight {
