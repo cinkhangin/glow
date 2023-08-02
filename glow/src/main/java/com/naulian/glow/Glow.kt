@@ -8,7 +8,6 @@ import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.KTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow.tokens.Type
-import java.lang.StringBuilder
 
 private fun color(hex: String): Int {
     return android.graphics.Color.parseColor(hex)

@@ -140,7 +140,7 @@ private class PLexer(private val input: String) {
         val start = position
         do {
             position++
-        } while (currentChar() != '\n')
+        } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
         return Token(Type.COMMENT_SINGLE, identifier)

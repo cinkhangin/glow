@@ -46,7 +46,7 @@ object KTokens {
     }
 
     private fun argumentToken(token: Token): Token {
-        return if(token.type != Type.IDENTIFIER)  token
+        return if (token.type != Type.IDENTIFIER) token
         else token.copy(type = Type.ARGUMENT)
     }
 
@@ -137,6 +137,7 @@ private class KLexer(private val input: String) {
                     else -> createToken(Type.SLASH_FORWARD, char.toString())
                 }
             }
+
             '\'' -> readChar()
             '\"' -> readString()
             in 'a'..'z', in 'A'..'Z', '_' -> readIdentifier()
@@ -150,7 +151,7 @@ private class KLexer(private val input: String) {
         val start = position
         do {
             position++
-        } while (currentChar() != '\n')
+        } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
         return Token(Type.COMMENT_SINGLE, identifier)
@@ -190,7 +191,7 @@ private class KLexer(private val input: String) {
         }
 
         return when (val identifier = input.substring(start, position)) {
-            "var", "val"  -> Token(Type.VARIABLE, identifier)
+            "var", "val" -> Token(Type.VARIABLE, identifier)
             "fun" -> Token(Type.FUNCTION, identifier)
             "class" -> Token(Type.CLASS, identifier)
             in keywords -> Token(Type.KEYWORD, identifier)
