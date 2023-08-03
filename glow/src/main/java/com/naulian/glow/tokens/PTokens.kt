@@ -1,8 +1,7 @@
 package com.naulian.glow.tokens
 
-import com.naulian.anhance.logDebug
-
 object PTokens {
+    @Suppress("unused")
     private val TAG = PTokens::class.java.simpleName
 
     fun tokenize(input: String): List<Token> {
@@ -10,7 +9,7 @@ object PTokens {
         val tokens = mutableListOf<Token>()
         var token = lexer.nextToken()
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
-            logDebug(TAG, token)
+            //logDebug(TAG, token)
             tokens.add(token)
             token = lexer.nextToken()
         }
@@ -18,6 +17,7 @@ object PTokens {
         return audit1(tokens)
     }
 
+    //decide token based on previous token
     private fun audit1(list: List<Token>): List<Token> {
         if (list.size < 2) return list
 
@@ -27,6 +27,7 @@ object PTokens {
         )
 
         for (index in 2 until list.size) {
+            //use index - 2 to skip white space
             val prev = list[index - 2]
             val token = list[index]
 
@@ -57,6 +58,7 @@ object PTokens {
         else token.copy(type = Type.VALUE_INT)
     }
 
+    //decide token based on next token
     private fun audit2(listRaw: List<Token>): List<Token> {
         val list = listRaw.reversed()
         if (list.size < 2) return list
