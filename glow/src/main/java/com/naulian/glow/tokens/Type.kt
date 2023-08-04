@@ -39,6 +39,7 @@ enum class Type {
     VALUE_INT,
     VALUE_LONG,
     VALUE_FLOAT,
+
     //    FUNC_CALL,
     DATA_TYPE,
     CLASS_NAME,
@@ -52,4 +53,5 @@ enum class Type {
     COMMENT_SINGLE,
     COMMENT_MULTI,
     SLASH_FORWARD,
+    SLASH_BACKWARD,
 }

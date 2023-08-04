@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import com.naulian.anhance.readStringAsset
+import com.naulian.glow.tokens.PTokens
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
         textInput.doAfterTextChanged {
             val text = it?.toString() ?: ""
+            PTokens.logTokens(text)
             val highlighted = glowSyntax(text,"py", CodeTheme.kotlinLight)
             textSource.text = highlighted.raw
             textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
