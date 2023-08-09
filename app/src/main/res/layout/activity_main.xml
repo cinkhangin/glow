@@ -24,7 +24,7 @@
                 android:background="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:fontFamily="serif-monospace"
+                android:fontFeatureSettings="liga=0;"
                 android:padding="16dp"
                 android:inputType="textMultiLine"
                 android:textSize="14sp"
@@ -51,9 +51,9 @@
                 android:id="@+id/textSource"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif-monospace"
                 android:padding="16dp"
                 android:textSize="14sp"
+                android:fontFeatureSettings="liga=0;"
                 android:textStyle="bold" />
     </ScrollView>
 
@@ -81,7 +81,7 @@
                 android:id="@+id/textOutput"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:fontFamily="serif-monospace"
+                android:fontFeatureSettings="liga=0;"
                 android:padding="16dp"
                 android:textSize="14sp"
                 android:textStyle="bold" />

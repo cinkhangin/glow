@@ -74,6 +74,7 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
+                Type.ASSIGNMENT -> it.value.color(theme.normal)
                 Type.COMMENT_MULTI -> it.value.color(theme.comment)
                 Type.COMMENT_SINGLE -> it.value.color(theme.comment)
                 else -> it.value
@@ -107,6 +108,7 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
+                Type.ASSIGNMENT -> it.value.color(theme.normal)
                 Type.COMMENT_MULTI -> it.value.color(theme.comment)
                 Type.COMMENT_SINGLE -> it.value.color(theme.comment)
                 else -> it.value
@@ -132,11 +134,13 @@ object Glow {
                 Type.CLASS -> it.value.color(theme.keyword)
                 Type.FUNCTION -> it.value.color(theme.keyword)
                 Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.FUNC_CALL -> it.value.color(theme.method)
                 Type.NUMBER -> it.value.color(theme.number)
                 Type.VALUE_INT -> it.value.color(theme.number)
                 Type.VALUE_LONG -> it.value.color(theme.number)
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.STRING -> it.value.color(theme.string)
+                Type.ASSIGNMENT -> it.value.color(theme.normal)
                 Type.COMMENT_SINGLE -> it.value.color(theme.comment)
                 else -> it.value
             }
@@ -169,6 +173,7 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
+                Type.ASSIGNMENT -> it.value.color(theme.normal)
                 Type.COMMENT_MULTI -> it.value.color(theme.comment)
                 Type.COMMENT_SINGLE -> it.value.color(theme.comment)
                 else -> it.value

@@ -1,12 +1,15 @@
 package com.naulian.glow.tokens
 
 enum class Type {
+    NONE,
+
     GT,
     LT,
     AT,
     DOT,
     VARIABLE,
-    EOF,
+    EOF, //End of file
+    EOL, //End of line
     PLUS,
     CHAR,
     DASH,
@@ -35,6 +38,7 @@ enum class Type {
     VAR_NAME,
     SEMICOLON,
     FUNC_NAME,
+    FUNC_CALL,
 
     VALUE_INT,
     VALUE_LONG,
