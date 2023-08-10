@@ -1,4 +1,4 @@
-![](screenshot/jsvascript.jpg =250x)
+<img src="screenshots/javascript.jpg" alt="screenshot" width="240"></img>
 
 # glow 
 A simple syntax highlighter to use with TextView. Kotlin, Java, JavaScript, and Python are Supported.
@@ -8,9 +8,9 @@ A simple syntax highlighter to use with TextView. Kotlin, Java, JavaScript, and 
 
 ```groovy
 allprojects {
-		repositories {
+    repositories {
         maven { url 'https://jitpack.io' }
-		}
+    }
 }
 
 dependencies {
