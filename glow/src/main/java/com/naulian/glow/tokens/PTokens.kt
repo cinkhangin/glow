@@ -186,7 +186,7 @@ private class PLexer(private val input: String) {
     private fun readDoubleQString(): Token {
         val start = position
         position++
-        while (currentChar() != '\"') {
+        while (currentChar() != '\"' && currentChar() != Char.MIN_VALUE) {
             position++
         }
         position++
@@ -197,7 +197,7 @@ private class PLexer(private val input: String) {
     private fun readSingleQString(): Token {
         val start = position
         position++
-        while (currentChar() != '\'') {
+        while (currentChar() != '\'' && currentChar() != Char.MIN_VALUE) {
             position++
         }
         position++

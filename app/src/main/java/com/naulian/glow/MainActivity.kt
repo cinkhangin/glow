@@ -19,13 +19,13 @@ class MainActivity : AppCompatActivity() {
         val textSource = findViewById<TextView>(R.id.textSource)
         val textOutput = findViewById<TextView>(R.id.textOutput)
 
-        val textPaint = textOutput.paint
-        textPaint.fontFeatureSettings = "liga=0;" // Disable ligatures
+        val filename = "sample.js"
+        val language = "js"
 
-        readStringAsset("python") { result ->
+        readStringAsset(filename) { result ->
             result.onSuccess {
                 textInput.setText(it)
-                val highlighted = glowSyntax(it,"py", CodeTheme.kotlinLight)
+                val highlighted = glowSyntax(it,language, CodeTheme.kotlinLight)
                 textSource.text = highlighted.raw
                 textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                 textOutput.text = highlighted.spanned
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         textInput.doAfterTextChanged {
             val text = it?.toString() ?: ""
-            val highlighted = glowSyntax(text,"py", CodeTheme.kotlinLight)
+            val highlighted = glowSyntax(text,language, CodeTheme.kotlinLight)
             textSource.text = highlighted.raw
             textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
             textOutput.text = highlighted.spanned

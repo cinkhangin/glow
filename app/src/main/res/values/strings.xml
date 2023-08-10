@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Glow</string>
     <string name="code">kj</string>
+    <string name="write_code_here">Write code here</string>
 </resources>

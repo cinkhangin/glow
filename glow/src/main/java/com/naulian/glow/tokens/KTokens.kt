@@ -1,36 +1,28 @@
 package com.naulian.glow.tokens
 
-import com.naulian.anhance.logDebug
-
 object KTokens {
+
+    @Suppress("unused")
     private val TAG = KTokens::class.java.simpleName
 
     fun tokenize(input: String): List<Token> {
         val lexer = KLexer(input)
         val tokens = mutableListOf<Token>()
         var token = lexer.nextToken()
+        var prevToken = Token(Type.NONE)
+        var prevIndex = 0
+
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
-            logDebug(TAG, token)
-            tokens.add(token)
-            token = lexer.nextToken()
-        }
+            //logDebug(TAG, token)
 
-        return audit1(tokens)
-    }
+            if (token.type == Type.WHITE_SPACE) {
+                tokens.add(token)
+                token = lexer.nextToken()
+                continue
+            }
 
-    private fun audit1(list: List<Token>): List<Token> {
-        if (list.size < 2) return list
-
-        val tokens = mutableListOf(
-            list[0],
-            list[1]
-        )
-
-        for (index in 2 until list.size) {
-            val prev = list[index - 2]
-            val token = list[index]
-
-            val modified = when (prev.type) {
+            //based on previous
+            val modified = when (prevToken.type) {
                 Type.ASSIGNMENT -> numberToken(token)
                 Type.LEFT_PARENTHESES -> argumentToken(token)
                 Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
@@ -40,9 +32,32 @@ object KTokens {
                 else -> token
             }
 
+            //based on next
+            when(modified.type){
+                Type.COLON ->{
+                    if (prevToken.type == Type.ARGUMENT) {
+                        tokens[prevIndex] = prevToken.copy(type = Type.PARAM)
+                    }
+                }
+                Type.LEFT_PARENTHESES -> {
+                    tokens.getOrNull(prevIndex - 1)?.let {
+                        if(it.type == Type.DOT){
+                            tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
+                        }
+                    }
+                }
+                else -> Unit
+            }
+
+            //tracking
+            prevIndex = tokens.size
+            prevToken = modified
+
             tokens.add(modified)
+            token = lexer.nextToken()
         }
-        return audit2(tokens)
+
+        return tokens
     }
 
     private fun argumentToken(token: Token): Token {
@@ -55,32 +70,6 @@ object KTokens {
         return if (token.value.contains("L")) token.copy(type = Type.VALUE_LONG)
         else if (token.value.contains("f")) token.copy(type = Type.VALUE_FLOAT)
         else token.copy(type = Type.VALUE_INT)
-    }
-
-    private fun audit2(listRaw: List<Token>): List<Token> {
-        val list = listRaw.reversed()
-        if (list.size < 2) return list
-
-        val tokens = mutableListOf(
-            list[0],
-            list[1]
-        )
-
-        for (index in 2 until list.size) {
-            val prev = list[index - 2]
-            val token = list[index]
-
-            val modified = when (prev.type) {
-                Type.COLON -> if (token.type == Type.ARGUMENT) token.copy(
-                    type = Type.PARAM
-                )
-                else token
-
-                else -> token
-            }
-            tokens.add(modified)
-        }
-        return tokens.reversed()
     }
 }
 
@@ -161,7 +150,7 @@ private class KLexer(private val input: String) {
         val start = position
         do {
             position++
-        } while (currentChar() != '/')
+        } while (currentChar() != '/' && currentChar() != Char.MIN_VALUE)
         position++
 
         val identifier = input.substring(start, position)
@@ -202,7 +191,7 @@ private class KLexer(private val input: String) {
     private fun readString(): Token {
         val start = position
         position++
-        while (currentChar() != '\"') {
+        while (currentChar() != '\"' && currentChar() != Char.MIN_VALUE) {
             position++
         }
         position++
