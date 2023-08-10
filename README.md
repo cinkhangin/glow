@@ -1,6 +1,8 @@
-[![](https://jitpack.io/v/cinkhangin/glow.svg)](https://jitpack.io/#cinkhangin/glow)
+![](screenshots/javascript.jpg)
+
 # glow 
 A simple syntax highlighter to use with TextView. Kotlin, Java, JavaScript, and Python are Supported.
+[![](https://jitpack.io/v/cinkhangin/glow.svg)](https://jitpack.io/#cinkhangin/glow)
 
 [Jitpack](https://jitpack.io/#cinkhangin/glow)
 
