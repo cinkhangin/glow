@@ -131,6 +131,7 @@ object Glow {
         tokens.forEach {
             val code = when (it.type) {
                 Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.PROPERTY -> it.value.color(theme.property)
                 Type.CLASS -> it.value.color(theme.keyword)
                 Type.FUNCTION -> it.value.color(theme.keyword)
                 Type.FUNC_NAME -> it.value.color(theme.method)
@@ -198,7 +199,7 @@ object Glow {
             .color2(KotlinRegex.variables, theme.variable)
             .color(KotlinRegex.keywords, theme.keyword)
             .color(KotlinRegex.strings, theme.string)
-            .color(KotlinRegex.instanceProperty, theme.instanceProperty)
+            .color(KotlinRegex.instanceProperty, theme.property)
             //.replace(Rex.properties, Color.property)
             //.color(Rex.methods, Color.method)
             .color(KotlinRegex.comments, theme.comment)

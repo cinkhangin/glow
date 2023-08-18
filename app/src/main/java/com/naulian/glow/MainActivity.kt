@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
         val textSource = findViewById<TextView>(R.id.textSource)
         val textOutput = findViewById<TextView>(R.id.textOutput)
 
-        val filename = "sample.js"
-        val language = "js"
+        val filename = "sample.txt"
+        val language = "py"
 
         readStringAsset(filename) { result ->
             result.onSuccess {

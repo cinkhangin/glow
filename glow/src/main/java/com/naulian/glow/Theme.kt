@@ -10,5 +10,5 @@ data class Theme(
     val keyword: String = "#ED864A",
     val variable: String = "#7EC3E6",
 
-    val instanceProperty : String = Colors.purple
+    val property : String = Colors.purple
 )

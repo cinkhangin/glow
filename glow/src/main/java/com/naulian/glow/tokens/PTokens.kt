@@ -41,6 +41,7 @@ object PTokens {
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
                 Type.VARIABLE -> token.copy(type = Type.VAR_NAME)
+                Type.DOT -> token.copy(type = Type.PROPERTY)
                 else -> token
             }
 

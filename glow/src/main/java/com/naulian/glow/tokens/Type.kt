@@ -27,6 +27,7 @@ enum class Type {
     ARGUMENT,
     WHITE_SPACE,
     ASSIGNMENT,
+    PROPERTY,
     CLASS,
     COMMA,
     COLON,

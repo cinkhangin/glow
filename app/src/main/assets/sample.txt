@@ -1,1 +1,2 @@
-x = a >= b
+x = math.pi
+y = math.ceil(1.4)
