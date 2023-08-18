@@ -19,7 +19,7 @@ dependencies {
 ```
 
 ```kotlin
-val sourceCode = "print("hello")"
+val sourceCode = "print(\"hello\")"
 val language = "py" //or "python"
 
 val highlighted = glowSyntax(sourceCode, language, CodeTheme.kotlinLight)
