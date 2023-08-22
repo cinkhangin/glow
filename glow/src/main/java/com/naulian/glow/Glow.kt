@@ -2,7 +2,7 @@
 
 package com.naulian.glow
 
-import androidx.core.text.HtmlCompat
+import com.naulian.anhance.html
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.KTokens
@@ -42,19 +42,25 @@ fun glowSyntax(
 object Glow {
     private val TAG = Glow::class.java.simpleName
 
-    fun highlight(source: String, theme: Theme = Theme()): HighLight {
-        return highLightKotlin(source, theme)
-    }
-
     fun highlight(source: String, language: String, theme: Theme = Theme()): HighLight {
         return when (language.lowercase()) {
             "java" -> hlJava(source, theme)
             "python", "py" -> hlPython(source, theme)
             "kotlin", "kt" -> hlKotlin(source, theme)
             "javascript", "js" -> hlJavaScript(source, theme)
-            else -> hlKotlin(source, theme)
+            else -> hlText(source)
         }
     }
+
+    fun hlText(input: String): HighLight {
+        val raw = input
+            .replace("  ", "&nbsp;&nbsp;")
+            .replace("\n", "<br>")
+
+        val spanned = raw.html()
+        return HighLight(spanned, raw)
+    }
+
 
     fun hlJava(input: String, theme: Theme = Theme()): HighLight {
         val tokens = JTokens.tokenize(input)
@@ -86,7 +92,7 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        val spanned = output.html()
         return HighLight(spanned, output)
     }
 
@@ -120,7 +126,7 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        val spanned = output.html()
         return HighLight(spanned, output)
     }
 
@@ -152,7 +158,7 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        val spanned = output.html()
         return HighLight(spanned, output)
     }
 
@@ -186,32 +192,7 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
-        return HighLight(spanned, output)
-    }
-
-    private fun highLightKotlin(source: String, theme: Theme): HighLight {
-        //order matter
-        val output = source.italic(KotlinRegex.lists)
-            //color punctuations
-            .color(KotlinRegex.punctuations, theme.keyword)
-            .color(KotlinRegex.numbers, theme.number)
-            .color2(KotlinRegex.variables, theme.variable)
-            .color(KotlinRegex.keywords, theme.keyword)
-            .color(KotlinRegex.strings, theme.string)
-            .color(KotlinRegex.instanceProperty, theme.property)
-            //.replace(Rex.properties, Color.property)
-            //.color(Rex.methods, Color.method)
-            .color(KotlinRegex.comments, theme.comment)
-            //resolve /* for multiline comment
-            .replace("/<font color=${theme.keyword}>*</font>", "/*")
-            .replace("<font color=${theme.keyword}>*</font>/", "*/")
-            //highlight multiline comment
-            .color(KotlinRegex.documentations, theme.comment)
-            .replace("  ", "&nbsp;&nbsp;")
-            .replace("\n", "<br>")
-
-        val spanned = HtmlCompat.fromHtml(output, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        val spanned = output.html()
         return HighLight(spanned, output)
     }
 }

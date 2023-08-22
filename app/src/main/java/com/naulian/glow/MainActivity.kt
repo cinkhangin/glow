@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val textOutput = findViewById<TextView>(R.id.textOutput)
 
         val filename = "sample.txt"
-        val language = "py"
+        val language = ""
 
         readStringAsset(filename) { result ->
             result.onSuccess {
