@@ -16,14 +16,14 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val filename = "sample.txt"
-        val language = ""
+        val filename = "sample.java"
+        val language = "java"
 
         binding.apply {
             readStringAsset(filename) { result ->
                 result.onSuccess {
                     textInput.setText(it)
-                    val highlighted = glowSyntax(it,language, CodeTheme.kotlinLight)
+                    val highlighted = glowSyntax(it, language, CodeTheme.kotlinLight)
                     textSource.text = highlighted.raw
                     textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                     textOutput.text = highlighted.spanned
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
             textInput.doAfterTextChanged {
                 val text = it?.toString() ?: ""
-                val highlighted = glowSyntax(text,language, CodeTheme.kotlinLight)
+                val highlighted = glowSyntax(text, language, CodeTheme.kotlinLight)
                 textSource.text = highlighted.raw
                 textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                 textOutput.text = highlighted.spanned

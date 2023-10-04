@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -5,14 +7,17 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        maven { url("https://jitpack.io")}
+        maven("https://jitpack.io")
     }
 }
+
 rootProject.name = "Glow"
-include ':app'
-include ':glow'
+include(":app")
+include(":glow")
+

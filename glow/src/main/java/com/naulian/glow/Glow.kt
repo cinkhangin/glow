@@ -69,11 +69,13 @@ object Glow {
         tokens.forEach {
             val code = when (it.type) {
                 Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.PROPERTY -> it.value.color(theme.property)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
                 Type.CLASS -> it.value.color(theme.keyword)
                 Type.FUNCTION -> it.value.color(theme.keyword)
                 Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.FUNC_CALL -> it.value.color(theme.method)
                 Type.NUMBER -> it.value.color(theme.number)
                 Type.VALUE_INT -> it.value.color(theme.number)
                 Type.VALUE_LONG -> it.value.color(theme.number)
