@@ -63,7 +63,10 @@ object Glow {
 
 
     fun hlJava(input: String, theme: Theme = Theme()): HighLight {
-        val tokens = JTokens.tokenize(input)
+        val modified = input.replace("<", "&lt")
+            .replace(">", "&gt")
+
+        val tokens = JTokens.tokenize(modified)
 
         val builder = StringBuilder()
         tokens.forEach {
@@ -99,7 +102,10 @@ object Glow {
     }
 
     fun hlJavaScript(input: String, theme: Theme = Theme()): HighLight {
-        val tokens = JsTokens.tokenize(input)
+        val modified = input.replace("<", "&lt")
+            .replace(">", "&gt")
+
+        val tokens = JsTokens.tokenize(modified)
 
         val builder = StringBuilder()
         tokens.forEach {
@@ -133,7 +139,10 @@ object Glow {
     }
 
     fun hlPython(input: String, theme: Theme = Theme()): HighLight {
-        val tokens = PTokens.tokenize(input)
+        val modified = input.replace("<", "&lt")
+            .replace(">", "&gt")
+
+        val tokens = PTokens.tokenize(modified)
 
         val builder = StringBuilder()
         tokens.forEach {
@@ -165,7 +174,10 @@ object Glow {
     }
 
     fun hlKotlin(input: String, theme: Theme = Theme()): HighLight {
-        val tokens = KTokens.tokenize(input)
+        val modified = input.replace("<", "&lt")
+            .replace(">", "&gt")
+
+        val tokens = KTokens.tokenize(modified)
 
         val builder = StringBuilder()
         tokens.forEach {
