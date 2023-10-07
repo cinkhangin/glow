@@ -34,19 +34,31 @@ object JTokens {
             }
 
             //based on next
-            when(modified.type){
-                Type.COLON ->{
+            when (modified.type) {
+                Type.COLON -> {
                     if (prevToken.type == Type.ARGUMENT) {
                         tokens[prevIndex] = prevToken.copy(type = Type.PARAM)
                     }
                 }
+
                 Type.LEFT_PARENTHESES -> {
+                    if (prevToken.type == Type.VAR_NAME) {
+                        tokens[prevIndex] = prevToken.copy(type = Type.FUNC_NAME)
+                    }
+
                     tokens.getOrNull(prevIndex - 1)?.let {
-                        if(it.type == Type.DOT){
+                        if (it.type == Type.DOT) {
                             tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
                         }
                     }
                 }
+
+                Type.RIGHT_BRACKET -> {
+                    if (prevToken.type == Type.VAR_NAME) {
+                        tokens[prevIndex] = prevToken.copy(type = Type.LEFT_BRACKET)
+                    }
+                }
+
                 else -> Unit
             }
 
@@ -62,7 +74,7 @@ object JTokens {
     }
 
     private fun argumentToken(token: Token): Token {
-        return if(token.type != Type.IDENTIFIER)  token
+        return if (token.type != Type.IDENTIFIER) token
         else token.copy(type = Type.ARGUMENT)
     }
 
@@ -126,6 +138,7 @@ private class JLexer(private val input: String) {
                     else -> createToken(Type.SLASH_FORWARD, char.toString())
                 }
             }
+
             '\'' -> readChar()
             '\"' -> readString()
             in 'a'..'z', in 'A'..'Z', '_' -> readIdentifier()

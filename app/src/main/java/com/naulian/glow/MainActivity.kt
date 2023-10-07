@@ -22,8 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             readStringAsset(filename) { result ->
                 result.onSuccess {
-                    textInput.setText(it)
-                    val highlighted = glowSyntax(it, language, CodeTheme.kotlinLight)
+                    val source = "int foo(int[] numbers) {\n    return 0;\n} "
+                    textInput.setText(source)
+                    val highlighted = glowSyntax(source, language, CodeTheme.kotlinLight)
                     textSource.text = highlighted.raw
                     textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                     textOutput.text = highlighted.spanned
