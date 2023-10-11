@@ -14,7 +14,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.cinkhangin:glow:0.1.8'
+    implementation 'com.github.cinkhangin:glow:1.0.2'
 }
 ```
 
