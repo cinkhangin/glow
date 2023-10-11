@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             readStringAsset(filename) { result ->
                 result.onSuccess {
-                    val source = "int foo(int[] numbers) {\n    return 0;\n} "
+                    val source = "ArrayList<String> fruits = new ArrayList<String>();\nint x = a <= b;"
                     textInput.setText(source)
                     val highlighted = glowSyntax(source, language, CodeTheme.kotlinLight)
                     textSource.text = highlighted.raw

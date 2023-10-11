@@ -63,14 +63,13 @@ object Glow {
 
 
     fun hlJava(input: String, theme: Theme = Theme()): HighLight {
-        val modified = input.replace("<", "&lt")
-            .replace(">", "&gt")
-
-        val tokens = JTokens.tokenize(modified)
+        val tokens = JTokens.tokenize(input)
+        println(tokens)
 
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
+                Type.LT, Type.GT -> it.value.color(theme.normal)
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.VARIABLE -> it.value.color(theme.keyword)
@@ -182,6 +181,7 @@ object Glow {
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
+                Type.LT, Type.GT -> it.value.color(theme.normal)
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
