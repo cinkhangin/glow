@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val filename = "sample.kt"
-        val language = "kt"
+        val filename = "sample.java"
+        val language = "java"
         val theme = CodeTheme.default(this@MainActivity)
 
         binding.apply {

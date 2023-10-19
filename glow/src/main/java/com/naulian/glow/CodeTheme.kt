@@ -5,25 +5,21 @@ import com.naulian.anhance.isNightMode
 
 object CodeTheme {
 
-    private val defaultLight = Theme(
-        keyword = "#0033B3",
-        string = "#067D17",
-        variable = "#871094",
-        method = "#FF9B00"
-    )
-
-    private val defaultDark = Theme(
-        keyword = "#2274cf",
-        string = "#069c1b",
-        variable = "#a65ab3",
-        method = "#db8800",
-        normal = "#f6fff3",
-        comment = "#727272",
-    )
-
     @Deprecated("Deprecated\nUse CodeTheme.default(context) instead.")
-    val kotlinLight = defaultLight
+    val kotlinLight = Theme()
+
+    private val defaultLight = Theme(
+        background = "#ffffff",
+        normal = "#000000",
+        string = "#067D17",
+        comment = "#8C8C8C",
+        method = "#FF9B00",
+        number = "#0000FF",
+        keyword = "#0033B3",
+        variable = "#000000",
+        property = "#871094"
+    )
 
     fun default(context: Context) =
-        if (context.isNightMode()) defaultDark else defaultLight
+        if (context.isNightMode()) Theme() else defaultLight
 }

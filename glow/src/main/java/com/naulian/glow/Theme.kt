@@ -1,14 +1,14 @@
 package com.naulian.glow
 
 data class Theme(
-    val normal : String = "#3D3D3D",
-    val string: String = "#54B33E",
-    val comment: String = "#CACACA",
-    val method: String = "#FFC66D",
-    val number: String = "#00AAFF",
-    //const val property = "#ED94FF"
-    val keyword: String = "#ED864A",
-    val variable: String = "#7EC3E6",
+    val background: String = "#1d1d26",
+    val normal : String = "#C9C9D1",
 
-    val property : String = Colors.purple
+    val string: String = "#62A362",
+    val comment: String = "#676773",
+    val method: String = "#C7A65D",
+    val number: String = "#4DACF0",
+    val keyword: String = "#E0957B",
+    val variable: String = "#C9C9D1",
+    val property : String = "93A6F5"
 )

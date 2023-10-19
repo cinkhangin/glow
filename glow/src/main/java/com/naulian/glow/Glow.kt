@@ -64,7 +64,6 @@ object Glow {
 
     fun hlJava(input: String, theme: Theme = Theme()): HighLight {
         val tokens = JTokens.tokenize(input)
-        println(tokens)
 
         val builder = StringBuilder()
         tokens.forEach {
@@ -101,14 +100,12 @@ object Glow {
     }
 
     fun hlJavaScript(input: String, theme: Theme = Theme()): HighLight {
-        val modified = input.replace("<", "&lt")
-            .replace(">", "&gt")
-
-        val tokens = JsTokens.tokenize(modified)
+        val tokens = JsTokens.tokenize(input)
 
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
+                Type.LT, Type.GT -> it.value.color(theme.normal)
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
@@ -138,14 +135,12 @@ object Glow {
     }
 
     fun hlPython(input: String, theme: Theme = Theme()): HighLight {
-        val modified = input.replace("<", "&lt")
-            .replace(">", "&gt")
-
-        val tokens = PTokens.tokenize(modified)
+        val tokens = PTokens.tokenize(input)
 
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
+                Type.LT, Type.GT -> it.value.color(theme.normal)
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.CLASS -> it.value.color(theme.keyword)
@@ -173,10 +168,7 @@ object Glow {
     }
 
     fun hlKotlin(input: String, theme: Theme = Theme()): HighLight {
-        val modified = input.replace("<", "&lt")
-            .replace(">", "&gt")
-
-        val tokens = KTokens.tokenize(modified)
+        val tokens = KTokens.tokenize(input)
 
         val builder = StringBuilder()
         tokens.forEach {
