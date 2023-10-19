@@ -16,17 +16,17 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val filename = "sample.java"
-        val language = "java"
+        val filename = "sample.kt"
+        val language = "kt"
+        val theme = CodeTheme.default(this@MainActivity)
 
         binding.apply {
             readStringAsset(filename) { result ->
                 result.onSuccess {
-                    val source = "ArrayList<String> fruits = new ArrayList<String>();\nint x = a <= b;"
+                    val source = it
                     textInput.setText(source)
-                    val highlighted = glowSyntax(source, language, CodeTheme.kotlinLight)
+                    val highlighted = glowSyntax(source, language, theme)
                     textSource.text = highlighted.raw
-                    textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                     textOutput.text = highlighted.spanned
                 }
                 result.onFailure {
@@ -36,9 +36,8 @@ class MainActivity : AppCompatActivity() {
 
             textInput.doAfterTextChanged {
                 val text = it?.toString() ?: ""
-                val highlighted = glowSyntax(text, language, CodeTheme.kotlinLight)
+                val highlighted = glowSyntax(text, language, theme)
                 textSource.text = highlighted.raw
-                textOutput.setCodeTheme(CodeTheme.kotlinLight.normal)
                 textOutput.text = highlighted.spanned
             }
         }
