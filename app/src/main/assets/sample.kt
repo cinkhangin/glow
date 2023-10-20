@@ -1,9 +1,9 @@
 import kotlin.random.Random
 
 fun main() {
-    println("Welcome to the Coin Flipping Game!")
-    println("I will flip a coin, and you have to guess the outcome.")
-    println("Enter 'H' for Heads or 'T' for Tails.")
+    println("Welcome to the $Coin Flipping Game!")
+    println("I will flip a ${coin}, and you have to guess the outcome.")
+    println("Enter 'H' for Heads \n or 'T' for Tails.")
 
     var playerGuess: String
     var computerResult: String

@@ -9,10 +9,10 @@ object CodeTheme {
     val kotlinLight = Theme()
 
     private val defaultLight = Theme(
-        background = "#ffffff",
+        background = "#FFFFFF",
         normal = "#000000",
         string = "#067D17",
-        comment = "#8C8C8C",
+        comment = "#AEAEAE",
         method = "#FF9B00",
         number = "#0000FF",
         keyword = "#0033B3",

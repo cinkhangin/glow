@@ -52,7 +52,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.cinkhangin"
                 artifactId = "glow"
-                version = "1.1.1"
+                version = "1.2.0"
             }
         }
     }

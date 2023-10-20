@@ -59,4 +59,6 @@ enum class Type {
     COMMENT_MULTI,
     SLASH_FORWARD,
     SLASH_BACKWARD,
+    INTERPOLATION,
+    STRING_BRACE
 }

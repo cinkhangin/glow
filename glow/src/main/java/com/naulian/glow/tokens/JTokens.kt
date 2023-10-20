@@ -97,45 +97,45 @@ private class JLexer(private val input: String) {
         "transient", "try", "void", "volatile", "while"
     )
 
-    private fun currentChar() = if (position < input.length) input[position] else Char.MIN_VALUE
+    private val char = if (position < input.length) input[position] else Char.MIN_VALUE
 
     fun nextToken(): Token {
-        if (currentChar().isWhitespace()) {
+        if (char.isWhitespace()) {
             return whitespaceToken()
         }
 
-        return when (val char = currentChar()) {
-            '*' -> createToken(Type.ASTERISK, char.toString())
-            '.' -> createToken(Type.DOT, char.toString())
-            '-' -> createToken(Type.DASH, char.toString())
-            '@' -> createToken(Type.AT, char.toString())
-            '#' -> createToken(Type.HASH, char.toString())
-            '$' -> createToken(Type.DOLLAR, char.toString())
-            '%' -> createToken(Type.MODULO, char.toString())
-            '^' -> createToken(Type.POW, char.toString())
-            '&' -> createToken(Type.AND, char.toString())
-            '?' -> createToken(Type.QUESTION_MARK, char.toString())
-            '|' -> createToken(Type.OR, char.toString())
-            '\\' -> createToken(Type.ESCAPE, char.toString())
-            '!' -> createToken(Type.BANG, char.toString())
-            '{' -> createToken(Type.LEFT_BRACE, char.toString())
-            '}' -> createToken(Type.RIGHT_BRACE, char.toString())
-            '(' -> createToken(Type.LEFT_PARENTHESES, char.toString())
-            ')' -> createToken(Type.RIGHT_PARENTHESES, char.toString())
-            ',' -> createToken(Type.COMMA, char.toString())
-            ':' -> createToken(Type.COLON, char.toString())
+        return when (val c = char) {
+            '*' -> createToken(Type.ASTERISK, c.toString())
+            '.' -> createToken(Type.DOT, c.toString())
+            '-' -> createToken(Type.DASH, c.toString())
+            '@' -> createToken(Type.AT, c.toString())
+            '#' -> createToken(Type.HASH, c.toString())
+            '$' -> createToken(Type.DOLLAR, c.toString())
+            '%' -> createToken(Type.MODULO, c.toString())
+            '^' -> createToken(Type.POW, c.toString())
+            '&' -> createToken(Type.AND, c.toString())
+            '?' -> createToken(Type.QUESTION_MARK, c.toString())
+            '|' -> createToken(Type.OR, c.toString())
+            '\\' -> createToken(Type.ESCAPE, c.toString())
+            '!' -> createToken(Type.BANG, c.toString())
+            '{' -> createToken(Type.LEFT_BRACE, c.toString())
+            '}' -> createToken(Type.RIGHT_BRACE, c.toString())
+            '(' -> createToken(Type.LEFT_PARENTHESES, c.toString())
+            ')' -> createToken(Type.RIGHT_PARENTHESES, c.toString())
+            ',' -> createToken(Type.COMMA, c.toString())
+            ':' -> createToken(Type.COLON, c.toString())
             '>' -> createToken(Type.GT, "&gt")
             '<' -> createToken(Type.LT, "&lt")
-            ';' -> createToken(Type.SEMICOLON, char.toString())
-            '+' -> createToken(Type.PLUS, char.toString())
-            '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '[' -> createToken(Type.LEFT_BRACKET, char.toString())
-            ']' -> createToken(Type.RIGHT_BRACKET, char.toString())
+            ';' -> createToken(Type.SEMICOLON, c.toString())
+            '+' -> createToken(Type.PLUS, c.toString())
+            '=' -> createToken(Type.ASSIGNMENT, c.toString())
+            '[' -> createToken(Type.LEFT_BRACKET, c.toString())
+            ']' -> createToken(Type.RIGHT_BRACKET, c.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.SLASH_FORWARD, char.toString())
+                    else -> createToken(Type.SLASH_FORWARD, c.toString())
                 }
             }
 
@@ -143,8 +143,8 @@ private class JLexer(private val input: String) {
             '\"' -> readString()
             in 'a'..'z', in 'A'..'Z', '_' -> readIdentifier()
             in '0'..'9' -> readNumber()
-            Char.MIN_VALUE -> createToken(Type.EOF, char.toString())
-            else -> createToken(Type.ILLEGAL, char.toString())
+            Char.MIN_VALUE -> createToken(Type.EOF, c.toString())
+            else -> createToken(Type.ILLEGAL, c.toString())
         }
     }
 
@@ -152,7 +152,7 @@ private class JLexer(private val input: String) {
         val start = position
         do {
             position++
-        } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
+        } while (char != '\n' && char != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
         return Token(Type.COMMENT_SINGLE, identifier)
@@ -162,7 +162,7 @@ private class JLexer(private val input: String) {
         val start = position
         do {
             position++
-        } while (currentChar() != '/' && currentChar() != Char.MIN_VALUE)
+        } while (char != '/' && char != Char.MIN_VALUE)
         position++
 
         val identifier = input.substring(start, position)
@@ -177,7 +177,7 @@ private class JLexer(private val input: String) {
 
     private fun whitespaceToken(): Token {
         val start = position
-        while (currentChar().isWhitespace()) {
+        while (char.isWhitespace()) {
             position++
         }
 
@@ -187,7 +187,7 @@ private class JLexer(private val input: String) {
 
     private fun readIdentifier(): Token {
         val start = position
-        while (currentChar().isLetter() || currentChar() == '_' || currentChar().isDigit()) {
+        while (char.isLetter() || char == '_' || char.isDigit()) {
             position++
         }
 
@@ -209,7 +209,7 @@ private class JLexer(private val input: String) {
     private fun readString(): Token {
         val start = position
         position++
-        while (currentChar() != '\"' && currentChar() != Char.MIN_VALUE) {
+        while (char != '\"' && char != Char.MIN_VALUE) {
             position++
         }
         position++
@@ -220,7 +220,7 @@ private class JLexer(private val input: String) {
     private fun readChar(): Token {
         val start = position
         position++
-        while (currentChar() != '\'') {
+        while (char != '\'') {
             position++
         }
         position++
@@ -232,9 +232,9 @@ private class JLexer(private val input: String) {
         val start = position
 
         while (
-            currentChar().isDigit() || currentChar() == '_' ||
-            currentChar() == 'L' || currentChar() == 'f' ||
-            currentChar() == '.'
+            char.isDigit() || char == '_' ||
+            char == 'L' || char == 'f' ||
+            char == '.'
         ) {
             position++
         }

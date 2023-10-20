@@ -29,23 +29,26 @@ object KTokens {
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
                 Type.VARIABLE -> token.copy(type = Type.VAR_NAME)
+                Type.DOT -> token.copy(type = Type.PROPERTY)
                 else -> token
             }
 
             //based on next
-            when(modified.type){
-                Type.COLON ->{
+            when (modified.type) {
+                Type.COLON -> {
                     if (prevToken.type == Type.ARGUMENT) {
                         tokens[prevIndex] = prevToken.copy(type = Type.PARAM)
                     }
                 }
+
                 Type.LEFT_PARENTHESES -> {
                     tokens.getOrNull(prevIndex - 1)?.let {
-                        if(it.type == Type.DOT){
+                        if (it.type == Type.DOT) {
                             tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
                         }
                     }
                 }
+
                 else -> Unit
             }
 
@@ -53,7 +56,10 @@ object KTokens {
             prevIndex = tokens.size
             prevToken = modified
 
-            tokens.add(modified)
+            if (modified.type == Type.STRING) {
+                val strTokens = StrTokens(modified.value).tokenize()
+                tokens.addAll(strTokens)
+            } else tokens.add(modified)
             token = lexer.nextToken()
         }
 
