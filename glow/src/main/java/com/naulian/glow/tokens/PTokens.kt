@@ -1,6 +1,7 @@
 package com.naulian.glow.tokens
 
 import com.naulian.anhance.logInfo
+import kotlin.math.min
 
 object PTokens {
     @Suppress("unused")
@@ -191,6 +192,8 @@ private class PLexer(private val input: String) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.STRING, identifier)
     }
@@ -202,6 +205,8 @@ private class PLexer(private val input: String) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.STRING, identifier)
     }

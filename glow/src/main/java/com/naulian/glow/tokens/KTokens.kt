@@ -1,5 +1,7 @@
 package com.naulian.glow.tokens
 
+import kotlin.math.min
+
 object KTokens {
 
     @Suppress("unused")
@@ -201,6 +203,8 @@ private class KLexer(private val input: String) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.STRING, identifier)
     }
@@ -208,10 +212,12 @@ private class KLexer(private val input: String) {
     private fun readChar(): Token {
         val start = position
         position++
-        while (currentChar() != '\'') {
+        while (currentChar() != '\'' && currentChar() != Char.MIN_VALUE) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.CHAR, identifier)
     }

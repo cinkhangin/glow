@@ -1,5 +1,7 @@
 package com.naulian.glow.tokens
 
+import kotlin.math.min
+
 object JTokens {
 
     @Suppress("unused")
@@ -213,6 +215,8 @@ private class JLexer(private val input: String) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.STRING, identifier)
     }
@@ -224,6 +228,8 @@ private class JLexer(private val input: String) {
             position++
         }
         position++
+
+        position = min(position, input.length)
         val identifier = input.substring(start, position)
         return Token(Type.CHAR, identifier)
     }

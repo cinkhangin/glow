@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             textOutput.setCodeTheme(theme.normal)
             readStringAsset(filename) { result ->
-                result.onSuccess {
+                /*result.onSuccess {
                     val source = it
                     textInput.setText(source)
                     val highlighted = glowSyntax(source, language, theme)
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 result.onFailure {
                     textOutput.text = it.message
-                }
+                }*/
             }
 
             textInput.doAfterTextChanged {
