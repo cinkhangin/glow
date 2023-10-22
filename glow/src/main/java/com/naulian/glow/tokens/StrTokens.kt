@@ -1,7 +1,5 @@
 package com.naulian.glow.tokens
 
-import com.naulian.anhance.logDebug
-
 class StrTokens(private val str: String) {
     private val tag = StrTokens::class.java.simpleName
 
@@ -15,7 +13,6 @@ class StrTokens(private val str: String) {
         tokens.clear()
         position = 0
         while (char != Char.MAX_VALUE) {
-            logDebug(tag, char)
             when (char) {
                 '\\' -> readEscapes()
                 '$' -> readInterpolation()

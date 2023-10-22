@@ -1,5 +1,6 @@
 package com.naulian.glow.tokens
 
+import com.naulian.anhance.logDebug
 import kotlin.math.min
 
 object JTokens {
@@ -99,7 +100,7 @@ private class JLexer(private val input: String) {
         "transient", "try", "void", "volatile", "while"
     )
 
-    private val char = if (position < input.length) input[position] else Char.MIN_VALUE
+    private val char get() = if (position < input.length) input[position] else Char.MIN_VALUE
 
     fun nextToken(): Token {
         if (char.isWhitespace()) {
@@ -165,9 +166,11 @@ private class JLexer(private val input: String) {
         do {
             position++
         } while (char != '/' && char != Char.MIN_VALUE)
+
         position++
 
         val identifier = input.substring(start, position)
+        logDebug(identifier)
         return Token(Type.COMMENT_MULTI, identifier)
     }
 
