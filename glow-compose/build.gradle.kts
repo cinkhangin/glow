@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    //`maven-publish`
 }
 
 android {
@@ -76,17 +75,3 @@ dependencies {
     })
     implementation(project(":glow"))
 }
-
-/*
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = "com.naulian"
-                artifactId = "glow_compose"
-                version = "1.0.0-test00"
-            }
-        }
-    }
-}*/
