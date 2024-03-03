@@ -1,18 +1,18 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    `maven-publish`
 }
 
 android {
-    namespace = "com.naulian.glow"
+    namespace = "com.naulian.glow_compose"
     compileSdk = 34
+
     defaultConfig {
-        applicationId = "com.naulian.glow"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -31,22 +31,27 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
 
-    implementation("com.naulian:anhance:2024.1.16")
-
-    implementation(fileTree("libs") {
-        include("*.jar")
-    })
-    implementation(project(":glow"))
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+                groupId = "com.naulian"
+                artifactId = "glow_compose"
+                version = "1.2.1"
+            }
+        }
+    }
 }
