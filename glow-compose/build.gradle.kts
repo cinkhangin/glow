@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    `maven-publish`
+    //`maven-publish`
 }
 
 android {
@@ -77,6 +77,7 @@ dependencies {
     implementation(project(":glow"))
 }
 
+/*
 afterEvaluate {
     publishing {
         publications {
@@ -88,4 +89,4 @@ afterEvaluate {
             }
         }
     }
-}
+}*/
