@@ -26,4 +26,8 @@ val highlighted = glowSyntax(sourceCode, language, CodeTheme.kotlinLight)
 //textView.text = highlighted.raw 
 textView.setCodeTheme(CodeTheme.kotlinLight.normal)
 textView.text = highlighted.spanned
+
+//compose
+val annotatedHighLight = Glow.highlight(sourceCode, language, CodeTheme.kotlinLight)
+Text(text= annotatedHighLight.value)
 ```
