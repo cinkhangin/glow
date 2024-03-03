@@ -2,7 +2,7 @@
 
 # glow 
 A simple syntax highlighter to use with TextView. Kotlin, Java, JavaScript, and Python are Supported.
-[![](https://jitpack.io/v/cinkhangin/glow.svg)](https://jitpack.io/#com.naulian/glow)
+[![](https://jitpack.io/v/com.naulian/glow.svg)](https://jitpack.io/#com.naulian/glow)
 
 [Jitpack](https://jitpack.io/#com.naulian/glow)
 
