@@ -9,26 +9,26 @@ import com.naulian.glow.tokens.KTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow.tokens.Type
 
-private fun color(hex: String): Int {
+fun color(hex: String): Int {
     return android.graphics.Color.parseColor(hex)
 }
 
-private fun String.color(color: String) =
+fun String.color(color: String) =
     "<font color=$color>$this</font>"
 
-private fun String.italic() = "<i>$this</i>"
-private fun String.bold() = "<b>$this</b>"
+fun String.italic() = "<i>$this</i>"
+fun String.bold() = "<b>$this</b>"
 
-private fun String.italic(rex: Regex) =
+fun String.italic(rex: Regex) =
     replace(rex) { it.value.italic() }
 
-private fun String.bold(rex: Regex) =
+fun String.bold(rex: Regex) =
     replace(rex) { it.value.bold() }
 
-private fun String.color(rex: Regex, color: String) =
+fun String.color(rex: Regex, color: String) =
     replace(rex) { it.value.color(color) }
 
-private fun String.color2(rex: Regex, color: String) =
+fun String.color2(rex: Regex, color: String) =
     replace(rex) { "${it.groups[1]?.value} ${it.groups[2]?.value?.color(color)}" }
 
 
