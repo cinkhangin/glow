@@ -2,9 +2,11 @@
 
 # glow 
 A simple syntax highlighter to use with TextView. Kotlin, Java, JavaScript, and Python are Supported.
-[![](https://jitpack.io/v/cinkhangin/glow.svg)](https://jitpack.io/#cinkhangin/glow)
 
-[Jitpack](https://jitpack.io/#cinkhangin/glow)
+
+[Jitpack](https://jitpack.io/#com.naulian/glow)
+
+[![](https://jitpack.io/v/com.naulian/glow.svg)](https://jitpack.io/#com.naulian/glow)
 
 ```groovy
 allprojects {
@@ -14,7 +16,9 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.cinkhangin:glow:1.0.2'
+    implementation 'com.naulian:glow:latest_version'
+    //kotlin dsl
+    implementation("com.naulian:glow:latest_version")
 }
 ```
 
