@@ -48,7 +48,6 @@
             android:id="@+id/composeView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="240dp"
-            android:padding="16dp" />
+            android:minHeight="240dp"/>
     </LinearLayout>
 </ScrollView>

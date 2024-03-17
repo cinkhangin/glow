@@ -1,14 +1,14 @@
+@file:Suppress("unused")
+
 package com.naulian.glow
 
 import android.content.Context
 import com.naulian.anhance.isNightMode
 
+@Suppress("MemberVisibilityCanBePrivate")
 object CodeTheme {
 
-    @Deprecated("Deprecated\nUse CodeTheme.default(context) instead.")
-    val kotlinLight = Theme()
-
-    private val defaultLight = Theme(
+    val defaultLight = Theme(
         background = "#FFFFFF",
         normal = "#000000",
         string = "#067D17",
@@ -20,6 +20,8 @@ object CodeTheme {
         property = "#871094"
     )
 
+    val defaultDark = Theme()
+
     fun default(context: Context) =
-        if (context.isNightMode()) Theme() else defaultLight
+        if (context.isNightMode()) defaultDark else defaultLight
 }

@@ -80,7 +80,7 @@ object Glow {
                     Type.ASSIGNMENT -> theme.normal
                     Type.COMMENT_MULTI -> theme.comment
                     Type.COMMENT_SINGLE -> theme.comment
-                    else -> it.value
+                    else -> theme.normal
                 }.toComposeColor()
 
                 val hlCode = it.value
@@ -115,7 +115,7 @@ object Glow {
                     Type.ASSIGNMENT -> theme.normal
                     Type.COMMENT_MULTI -> theme.comment
                     Type.COMMENT_SINGLE -> theme.comment
-                    else -> it.value
+                    else -> theme.normal
                 }.toComposeColor()
 
                 val hlCode = it.value
@@ -149,7 +149,7 @@ object Glow {
                     Type.STRING -> theme.string
                     Type.ASSIGNMENT -> theme.normal
                     Type.COMMENT_SINGLE -> theme.comment
-                    else -> it.value
+                    else -> theme.normal
                 }.toComposeColor()
 
                 val hlCode = it.value
@@ -189,7 +189,7 @@ object Glow {
                     Type.ESCAPE -> theme.keyword
                     Type.COMMENT_MULTI -> theme.comment
                     Type.COMMENT_SINGLE -> theme.comment
-                    else -> it.value
+                    else -> theme.normal
                 }.toComposeColor()
 
                 val hlCode = it.value
