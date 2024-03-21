@@ -9,7 +9,7 @@ android {
     namespace = "com.naulian.glow"
 
     defaultConfig {
-        minSdk= 26
+        minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -45,6 +45,11 @@ dependencies {
     implementation("com.naulian:anhance:2024.1.16")
 }
 
+val sourceJar by tasks.creating(Jar::class) {
+    from(android.sourceSets["main"])
+    archiveClassifier = "source"
+}
+
 afterEvaluate {
     publishing {
         publications {
@@ -52,7 +57,9 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow"
-                version = "1.3.4"
+                version = "1.3.5"
+
+                artifact(sourceJar)
             }
         }
     }
