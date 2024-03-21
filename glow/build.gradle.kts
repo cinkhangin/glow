@@ -57,7 +57,7 @@ dependencies {
 }*/
 
 val sourceJar by tasks.creating(Jar::class) {
-    from("src/main/kotlin")
+    from("src/main/java")
     archiveClassifier = "source"
 }
 
@@ -68,7 +68,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow"
-                version = "1.3.5"
+                version = "1.3.7"
 
                 artifact(sourceJar)
             }

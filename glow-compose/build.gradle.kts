@@ -77,6 +77,11 @@ dependencies {
     implementation(project(":glow"))
 }
 
+val sourceJar by tasks.creating(Jar::class) {
+    from("src/main/java")
+    archiveClassifier = "source"
+}
+
 afterEvaluate {
     publishing {
         publications {
@@ -84,7 +89,9 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow-compose"
-                version = "1.3.5"
+                version = "1.3.7"
+
+                artifact(sourceJar)
             }
         }
     }
