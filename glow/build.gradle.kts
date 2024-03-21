@@ -46,7 +46,7 @@ dependencies {
 }
 
 val sourceJar by tasks.creating(Jar::class) {
-    from(android.sourceSets["main"])
+    from(android.sourceSets.asMap["main"])
     archiveClassifier = "source"
 }
 
