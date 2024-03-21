@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.cli.jvm.main
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -45,8 +47,17 @@ dependencies {
     implementation("com.naulian:anhance:2024.1.16")
 }
 
+/*kotlin {
+    sourceSets {
+        main {
+            kotlin.srcDir("src/main/kotlin")
+            resources.srcDir("src/main/res")
+        }
+    }
+}*/
+
 val sourceJar by tasks.creating(Jar::class) {
-    from(android.sourceSets.asMap["main"])
+    from("src/main/kotlin")
     archiveClassifier = "source"
 }
 
