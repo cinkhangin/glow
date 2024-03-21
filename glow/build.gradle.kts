@@ -47,18 +47,9 @@ dependencies {
     implementation("com.naulian:anhance:2024.1.16")
 }
 
-/*kotlin {
-    sourceSets {
-        main {
-            kotlin.srcDir("src/main/kotlin")
-            resources.srcDir("src/main/res")
-        }
-    }
-}*/
-
 val sourceJar by tasks.creating(Jar::class) {
     from("src/main/java")
-    archiveClassifier = "source"
+    archiveClassifier = "sources"
 }
 
 afterEvaluate {
@@ -68,7 +59,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow"
-                version = "1.3.7"
+                version = "1.3.8"
 
                 artifact(sourceJar)
             }
