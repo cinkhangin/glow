@@ -9,10 +9,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
 import com.naulian.anhance.logError
 import com.naulian.glow.Theme
-import com.naulian.glow.language.kotlin.tokenizeKt
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.PTokens
+import com.naulian.glow_compose.kotlin.tokenizeKt
 import android.graphics.Color as LegacyColor
 
 val font = FontFamily(Font(R.font.jetbrains_mono))

@@ -5,11 +5,11 @@ package com.naulian.glow_compose
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.naulian.glow.Theme
-import com.naulian.glow.language.kotlin.tokenizeKt
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow.tokens.TxtTokens
+import com.naulian.glow_compose.kotlin.tokenizeKt
 
 fun launchGlowJob(source: String, language: String, theme: Theme): GlowJob {
     return GlowJob().launch(source, language, theme)
