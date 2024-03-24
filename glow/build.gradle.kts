@@ -46,10 +46,14 @@ dependencies {
     implementation(project(":glow-core"))
 }
 
-val sourceJar by tasks.creating(Jar::class) {
-    from("src/main/java")
-    archiveClassifier = "sources"
+android {
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
+
 
 afterEvaluate {
     publishing {
@@ -59,8 +63,6 @@ afterEvaluate {
                 groupId = "com.naulian"
                 artifactId = "glow"
                 version = "1.3.9"
-
-                artifact(sourceJar)
             }
         }
     }
