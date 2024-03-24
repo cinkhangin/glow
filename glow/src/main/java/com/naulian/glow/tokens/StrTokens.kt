@@ -1,5 +1,8 @@
 package com.naulian.glow.tokens
 
+import com.naulian.glow_core.Token
+import com.naulian.glow_core.Type
+
 class StrTokens(private val str: String) {
     private val tag = StrTokens::class.java.simpleName
 

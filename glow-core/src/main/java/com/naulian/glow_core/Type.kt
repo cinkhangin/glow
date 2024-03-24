@@ -1,12 +1,24 @@
-package com.naulian.glow.tokens
+package com.naulian.glow_core
 
 enum class Type {
     NONE,
 
+    //White space
+    NEWLINE,
+    SPACE,
+
+    WORD,
+
+    //Operator
     GT,
     LT,
+
+    //PUNCTUATION
     AT,
     DOT,
+    SINGLE_QUOTE,
+    DOUBLE_QUOTE,
+
     VARIABLE,
     EOF, //End of file
     EOL, //End of line
@@ -57,8 +69,8 @@ enum class Type {
     RIGHT_BRACKET,
     COMMENT_SINGLE,
     COMMENT_MULTI,
-    SLASH_FORWARD,
-    SLASH_BACKWARD,
+    FORWARD_SLASH,
+    BACK_SLASH,
     INTERPOLATION,
     STRING_BRACE
 }

@@ -75,6 +75,7 @@ dependencies {
         include("*.jar")
     })
     implementation(project(":glow"))
+    implementation(project(":glow-core"))
 }
 
 val sourceJar by tasks.creating(Jar::class) {
@@ -89,7 +90,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow-compose"
-                version = "1.3.8"
+                version = "1.3.9"
 
                 artifact(sourceJar)
             }

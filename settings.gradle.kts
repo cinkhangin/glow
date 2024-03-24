@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":glow-compose")
-
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -23,4 +20,7 @@ dependencyResolutionManagement {
 rootProject.name = "Glow"
 include(":app")
 include(":glow")
+include(":glow-core")
+include(":glow-compose")
+
 

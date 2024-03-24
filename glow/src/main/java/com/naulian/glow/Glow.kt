@@ -3,11 +3,11 @@
 package com.naulian.glow
 
 import com.naulian.anhance.html
+import com.naulian.glow.language.kotlin.tokenizeKt
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
-import com.naulian.glow.tokens.KTokens
 import com.naulian.glow.tokens.PTokens
-import com.naulian.glow.tokens.Type
+import com.naulian.glow_core.Type
 
 fun color(hex: String): Int {
     return android.graphics.Color.parseColor(hex)
@@ -168,7 +168,7 @@ object Glow {
     }
 
     fun hlKotlin(input: String, theme: Theme = Theme()): HighLight {
-        val tokens = KTokens.tokenize(input)
+        val tokens = tokenizeKt(input)
 
         val builder = StringBuilder()
         tokens.forEach {

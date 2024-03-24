@@ -1,6 +1,8 @@
 package com.naulian.glow.tokens
 
 import com.naulian.anhance.logInfo
+import com.naulian.glow_core.Token
+import com.naulian.glow_core.Type
 import kotlin.math.min
 
 object PTokens {
@@ -129,7 +131,7 @@ private class PLexer(private val input: String) {
             ';' -> createToken(Type.SEMICOLON, char.toString())
             '+' -> createToken(Type.PLUS, char.toString())
             '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '/' -> createToken(Type.SLASH_FORWARD, char.toString())
+            '/' -> createToken(Type.FORWARD_SLASH, char.toString())
             '[' -> createToken(Type.LEFT_BRACKET, char.toString())
             ']' -> createToken(Type.RIGHT_BRACKET, char.toString())
             '#' -> readComments()

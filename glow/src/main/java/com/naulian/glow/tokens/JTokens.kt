@@ -1,6 +1,8 @@
 package com.naulian.glow.tokens
 
 import com.naulian.anhance.logDebug
+import com.naulian.glow_core.Token
+import com.naulian.glow_core.Type
 import kotlin.math.min
 
 object JTokens {
@@ -138,7 +140,7 @@ private class JLexer(private val input: String) {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.SLASH_FORWARD, c.toString())
+                    else -> createToken(Type.FORWARD_SLASH, c.toString())
                 }
             }
 
