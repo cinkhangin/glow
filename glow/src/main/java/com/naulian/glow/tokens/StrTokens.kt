@@ -37,12 +37,12 @@ class StrTokens(private val str: String) {
 
         val identifier = if (char == Char.MAX_VALUE) str.substring(start)
         else str.substring(start, position)
-        val newToken = Token(Type.ESCAPE, identifier)
+        val newToken = Token(Type.B_SCAPE, identifier)
         tokens.add(newToken)
     }
 
     private fun readInterpolation() {
-        val dollar = Token(Type.ESCAPE, "$")
+        val dollar = Token(Type.B_SCAPE, "$")
         tokens.add(dollar)
         advance()
 

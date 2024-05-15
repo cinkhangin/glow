@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class CoinFlippingGame {
     public static String flipCoin() {
+        HashMap<String, Integer> map = new HashMap<>();
         Random random = new Random();
         int result = random.nextInt(2); // 0 for Heads, 1 for Tails
         return (result == 0) ? "Heads" : "Tails";

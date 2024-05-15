@@ -67,11 +67,11 @@ class GlowJob {
                     Type.VALUE_FLOAT -> theme.number
                     Type.CHAR -> theme.string
                     Type.STRING -> theme.string
-                    Type.ASSIGNMENT -> theme.normal
-                    Type.MCOMMENT -> theme.comment
-                    Type.SCOMMENT -> theme.comment
+                    Type.EQUAL_TO -> theme.normal
+                    Type.M_COMMENT -> theme.comment
+                    Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {
@@ -100,11 +100,11 @@ class GlowJob {
                     Type.VALUE_FLOAT -> theme.number
                     Type.CHAR -> theme.string
                     Type.STRING -> theme.string
-                    Type.ASSIGNMENT -> theme.normal
-                    Type.MCOMMENT -> theme.comment
-                    Type.SCOMMENT -> theme.comment
+                    Type.EQUAL_TO -> theme.normal
+                    Type.M_COMMENT -> theme.comment
+                    Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
 
@@ -133,10 +133,10 @@ class GlowJob {
                     Type.VALUE_LONG -> theme.number
                     Type.VALUE_FLOAT -> theme.number
                     Type.STRING -> theme.string
-                    Type.ASSIGNMENT -> theme.normal
-                    Type.SCOMMENT -> theme.comment
+                    Type.EQUAL_TO -> theme.normal
+                    Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {
@@ -169,12 +169,12 @@ class GlowJob {
                     Type.STRING -> theme.string
                     Type.STRING_BRACE -> theme.keyword
                     Type.INTERPOLATION -> theme.property
-                    Type.ASSIGNMENT -> theme.normal
-                    Type.ESCAPE -> theme.keyword
-                    Type.MCOMMENT -> theme.comment
-                    Type.SCOMMENT -> theme.comment
+                    Type.EQUAL_TO -> theme.normal
+                    Type.B_SCAPE -> theme.keyword
+                    Type.M_COMMENT -> theme.comment
+                    Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {

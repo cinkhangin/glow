@@ -23,8 +23,8 @@ fun tokenizeKt(input: String): List<Token> {
 
         //based on previous
         val modified = when (prevToken.type) {
-            Type.ASSIGNMENT -> numberToken(token)
-            Type.LPAREN -> argumentToken(token)
+            Type.EQUAL_TO -> numberToken(token)
+            Type.L_PAREN -> argumentToken(token)
             Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
             Type.CLASS -> token.copy(type = Type.CLASS_NAME)
             Type.COLON -> token.copy(type = Type.DATA_TYPE)
@@ -41,7 +41,7 @@ fun tokenizeKt(input: String): List<Token> {
                 }
             }
 
-            Type.LPAREN -> {
+            Type.L_PAREN -> {
                 tokens.getOrNull(prevIndex - 1)?.let {
                     if (it.type == Type.DOT) {
                         tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)

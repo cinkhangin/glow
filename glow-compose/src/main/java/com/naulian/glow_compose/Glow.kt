@@ -26,7 +26,7 @@ fun String.toAnnotatedString(): AnnotatedString {
     }
 }
 
-fun String.toComposeColor(): Color {
+fun String.hexToColor(): Color {
     return if (startsWith("#")) {
         val legacyColor = LegacyColor.parseColor(this)
         Color(legacyColor)
@@ -76,11 +76,11 @@ object Glow {
                     com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
                     com.naulian.glow_core.Type.CHAR -> theme.string
                     com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
-                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.EQUAL_TO -> theme.normal
+                    com.naulian.glow_core.Type.M_COMMENT -> theme.comment
+                    com.naulian.glow_core.Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {
@@ -111,11 +111,11 @@ object Glow {
                     com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
                     com.naulian.glow_core.Type.CHAR -> theme.string
                     com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
-                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.EQUAL_TO -> theme.normal
+                    com.naulian.glow_core.Type.M_COMMENT -> theme.comment
+                    com.naulian.glow_core.Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
 
@@ -146,10 +146,10 @@ object Glow {
                     com.naulian.glow_core.Type.VALUE_LONG -> theme.number
                     com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
                     com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.EQUAL_TO -> theme.normal
+                    com.naulian.glow_core.Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {
@@ -184,12 +184,12 @@ object Glow {
                     com.naulian.glow_core.Type.STRING -> theme.string
                     com.naulian.glow_core.Type.STRING_BRACE -> theme.keyword
                     com.naulian.glow_core.Type.INTERPOLATION -> theme.property
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.ESCAPE -> theme.keyword
-                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
-                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.EQUAL_TO -> theme.normal
+                    com.naulian.glow_core.Type.B_SCAPE -> theme.keyword
+                    com.naulian.glow_core.Type.M_COMMENT -> theme.comment
+                    com.naulian.glow_core.Type.S_COMMENT -> theme.comment
                     else -> theme.normal
-                }.toComposeColor()
+                }.hexToColor()
 
                 val hlCode = it.value
                 withStyle(style = spanStyle(color = hlColor)) {

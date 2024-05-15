@@ -22,7 +22,7 @@ class KtLexer(private val input: String) {
         return when (val char = currentChar()) {
             ' ' -> whitespaceToken()
             '\n' -> createToken(Type.NEWLINE, "\n")
-            '*' -> createToken(Type.ASTERISK, char.toString())
+            '*' -> createToken(Type.STAR, char.toString())
             '.' -> createToken(Type.DOT, char.toString())
             '-' -> createToken(Type.DASH, char.toString())
             '@' -> createToken(Type.AT, char.toString())
@@ -31,28 +31,28 @@ class KtLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, char.toString())
             '^' -> createToken(Type.POW, char.toString())
             '&' -> createToken(Type.AND, char.toString())
-            '?' -> createToken(Type.QMARK, char.toString())
+            '?' -> createToken(Type.Q_MARK, char.toString())
             '|' -> createToken(Type.OR, char.toString())
-            '\\' -> createToken(Type.ESCAPE, char.toString())
+            '\\' -> createToken(Type.B_SCAPE, char.toString())
             '!' -> createToken(Type.BANG, char.toString())
-            '{' -> createToken(Type.LBRACE, char.toString())
-            '}' -> createToken(Type.RBRACE, char.toString())
-            '(' -> createToken(Type.LPAREN, char.toString())
-            ')' -> createToken(Type.RPAREN, char.toString())
+            '{' -> createToken(Type.L_BRACE, char.toString())
+            '}' -> createToken(Type.R_BRACE, char.toString())
+            '(' -> createToken(Type.L_PAREN, char.toString())
+            ')' -> createToken(Type.R_PAREN, char.toString())
             ',' -> createToken(Type.COMMA, char.toString())
             ':' -> createToken(Type.COLON, char.toString())
-            '>' -> createToken(Type.GT, "&gt")
-            '<' -> createToken(Type.LT, "&lt")
-            ';' -> createToken(Type.SEMICOLON, char.toString())
+            '>' -> createToken(Type.GT, char.toString())
+            '<' -> createToken(Type.LT, char.toString())
+            ';' -> createToken(Type.S_COLON, char.toString())
             '+' -> createToken(Type.PLUS, char.toString())
-            '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '[' -> createToken(Type.LBRACK, char.toString())
-            ']' -> createToken(Type.RBRACKET, char.toString())
+            '=' -> createToken(Type.EQUAL_TO, char.toString())
+            '[' -> createToken(Type.L_BRACKET, char.toString())
+            ']' -> createToken(Type.R_BRACKET, char.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.FSLASH, char.toString())
+                    else -> createToken(Type.F_SLASH, char.toString())
                 }
             }
 
@@ -72,7 +72,7 @@ class KtLexer(private val input: String) {
         } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
-        return Token(Type.SCOMMENT, identifier)
+        return Token(Type.S_COMMENT, identifier)
     }
 
     private fun lexMultiLineComment(): Token {
@@ -83,7 +83,7 @@ class KtLexer(private val input: String) {
         position++
 
         val identifier = input.substring(start, position)
-        return Token(Type.MCOMMENT, identifier)
+        return Token(Type.M_COMMENT, identifier)
     }
 
 

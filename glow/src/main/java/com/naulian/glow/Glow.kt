@@ -68,7 +68,11 @@ object Glow {
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
-                Type.LT, Type.GT -> it.value.color(theme.normal)
+                Type.LT, Type.GT -> {
+                    it.value.replace(">", "&gt")
+                        .replace("<", "&lt")
+                        .color(theme.normal)
+                }
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.VARIABLE -> it.value.color(theme.keyword)
@@ -83,9 +87,9 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
-                Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.MCOMMENT -> it.value.color(theme.comment)
-                Type.SCOMMENT -> it.value.color(theme.comment)
+                Type.EQUAL_TO -> it.value.color(theme.normal)
+                Type.M_COMMENT -> it.value.color(theme.comment)
+                Type.S_COMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -105,7 +109,12 @@ object Glow {
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
-                Type.LT, Type.GT -> it.value.color(theme.normal)
+                Type.LT, Type.GT -> {
+                    it.value.replace(">", "&gt")
+                        .replace("<", "&lt")
+                        .color(theme.normal)
+                }
+
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
@@ -118,9 +127,9 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
-                Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.MCOMMENT -> it.value.color(theme.comment)
-                Type.SCOMMENT -> it.value.color(theme.comment)
+                Type.EQUAL_TO -> it.value.color(theme.normal)
+                Type.M_COMMENT -> it.value.color(theme.comment)
+                Type.S_COMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -140,7 +149,11 @@ object Glow {
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
-                Type.LT, Type.GT -> it.value.color(theme.normal)
+                Type.LT, Type.GT -> {
+                    it.value.replace(">", "&gt")
+                        .replace("<", "&lt")
+                        .color(theme.normal)
+                }
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.CLASS -> it.value.color(theme.keyword)
@@ -152,8 +165,8 @@ object Glow {
                 Type.VALUE_LONG -> it.value.color(theme.number)
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.STRING -> it.value.color(theme.string)
-                Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.SCOMMENT -> it.value.color(theme.comment)
+                Type.EQUAL_TO -> it.value.color(theme.normal)
+                Type.S_COMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -173,7 +186,11 @@ object Glow {
         val builder = StringBuilder()
         tokens.forEach {
             val code = when (it.type) {
-                Type.LT, Type.GT -> it.value.color(theme.normal)
+                Type.LT, Type.GT -> {
+                    it.value.replace(">", "&gt")
+                        .replace("<", "&lt")
+                        .color(theme.normal)
+                }
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
@@ -190,10 +207,10 @@ object Glow {
                 Type.STRING -> it.value.color(theme.string)
                 Type.STRING_BRACE -> it.value.color(theme.keyword)
                 Type.INTERPOLATION -> it.value.color(theme.property)
-                Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.ESCAPE -> it.value.color(theme.keyword)
-                Type.MCOMMENT -> it.value.color(theme.comment)
-                Type.SCOMMENT -> it.value.color(theme.comment)
+                Type.EQUAL_TO -> it.value.color(theme.normal)
+                Type.B_SCAPE -> it.value.color(theme.keyword)
+                Type.M_COMMENT -> it.value.color(theme.comment)
+                Type.S_COMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)

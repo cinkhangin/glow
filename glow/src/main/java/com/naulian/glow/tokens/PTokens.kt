@@ -38,8 +38,8 @@ object PTokens {
 
             //based on previous
             val modified = when (prevToken.type) {
-                Type.ASSIGNMENT -> numberToken(token)
-                Type.LPAREN -> argumentToken(token)
+                Type.EQUAL_TO -> numberToken(token)
+                Type.L_PAREN -> argumentToken(token)
                 Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
@@ -55,7 +55,7 @@ object PTokens {
                         tokens[prevIndex] = prevToken.copy(type = Type.PARAM)
                     }
                 }
-                Type.LPAREN -> {
+                Type.L_PAREN -> {
                     tokens.getOrNull(prevIndex - 1)?.let {
                         if(it.type == Type.DOT){
                             tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
@@ -108,7 +108,7 @@ private class PLexer(private val input: String) {
         }
 
         return when (val char = currentChar()) {
-            '*' -> createToken(Type.ASTERISK, char.toString())
+            '*' -> createToken(Type.STAR, char.toString())
             '.' -> createToken(Type.DOT, char.toString())
             '-' -> createToken(Type.DASH, char.toString())
             '@' -> createToken(Type.AT, char.toString())
@@ -116,24 +116,24 @@ private class PLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, char.toString())
             '^' -> createToken(Type.POW, char.toString())
             '&' -> createToken(Type.AND, char.toString())
-            '?' -> createToken(Type.QMARK, char.toString())
+            '?' -> createToken(Type.Q_MARK, char.toString())
             '|' -> createToken(Type.OR, char.toString())
-            '\\' -> createToken(Type.ESCAPE, char.toString())
+            '\\' -> createToken(Type.B_SCAPE, char.toString())
             '!' -> createToken(Type.BANG, char.toString())
-            '{' -> createToken(Type.LBRACE, char.toString())
-            '}' -> createToken(Type.RBRACE, char.toString())
-            '(' -> createToken(Type.LPAREN, char.toString())
-            ')' -> createToken(Type.RPAREN, char.toString())
+            '{' -> createToken(Type.L_BRACE, char.toString())
+            '}' -> createToken(Type.R_BRACE, char.toString())
+            '(' -> createToken(Type.L_PAREN, char.toString())
+            ')' -> createToken(Type.R_PAREN, char.toString())
             ',' -> createToken(Type.COMMA, char.toString())
             ':' -> createToken(Type.COLON, char.toString())
-            '>' -> createToken(Type.GT, "&gt")
-            '<' -> createToken(Type.LT, "&lt")
-            ';' -> createToken(Type.SEMICOLON, char.toString())
+            '>' -> createToken(Type.GT, char.toString())
+            '<' -> createToken(Type.LT, char.toString())
+            ';' -> createToken(Type.S_COLON, char.toString())
             '+' -> createToken(Type.PLUS, char.toString())
-            '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '/' -> createToken(Type.FSLASH, char.toString())
-            '[' -> createToken(Type.LBRACK, char.toString())
-            ']' -> createToken(Type.RBRACKET, char.toString())
+            '=' -> createToken(Type.EQUAL_TO, char.toString())
+            '/' -> createToken(Type.F_SLASH, char.toString())
+            '[' -> createToken(Type.L_BRACKET, char.toString())
+            ']' -> createToken(Type.R_BRACKET, char.toString())
             '#' -> readComments()
             '\'' -> readSingleQString()
             '\"' -> readDoubleQString()
@@ -151,7 +151,7 @@ private class PLexer(private val input: String) {
         } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
-        return Token(Type.SCOMMENT, identifier)
+        return Token(Type.S_COMMENT, identifier)
     }
 
     private fun createToken(type: Type, value: String): Token {

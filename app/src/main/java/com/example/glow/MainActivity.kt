@@ -15,7 +15,7 @@ import com.naulian.glow.CodeTheme
 import com.naulian.glow.glowSyntax
 import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
-import com.naulian.glow_compose.toComposeColor
+import com.naulian.glow_compose.hexToColor
 
 class MainActivity : AppCompatActivity() {
     @Suppress("unused")
@@ -27,24 +27,25 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val filename = "sample.kt"
-        val language = "kt"
-        val theme = CodeTheme.defaultDark
+        val filename = "sample.java"
+        val language = "java"
+        val lightTheme = CodeTheme.defaultLight
+        val darkTheme = CodeTheme.defaultDark
 
         binding.apply {
-            textOutput.setCodeTheme(theme.normal)
+            textOutput.setCodeTheme(lightTheme.normal)
             readStringAsset(filename) { result ->
-                result.onSuccess {
-                    val source = it
+                result.onSuccess { source ->
                     textInput.setText(source)
-                    val highlighted = glowSyntax(source, language, theme)
+                    val highlighted = glowSyntax(source, language, lightTheme)
                     textSource.text = highlighted.raw
                     textOutput.text = highlighted.spanned
 
-                    val highLightedCompose = Glow.highlight(source, language, theme)
+                    val highLightedCompose = Glow.highlight(source, language, darkTheme)
+
                     composeView.setContent {
                         LazyRow(modifier = Modifier
-                            .background(theme.background.toComposeColor())
+                            .background(darkTheme.background.hexToColor())
                             .padding(16.dp)) {
                             item { Text(text = highLightedCompose.value) }
                         }
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 /*val strTokens = StrTokens(text).tokenize()
                 textSource.text = strTokens.toString()*/
 
-                val highlighted = glowSyntax(text, language, theme)
+                val highlighted = glowSyntax(text, language, lightTheme)
                 textSource.text = highlighted.raw
                 textOutput.text = highlighted.spanned
             }

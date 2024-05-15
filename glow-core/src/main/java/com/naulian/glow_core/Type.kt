@@ -1,22 +1,22 @@
 package com.naulian.glow_core
 
 enum class Type {
-    NONE,
-
-    //White space
+    //BaseTypes
+    SPACE,
+    SYMBOL,
     NEWLINE,
+    STRING,
+    NUMBER,
 
+    //Other
+    NONE,
     WORD,
-
-    //Operator
     GT,
     LT,
-
-    //PUNCTUATION
     AT,
     DOT,
-    SQUOTE,
-    DQUOTE,
+    S_QUOTE,
+    D_QUOTE,
 
     VARIABLE,
     EOF, //End of file
@@ -28,27 +28,24 @@ enum class Type {
     HASH,
     DOLLAR,
     MODULO,
-    QMARK,
+    Q_MARK,
     POW,
     AND,
     OR,
-    ESCAPE,
+    B_SCAPE,
     PARAM,
-    ASTERISK,
+    STAR,
     ARGUMENT,
-    SPACE,
-    ASSIGNMENT,
+    EQUAL_TO,
     PROPERTY,
     CLASS,
     COMMA,
     COLON,
-    STRING,
-    NUMBER,
     ILLEGAL,
     KEYWORD,
     FUNCTION,
     VAR_NAME,
-    SEMICOLON,
+    S_COLON,
     FUNC_NAME,
     FUNC_CALL,
 
@@ -56,20 +53,20 @@ enum class Type {
     VALUE_LONG,
     VALUE_FLOAT,
 
-    //    FUNC_CALL,
+    //FUNC_CALL,
     DATA_TYPE,
     CLASS_NAME,
     IDENTIFIER,
-    LBRACE,
-    RBRACE,
-    LPAREN,
-    RPAREN,
-    LBRACK,
-    RBRACKET,
-    SCOMMENT,
-    MCOMMENT,
-    FSLASH,
-    BSLASH,
+    L_BRACE,
+    R_BRACE,
+    L_PAREN,
+    R_PAREN,
+    L_BRACKET,
+    R_BRACKET,
+    S_COMMENT,
+    M_COMMENT,
+    F_SLASH,
+    B_SLASH,
     INTERPOLATION,
     STRING_BRACE
 }

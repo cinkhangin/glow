@@ -77,4 +77,5 @@ dependencies {
 
     implementation(project(":glow"))
     implementation(project(":glow-compose"))
+    implementation(project(":glow-core"))
 }
