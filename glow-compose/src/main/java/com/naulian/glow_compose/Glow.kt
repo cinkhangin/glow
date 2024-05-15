@@ -77,8 +77,8 @@ object Glow {
                     com.naulian.glow_core.Type.CHAR -> theme.string
                     com.naulian.glow_core.Type.STRING -> theme.string
                     com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -112,8 +112,8 @@ object Glow {
                     com.naulian.glow_core.Type.CHAR -> theme.string
                     com.naulian.glow_core.Type.STRING -> theme.string
                     com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -147,7 +147,7 @@ object Glow {
                     com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
                     com.naulian.glow_core.Type.STRING -> theme.string
                     com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -186,8 +186,8 @@ object Glow {
                     com.naulian.glow_core.Type.INTERPOLATION -> theme.property
                     com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
                     com.naulian.glow_core.Type.ESCAPE -> theme.keyword
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    com.naulian.glow_core.Type.MCOMMENT -> theme.comment
+                    com.naulian.glow_core.Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 

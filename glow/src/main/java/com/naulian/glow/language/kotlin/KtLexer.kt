@@ -31,14 +31,14 @@ class KtLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, char.toString())
             '^' -> createToken(Type.POW, char.toString())
             '&' -> createToken(Type.AND, char.toString())
-            '?' -> createToken(Type.QUESTION_MARK, char.toString())
+            '?' -> createToken(Type.QMARK, char.toString())
             '|' -> createToken(Type.OR, char.toString())
             '\\' -> createToken(Type.ESCAPE, char.toString())
             '!' -> createToken(Type.BANG, char.toString())
-            '{' -> createToken(Type.LEFT_BRACE, char.toString())
-            '}' -> createToken(Type.RIGHT_BRACE, char.toString())
-            '(' -> createToken(Type.LEFT_PARENTHESES, char.toString())
-            ')' -> createToken(Type.RIGHT_PARENTHESES, char.toString())
+            '{' -> createToken(Type.LBRACE, char.toString())
+            '}' -> createToken(Type.RBRACE, char.toString())
+            '(' -> createToken(Type.LPAREN, char.toString())
+            ')' -> createToken(Type.RPAREN, char.toString())
             ',' -> createToken(Type.COMMA, char.toString())
             ':' -> createToken(Type.COLON, char.toString())
             '>' -> createToken(Type.GT, "&gt")
@@ -46,13 +46,13 @@ class KtLexer(private val input: String) {
             ';' -> createToken(Type.SEMICOLON, char.toString())
             '+' -> createToken(Type.PLUS, char.toString())
             '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '[' -> createToken(Type.LEFT_BRACKET, char.toString())
-            ']' -> createToken(Type.RIGHT_BRACKET, char.toString())
+            '[' -> createToken(Type.LBRACK, char.toString())
+            ']' -> createToken(Type.RBRACKET, char.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.FORWARD_SLASH, char.toString())
+                    else -> createToken(Type.FSLASH, char.toString())
                 }
             }
 
@@ -72,7 +72,7 @@ class KtLexer(private val input: String) {
         } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
-        return Token(Type.COMMENT_SINGLE, identifier)
+        return Token(Type.SCOMMENT, identifier)
     }
 
     private fun lexMultiLineComment(): Token {
@@ -83,7 +83,7 @@ class KtLexer(private val input: String) {
         position++
 
         val identifier = input.substring(start, position)
-        return Token(Type.COMMENT_MULTI, identifier)
+        return Token(Type.MCOMMENT, identifier)
     }
 
 

@@ -19,7 +19,7 @@ object JsTokens {
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
             //logDebug(TAG, token)
 
-            if (token.type == Type.WHITE_SPACE) {
+            if (token.type == Type.SPACE) {
                 tokens.add(token)
                 token = lexer.nextToken()
                 continue
@@ -28,7 +28,7 @@ object JsTokens {
             //based on previous
             val modified = when (prevToken.type) {
                 Type.ASSIGNMENT -> numberToken(token)
-                Type.LEFT_PARENTHESES -> argumentToken(token)
+                Type.LPAREN -> argumentToken(token)
                 Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
@@ -44,7 +44,7 @@ object JsTokens {
                     }
                 }
 
-                Type.LEFT_PARENTHESES -> {
+                Type.LPAREN -> {
                     tokens.getOrNull(prevIndex - 1)?.let {
                         if (it.type == Type.DOT) {
                             tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
@@ -105,14 +105,14 @@ private class JsLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, char.toString())
             '^' -> createToken(Type.POW, char.toString())
             '&' -> createToken(Type.AND, char.toString())
-            '?' -> createToken(Type.QUESTION_MARK, char.toString())
+            '?' -> createToken(Type.QMARK, char.toString())
             '|' -> createToken(Type.OR, char.toString())
             '\\' -> createToken(Type.ESCAPE, char.toString())
             '!' -> createToken(Type.BANG, char.toString())
-            '{' -> createToken(Type.LEFT_BRACE, char.toString())
-            '}' -> createToken(Type.RIGHT_BRACE, char.toString())
-            '(' -> createToken(Type.LEFT_PARENTHESES, char.toString())
-            ')' -> createToken(Type.RIGHT_PARENTHESES, char.toString())
+            '{' -> createToken(Type.LBRACE, char.toString())
+            '}' -> createToken(Type.RBRACE, char.toString())
+            '(' -> createToken(Type.LPAREN, char.toString())
+            ')' -> createToken(Type.RPAREN, char.toString())
             ',' -> createToken(Type.COMMA, char.toString())
             ':' -> createToken(Type.COLON, char.toString())
             '>' -> createToken(Type.GT, "&gt")
@@ -120,13 +120,13 @@ private class JsLexer(private val input: String) {
             ';' -> createToken(Type.SEMICOLON, char.toString())
             '+' -> createToken(Type.PLUS, char.toString())
             '=' -> createToken(Type.ASSIGNMENT, char.toString())
-            '[' -> createToken(Type.LEFT_BRACKET, char.toString())
-            ']' -> createToken(Type.RIGHT_BRACKET, char.toString())
+            '[' -> createToken(Type.LBRACK, char.toString())
+            ']' -> createToken(Type.RBRACKET, char.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.FORWARD_SLASH, char.toString())
+                    else -> createToken(Type.FSLASH, char.toString())
                 }
             }
 
@@ -147,7 +147,7 @@ private class JsLexer(private val input: String) {
         } while (currentChar() != '\n' && currentChar() != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
-        return Token(Type.COMMENT_SINGLE, identifier)
+        return Token(Type.SCOMMENT, identifier)
     }
 
     private fun lexMultiLineComment(): Token {
@@ -158,7 +158,7 @@ private class JsLexer(private val input: String) {
         position++
 
         val identifier = input.substring(start, position)
-        return Token(Type.COMMENT_MULTI, identifier)
+        return Token(Type.MCOMMENT, identifier)
     }
 
 
@@ -174,7 +174,7 @@ private class JsLexer(private val input: String) {
         }
 
         val indentifier = input.substring(start, position)
-        return Token(Type.WHITE_SPACE, indentifier)
+        return Token(Type.SPACE, indentifier)
     }
 
     private fun readIdentifier(): Token {

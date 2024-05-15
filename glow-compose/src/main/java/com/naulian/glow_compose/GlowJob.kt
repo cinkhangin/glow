@@ -10,13 +10,15 @@ import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow.tokens.TxtTokens
 import com.naulian.glow_compose.kotlin.tokenizeKt
+import com.naulian.glow_core.Token
+import com.naulian.glow_core.Type
 
 fun launchGlowJob(source: String, language: String, theme: Theme): GlowJob {
     return GlowJob().launch(source, language, theme)
 }
 
 class GlowJob {
-    private var _tokens = emptyList<com.naulian.glow_core.Token>()
+    private var _tokens = emptyList<Token>()
     val tokens get() = _tokens
 
     private var _highLight = HighLight(value = buildAnnotatedString { })
@@ -50,24 +52,24 @@ class GlowJob {
         val builder = buildAnnotatedString {
             tokens.forEach {
                 val hlColor = when (it.type) {
-                    com.naulian.glow_core.Type.LT, com.naulian.glow_core.Type.GT -> theme.normal
-                    com.naulian.glow_core.Type.KEYWORD -> theme.keyword
-                    com.naulian.glow_core.Type.PROPERTY -> theme.property
-                    com.naulian.glow_core.Type.VARIABLE -> theme.keyword
-                    com.naulian.glow_core.Type.VAR_NAME -> theme.variable
-                    com.naulian.glow_core.Type.CLASS -> theme.keyword
-                    com.naulian.glow_core.Type.FUNCTION -> theme.keyword
-                    com.naulian.glow_core.Type.FUNC_NAME -> theme.method
-                    com.naulian.glow_core.Type.FUNC_CALL -> theme.method
-                    com.naulian.glow_core.Type.NUMBER -> theme.number
-                    com.naulian.glow_core.Type.VALUE_INT -> theme.number
-                    com.naulian.glow_core.Type.VALUE_LONG -> theme.number
-                    com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
-                    com.naulian.glow_core.Type.CHAR -> theme.string
-                    com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    Type.LT, Type.GT -> theme.normal
+                    Type.KEYWORD -> theme.keyword
+                    Type.PROPERTY -> theme.property
+                    Type.VARIABLE -> theme.keyword
+                    Type.VAR_NAME -> theme.variable
+                    Type.CLASS -> theme.keyword
+                    Type.FUNCTION -> theme.keyword
+                    Type.FUNC_NAME -> theme.method
+                    Type.FUNC_CALL -> theme.method
+                    Type.NUMBER -> theme.number
+                    Type.VALUE_INT -> theme.number
+                    Type.VALUE_LONG -> theme.number
+                    Type.VALUE_FLOAT -> theme.number
+                    Type.CHAR -> theme.string
+                    Type.STRING -> theme.string
+                    Type.ASSIGNMENT -> theme.normal
+                    Type.MCOMMENT -> theme.comment
+                    Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -85,22 +87,22 @@ class GlowJob {
         val builder = buildAnnotatedString {
             tokens.forEach {
                 val hlColor = when (it.type) {
-                    com.naulian.glow_core.Type.LT, com.naulian.glow_core.Type.GT -> theme.normal
-                    com.naulian.glow_core.Type.KEYWORD -> theme.keyword
-                    com.naulian.glow_core.Type.VARIABLE -> theme.keyword
-                    com.naulian.glow_core.Type.VAR_NAME -> theme.variable
-                    com.naulian.glow_core.Type.CLASS -> theme.keyword
-                    com.naulian.glow_core.Type.FUNCTION -> theme.keyword
-                    com.naulian.glow_core.Type.FUNC_NAME -> theme.method
-                    com.naulian.glow_core.Type.NUMBER -> theme.number
-                    com.naulian.glow_core.Type.VALUE_INT -> theme.number
-                    com.naulian.glow_core.Type.VALUE_LONG -> theme.number
-                    com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
-                    com.naulian.glow_core.Type.CHAR -> theme.string
-                    com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    Type.LT, Type.GT -> theme.normal
+                    Type.KEYWORD -> theme.keyword
+                    Type.VARIABLE -> theme.keyword
+                    Type.VAR_NAME -> theme.variable
+                    Type.CLASS -> theme.keyword
+                    Type.FUNCTION -> theme.keyword
+                    Type.FUNC_NAME -> theme.method
+                    Type.NUMBER -> theme.number
+                    Type.VALUE_INT -> theme.number
+                    Type.VALUE_LONG -> theme.number
+                    Type.VALUE_FLOAT -> theme.number
+                    Type.CHAR -> theme.string
+                    Type.STRING -> theme.string
+                    Type.ASSIGNMENT -> theme.normal
+                    Type.MCOMMENT -> theme.comment
+                    Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -119,20 +121,20 @@ class GlowJob {
         val builder = buildAnnotatedString {
             tokens.forEach {
                 val hlColor = when (it.type) {
-                    com.naulian.glow_core.Type.LT, com.naulian.glow_core.Type.GT -> theme.normal
-                    com.naulian.glow_core.Type.KEYWORD -> theme.keyword
-                    com.naulian.glow_core.Type.PROPERTY -> theme.property
-                    com.naulian.glow_core.Type.CLASS -> theme.keyword
-                    com.naulian.glow_core.Type.FUNCTION -> theme.keyword
-                    com.naulian.glow_core.Type.FUNC_NAME -> theme.method
-                    com.naulian.glow_core.Type.FUNC_CALL -> theme.method
-                    com.naulian.glow_core.Type.NUMBER -> theme.number
-                    com.naulian.glow_core.Type.VALUE_INT -> theme.number
-                    com.naulian.glow_core.Type.VALUE_LONG -> theme.number
-                    com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
-                    com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    Type.LT, Type.GT -> theme.normal
+                    Type.KEYWORD -> theme.keyword
+                    Type.PROPERTY -> theme.property
+                    Type.CLASS -> theme.keyword
+                    Type.FUNCTION -> theme.keyword
+                    Type.FUNC_NAME -> theme.method
+                    Type.FUNC_CALL -> theme.method
+                    Type.NUMBER -> theme.number
+                    Type.VALUE_INT -> theme.number
+                    Type.VALUE_LONG -> theme.number
+                    Type.VALUE_FLOAT -> theme.number
+                    Type.STRING -> theme.string
+                    Type.ASSIGNMENT -> theme.normal
+                    Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 
@@ -150,27 +152,27 @@ class GlowJob {
         val builder = buildAnnotatedString {
             tokens.forEach {
                 val hlColor = when (it.type) {
-                    com.naulian.glow_core.Type.LT, com.naulian.glow_core.Type.GT -> theme.normal
-                    com.naulian.glow_core.Type.KEYWORD -> theme.keyword
-                    com.naulian.glow_core.Type.VARIABLE -> theme.keyword
-                    com.naulian.glow_core.Type.VAR_NAME -> theme.variable
-                    com.naulian.glow_core.Type.CLASS -> theme.keyword
-                    com.naulian.glow_core.Type.FUNCTION -> theme.keyword
-                    com.naulian.glow_core.Type.FUNC_NAME -> theme.method
-                    com.naulian.glow_core.Type.FUNC_CALL -> theme.method
-                    com.naulian.glow_core.Type.NUMBER -> theme.number
-                    com.naulian.glow_core.Type.VALUE_INT -> theme.number
-                    com.naulian.glow_core.Type.VALUE_LONG -> theme.number
-                    com.naulian.glow_core.Type.VALUE_FLOAT -> theme.number
-                    com.naulian.glow_core.Type.CHAR -> theme.string
-                    com.naulian.glow_core.Type.PROPERTY -> theme.property
-                    com.naulian.glow_core.Type.STRING -> theme.string
-                    com.naulian.glow_core.Type.STRING_BRACE -> theme.keyword
-                    com.naulian.glow_core.Type.INTERPOLATION -> theme.property
-                    com.naulian.glow_core.Type.ASSIGNMENT -> theme.normal
-                    com.naulian.glow_core.Type.ESCAPE -> theme.keyword
-                    com.naulian.glow_core.Type.COMMENT_MULTI -> theme.comment
-                    com.naulian.glow_core.Type.COMMENT_SINGLE -> theme.comment
+                    Type.LT, Type.GT -> theme.normal
+                    Type.KEYWORD -> theme.keyword
+                    Type.VARIABLE -> theme.keyword
+                    Type.VAR_NAME -> theme.variable
+                    Type.CLASS -> theme.keyword
+                    Type.FUNCTION -> theme.keyword
+                    Type.FUNC_NAME -> theme.method
+                    Type.FUNC_CALL -> theme.method
+                    Type.NUMBER -> theme.number
+                    Type.VALUE_INT -> theme.number
+                    Type.VALUE_LONG -> theme.number
+                    Type.VALUE_FLOAT -> theme.number
+                    Type.CHAR -> theme.string
+                    Type.PROPERTY -> theme.property
+                    Type.STRING -> theme.string
+                    Type.STRING_BRACE -> theme.keyword
+                    Type.INTERPOLATION -> theme.property
+                    Type.ASSIGNMENT -> theme.normal
+                    Type.ESCAPE -> theme.keyword
+                    Type.MCOMMENT -> theme.comment
+                    Type.SCOMMENT -> theme.comment
                     else -> theme.normal
                 }.toComposeColor()
 

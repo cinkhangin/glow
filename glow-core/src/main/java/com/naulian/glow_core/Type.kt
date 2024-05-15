@@ -5,7 +5,6 @@ enum class Type {
 
     //White space
     NEWLINE,
-    SPACE,
 
     WORD,
 
@@ -16,8 +15,8 @@ enum class Type {
     //PUNCTUATION
     AT,
     DOT,
-    SINGLE_QUOTE,
-    DOUBLE_QUOTE,
+    SQUOTE,
+    DQUOTE,
 
     VARIABLE,
     EOF, //End of file
@@ -29,7 +28,7 @@ enum class Type {
     HASH,
     DOLLAR,
     MODULO,
-    QUESTION_MARK,
+    QMARK,
     POW,
     AND,
     OR,
@@ -37,7 +36,7 @@ enum class Type {
     PARAM,
     ASTERISK,
     ARGUMENT,
-    WHITE_SPACE,
+    SPACE,
     ASSIGNMENT,
     PROPERTY,
     CLASS,
@@ -61,16 +60,16 @@ enum class Type {
     DATA_TYPE,
     CLASS_NAME,
     IDENTIFIER,
-    LEFT_BRACE,
-    RIGHT_BRACE,
-    LEFT_PARENTHESES,
-    RIGHT_PARENTHESES,
-    LEFT_BRACKET,
-    RIGHT_BRACKET,
-    COMMENT_SINGLE,
-    COMMENT_MULTI,
-    FORWARD_SLASH,
-    BACK_SLASH,
+    LBRACE,
+    RBRACE,
+    LPAREN,
+    RPAREN,
+    LBRACK,
+    RBRACKET,
+    SCOMMENT,
+    MCOMMENT,
+    FSLASH,
+    BSLASH,
     INTERPOLATION,
     STRING_BRACE
 }

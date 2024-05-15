@@ -1,4 +1,4 @@
-package com.naulian.glow
+package com.example.glow
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.widget.doAfterTextChanged
+import com.example.glow.databinding.ActivityMainBinding
 import com.naulian.anhance.readStringAsset
-import com.naulian.glow.databinding.ActivityMainBinding
+import com.naulian.glow.CodeTheme
+import com.naulian.glow.glowSyntax
+import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.toComposeColor
 
@@ -40,7 +43,9 @@ class MainActivity : AppCompatActivity() {
 
                     val highLightedCompose = Glow.highlight(source, language, theme)
                     composeView.setContent {
-                        LazyRow(modifier = Modifier.background(theme.background.toComposeColor()).padding(16.dp)) {
+                        LazyRow(modifier = Modifier
+                            .background(theme.background.toComposeColor())
+                            .padding(16.dp)) {
                             item { Text(text = highLightedCompose.value) }
                         }
                     }

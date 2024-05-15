@@ -20,7 +20,7 @@ object JTokens {
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
             //logDebug(TAG, token)
 
-            if (token.type == Type.WHITE_SPACE) {
+            if (token.type == Type.SPACE) {
                 tokens.add(token)
                 token = lexer.nextToken()
                 continue
@@ -29,7 +29,7 @@ object JTokens {
             //based on previous
             val modified = when (prevToken.type) {
                 Type.ASSIGNMENT -> numberToken(token)
-                Type.LEFT_PARENTHESES -> argumentToken(token)
+                Type.LPAREN -> argumentToken(token)
                 Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
                 Type.CLASS -> token.copy(type = Type.CLASS_NAME)
                 Type.COLON -> token.copy(type = Type.DATA_TYPE)
@@ -46,7 +46,7 @@ object JTokens {
                     }
                 }
 
-                Type.LEFT_PARENTHESES -> {
+                Type.LPAREN -> {
                     if (prevToken.type == Type.VAR_NAME) {
                         tokens[prevIndex] = prevToken.copy(type = Type.FUNC_NAME)
                     }
@@ -58,9 +58,9 @@ object JTokens {
                     }
                 }
 
-                Type.RIGHT_BRACKET -> {
+                Type.RBRACKET -> {
                     if (prevToken.type == Type.VAR_NAME) {
-                        tokens[prevIndex] = prevToken.copy(type = Type.LEFT_BRACKET)
+                        tokens[prevIndex] = prevToken.copy(type = Type.LBRACK)
                     }
                 }
 
@@ -119,14 +119,14 @@ private class JLexer(private val input: String) {
             '%' -> createToken(Type.MODULO, c.toString())
             '^' -> createToken(Type.POW, c.toString())
             '&' -> createToken(Type.AND, c.toString())
-            '?' -> createToken(Type.QUESTION_MARK, c.toString())
+            '?' -> createToken(Type.QMARK, c.toString())
             '|' -> createToken(Type.OR, c.toString())
             '\\' -> createToken(Type.ESCAPE, c.toString())
             '!' -> createToken(Type.BANG, c.toString())
-            '{' -> createToken(Type.LEFT_BRACE, c.toString())
-            '}' -> createToken(Type.RIGHT_BRACE, c.toString())
-            '(' -> createToken(Type.LEFT_PARENTHESES, c.toString())
-            ')' -> createToken(Type.RIGHT_PARENTHESES, c.toString())
+            '{' -> createToken(Type.LBRACE, c.toString())
+            '}' -> createToken(Type.RBRACE, c.toString())
+            '(' -> createToken(Type.LPAREN, c.toString())
+            ')' -> createToken(Type.RPAREN, c.toString())
             ',' -> createToken(Type.COMMA, c.toString())
             ':' -> createToken(Type.COLON, c.toString())
             '>' -> createToken(Type.GT, "&gt")
@@ -134,13 +134,13 @@ private class JLexer(private val input: String) {
             ';' -> createToken(Type.SEMICOLON, c.toString())
             '+' -> createToken(Type.PLUS, c.toString())
             '=' -> createToken(Type.ASSIGNMENT, c.toString())
-            '[' -> createToken(Type.LEFT_BRACKET, c.toString())
-            ']' -> createToken(Type.RIGHT_BRACKET, c.toString())
+            '[' -> createToken(Type.LBRACK, c.toString())
+            ']' -> createToken(Type.RBRACKET, c.toString())
             '/' -> {
                 when (input[position + 1]) {
                     '/' -> lexSingleLineComment()
                     '*' -> lexMultiLineComment()
-                    else -> createToken(Type.FORWARD_SLASH, c.toString())
+                    else -> createToken(Type.FSLASH, c.toString())
                 }
             }
 
@@ -160,7 +160,7 @@ private class JLexer(private val input: String) {
         } while (char != '\n' && char != Char.MIN_VALUE)
 
         val identifier = input.substring(start, position)
-        return Token(Type.COMMENT_SINGLE, identifier)
+        return Token(Type.SCOMMENT, identifier)
     }
 
     private fun lexMultiLineComment(): Token {
@@ -173,7 +173,7 @@ private class JLexer(private val input: String) {
 
         val identifier = input.substring(start, position)
         logDebug(identifier)
-        return Token(Type.COMMENT_MULTI, identifier)
+        return Token(Type.MCOMMENT, identifier)
     }
 
 
@@ -189,7 +189,7 @@ private class JLexer(private val input: String) {
         }
 
         val indentifier = input.substring(start, position)
-        return Token(Type.WHITE_SPACE, indentifier)
+        return Token(Type.SPACE, indentifier)
     }
 
     private fun readIdentifier(): Token {

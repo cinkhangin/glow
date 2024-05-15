@@ -15,7 +15,7 @@ fun tokenizeKt(input: String): List<Token> {
     while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
         //logDebug(TAG, token)
 
-        if (token.type == Type.WHITE_SPACE) {
+        if (token.type == Type.SPACE) {
             tokens.add(token)
             token = lexer.nextToken()
             continue
@@ -24,7 +24,7 @@ fun tokenizeKt(input: String): List<Token> {
         //based on previous
         val modified = when (prevToken.type) {
             Type.ASSIGNMENT -> numberToken(token)
-            Type.LEFT_PARENTHESES -> argumentToken(token)
+            Type.LPAREN -> argumentToken(token)
             Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
             Type.CLASS -> token.copy(type = Type.CLASS_NAME)
             Type.COLON -> token.copy(type = Type.DATA_TYPE)
@@ -41,7 +41,7 @@ fun tokenizeKt(input: String): List<Token> {
                 }
             }
 
-            Type.LEFT_PARENTHESES -> {
+            Type.LPAREN -> {
                 tokens.getOrNull(prevIndex - 1)?.let {
                     if (it.type == Type.DOT) {
                         tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)

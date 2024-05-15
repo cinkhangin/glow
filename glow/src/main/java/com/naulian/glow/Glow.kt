@@ -84,8 +84,8 @@ object Glow {
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
                 Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.COMMENT_MULTI -> it.value.color(theme.comment)
-                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                Type.MCOMMENT -> it.value.color(theme.comment)
+                Type.SCOMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -119,8 +119,8 @@ object Glow {
                 Type.CHAR -> it.value.color(theme.string)
                 Type.STRING -> it.value.color(theme.string)
                 Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.COMMENT_MULTI -> it.value.color(theme.comment)
-                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                Type.MCOMMENT -> it.value.color(theme.comment)
+                Type.SCOMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -153,7 +153,7 @@ object Glow {
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
                 Type.STRING -> it.value.color(theme.string)
                 Type.ASSIGNMENT -> it.value.color(theme.normal)
-                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                Type.SCOMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)
@@ -192,8 +192,8 @@ object Glow {
                 Type.INTERPOLATION -> it.value.color(theme.property)
                 Type.ASSIGNMENT -> it.value.color(theme.normal)
                 Type.ESCAPE -> it.value.color(theme.keyword)
-                Type.COMMENT_MULTI -> it.value.color(theme.comment)
-                Type.COMMENT_SINGLE -> it.value.color(theme.comment)
+                Type.MCOMMENT -> it.value.color(theme.comment)
+                Type.SCOMMENT -> it.value.color(theme.comment)
                 else -> it.value
             }
             builder.append(code)

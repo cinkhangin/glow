@@ -1,6 +1,8 @@
+import java.util.Locale
 import kotlin.random.Random
 
 fun main() {
+    val map = hashMapOf<String, Int>()
     println("Welcome to the $Coin Flipping Game!")
     println("I will flip a ${coin}, and you have to guess the outcome.")
     println("Enter 'H' for Heads \n or 'T' for Tails.")
@@ -16,7 +18,7 @@ fun main() {
 
     do {
         print("Enter your guess (H/T): ")
-        playerGuess = readLine()?.trim()?.toUpperCase() ?: ""
+        playerGuess = readlnOrNull()?.trim()?.uppercase(Locale.getDefault()) ?: ""
         validInput = playerGuess == "H" || playerGuess == "T"
         if (!validInput) {
             println("Invalid input. Please enter 'H' for Heads or 'T' for Tails.")
