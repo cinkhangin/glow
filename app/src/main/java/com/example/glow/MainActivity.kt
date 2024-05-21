@@ -3,6 +3,7 @@ package com.example.glow
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import com.naulian.glow.CodeTheme
 import com.naulian.glow.glowSyntax
 import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
+import com.naulian.glow_compose.atx.AtxBlock
 import com.naulian.glow_compose.hexToColor
 import com.naulian.glow_core.atx.AtxLexer
 import com.naulian.glow_core.atx.AtxType
@@ -57,10 +59,15 @@ class MainActivity : AppCompatActivity() {
                     val highLightedCompose = Glow.highlight(source, language, darkTheme)
 
                     composeView.setContent {
-                        LazyRow(modifier = Modifier
-                            .background(darkTheme.background.hexToColor())
-                            .padding(16.dp)) {
-                            item { Text(text = highLightedCompose.value) }
+                        Column {
+                            AtxBlock(source = SAMPLE)
+                            LazyRow(
+                                modifier = Modifier
+                                    .background(darkTheme.background.hexToColor())
+                                    .padding(16.dp)
+                            ) {
+                                item { Text(text = highLightedCompose.value) }
+                            }
                         }
                     }
                 }

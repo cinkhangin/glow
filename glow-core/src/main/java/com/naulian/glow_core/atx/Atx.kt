@@ -2,6 +2,20 @@ package com.naulian.glow_core.atx
 
 import android.util.Log
 
+object AtxTokenizer {
+    fun tokenize(source: String): List<AtxToken> {
+        val atxTokens = mutableListOf<AtxToken>()
+        val atxLexer = AtxLexer(source)
+
+        var current = atxLexer.advance()
+        while (current.type != AtxType.EOF) {
+            atxTokens.add(current)
+            current = atxLexer.advance()
+        }
+        return atxTokens
+    }
+}
+
 class BaseLexer(private val source: CharSequence) {
     private var cursor: Int = 0
     private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
@@ -117,7 +131,7 @@ class AtxLexer(source: String) {
     }
 }
 
-data class AtxToken(val type: AtxType, val text: String, val param: String = "")
+data class AtxToken(val type: AtxType, val value: String, val param: String = "")
 
 enum class AtxType {
     HEAD, TEXT, QUOTE,
