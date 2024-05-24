@@ -2,19 +2,6 @@ package com.naulian.glow_core.atx
 
 import android.util.Log
 
-object AtxTokenizer {
-    fun tokenize(source: String): List<AtxToken> {
-        val atxTokens = mutableListOf<AtxToken>()
-        val atxLexer = AtxLexer(source)
-
-        var current = atxLexer.advance()
-        while (current.type != AtxType.EOF) {
-            atxTokens.add(current)
-            current = atxLexer.advance()
-        }
-        return atxTokens
-    }
-}
 
 class BaseLexer(private val source: CharSequence) {
     private var cursor: Int = 0
@@ -27,6 +14,7 @@ class BaseLexer(private val source: CharSequence) {
             val t = advance()
             tokens.add(t)
         }
+        println(tokens)
         return tokens
     }
 
@@ -62,8 +50,19 @@ class AtxLexer(source: String) {
     private val words = baseLexer.tokenize()
     private var cursor: Int = 0
     private fun current() = words.getOrElse(cursor) { "@eof" }
+    private val atxTokens = mutableListOf<AtxToken>()
     private fun log(any: Any) {
         Log.i("AtxLexer", any.toString())
+    }
+
+    fun tokenize(): List<AtxToken> {
+        var current = advance()
+        while (current.type != AtxType.EOF) {
+            atxTokens.add(current)
+            current = advance()
+        }
+        //log(atxTokens)
+        return atxTokens
     }
 
     private fun skipBreak() {
@@ -101,7 +100,7 @@ class AtxLexer(source: String) {
         }
 
         val symbols = words.subList(start, cursor)
-        val value = symbols.joinToString(" ")
+        val value = symbols.joinToString("")
             .removePrefix(symbol)
             .trim()
         return AtxToken(type, value)
@@ -114,7 +113,7 @@ class AtxLexer(source: String) {
         }
 
         val symbols = words.subList(start, cursor)
-        val value = symbols.joinToString(" ")
+        val value = symbols.joinToString("")
             .removePrefix(symbol)
             .trim()
 
@@ -155,7 +154,7 @@ val SAMPLE = """
     @quote this is quote text @author name @br
     
     @code
-    fun main(args: Array<String>) {
+    fun main(varargs args: String) {
         println("Hello World!")
     }
     @lang kotlin
