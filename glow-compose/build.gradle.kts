@@ -73,6 +73,7 @@ dependencies {
     implementation(fileTree("libs") {
         include("*.jar")
     })
+
     implementation(project(":glow"))
     implementation(project(":glow-core"))
 }

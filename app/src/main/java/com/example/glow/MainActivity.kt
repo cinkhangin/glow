@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.widget.doAfterTextChanged
 import com.example.glow.databinding.ActivityMainBinding
-import com.naulian.anhance.logDebug
 import com.naulian.anhance.readStringAsset
 import com.naulian.glow.CodeTheme
 import com.naulian.glow.glowSyntax
@@ -19,8 +18,6 @@ import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.atx.AtxBlock
 import com.naulian.glow_compose.hexToColor
-import com.naulian.glow_core.atx.AtxLexer
-import com.naulian.glow_core.atx.AtxType
 import com.naulian.glow_core.atx.SAMPLE
 
 class MainActivity : AppCompatActivity() {
@@ -37,15 +34,6 @@ class MainActivity : AppCompatActivity() {
         val language = "java"
         val lightTheme = CodeTheme.defaultLight
         val darkTheme = CodeTheme.defaultDark
-
-        val lexer = AtxLexer(SAMPLE)
-        val tokens = mutableListOf<String>()
-        var current = lexer.advance()
-        while (current.type != AtxType.EOF) {
-            tokens.add(current.toString())
-            current = lexer.advance()
-        }
-        tokens.forEach(::logDebug)
 
         binding.apply {
             textOutput.setCodeTheme(lightTheme.normal)
