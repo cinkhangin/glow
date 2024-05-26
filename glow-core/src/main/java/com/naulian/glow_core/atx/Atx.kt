@@ -48,13 +48,22 @@ val SAMPLE = """
     }
     @f
     
+    @f python
+    def main():
+        print("Hello World!")
+        
+    
+    if __name__ == '__main__':
+        main()
+    @f
+    
     @n
    
     @h Google @a http://www.google.com
     
     @n
     
-    @p http://www.google.com/images/srpr/logo3w.png
+    @p https://picsum.photos/id/67/300/200
     @v https://www.youtube.com/watch?v=dQw4w9WgXcQ
     
     @n

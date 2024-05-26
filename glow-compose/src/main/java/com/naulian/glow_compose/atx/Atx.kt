@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import com.naulian.anhance.copyString
 import com.naulian.anhance.logDebug
 import com.naulian.glow.CodeTheme
@@ -116,7 +118,7 @@ fun TextComponent(node: AtxNode) {
                 AtxType.CODE_BLOCK -> {
                     appendWithStyle(
                         it.text,
-                        style = SpanStyle(background = Color.Gray)
+                        style = SpanStyle(background = Color.LightGray)
                     )
                 }
 
@@ -242,7 +244,16 @@ fun OtherComponent(node: AtxNode) {
                 }
             }
 
-            AtxType.PICTURE -> {}
+            AtxType.PICTURE -> {
+                AsyncImage(
+                    model = it.text,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.small),
+                    contentDescription = "Picture",
+                    contentScale = ContentScale.FillWidth,
+                )
+            }
             AtxType.VIDEO -> {}
 
             AtxType.LIST -> {}

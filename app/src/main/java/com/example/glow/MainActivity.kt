@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
                     composeView.setContent {
                         Column {
-                            AtxBlock(source = SAMPLE)
+                            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE)
                             LazyRow(
                                 modifier = Modifier
                                     .background(darkTheme.background.hexToColor())
