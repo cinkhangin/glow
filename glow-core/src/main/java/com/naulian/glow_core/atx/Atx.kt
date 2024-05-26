@@ -59,45 +59,51 @@ val SAMPLE = """
     @o ordered element 2
 """.trimIndent()
 
-enum class AtxType(val code: Char) {
-    HEADER('w'),
-    SUB_HEADER('x'),
-    TITLE('y'),
-    SUB_TITLE('z'),
+enum class AtxKind {
+    TEXT,
+    LINK,
+    OTHER
+}
 
-    BOLD('b'),
-    ITALIC('i'),
-    BOLD_ITALIC('m'),
-    UNDERLINE('u'),
-    STRIKE('s'),
+enum class AtxType(val code: Char, val kind: AtxKind = AtxKind.TEXT) {
+    HEADER('w', AtxKind.OTHER),
+    SUB_HEADER('x', AtxKind.OTHER),
+    TITLE('y', AtxKind.OTHER),
+    SUB_TITLE('z', AtxKind.OTHER),
 
-    QUOTE('q'),
+    BOLD('b', AtxKind.TEXT),
+    ITALIC('i', AtxKind.TEXT),
+    BOLD_ITALIC('m', AtxKind.TEXT),
+    UNDERLINE('u', AtxKind.TEXT),
+    STRIKE('s', AtxKind.TEXT),
 
-    CODE('f'),
-    CODE_BLOCK('c'),
+    QUOTE('q', AtxKind.OTHER),
 
-    LINK('a'),
-    HYPER('h'),
+    CODE('f', AtxKind.OTHER),
+    CODE_BLOCK('c', AtxKind.TEXT),
 
-    PICTURE('p'),
-    VIDEO('v'),
+    LINK('a', AtxKind.LINK),
+    HYPER('h', AtxKind.TEXT),
 
-    TEXT(' '),
-    COLORED('g'),
+    PICTURE('p', AtxKind.OTHER),
+    VIDEO('v', AtxKind.OTHER),
 
-    LIST('l'),
-    TABLE('t'),
-    ROW('r'),
+    TEXT(' ', AtxKind.TEXT),
+    COLORED('g', AtxKind.TEXT),
 
-    ELEMENT('e'),
-    ORDERED_ELEMENT('o'),
+    LIST('l', AtxKind.OTHER),
+    TABLE('t', AtxKind.OTHER),
+    ROW('r', AtxKind.OTHER),
 
-    JOIN('j'),
-    DIVIDER('d'),
-    NEWLINE('n'),
+    ELEMENT('e', AtxKind.OTHER),
+    ORDERED_ELEMENT('o', AtxKind.OTHER),
 
-    CONSTANT('k'),
-    END(Char.MIN_VALUE)
+    JOIN('j', AtxKind.TEXT),
+    DIVIDER('d', AtxKind.OTHER),
+    NEWLINE('n', AtxKind.TEXT),
+
+    CONSTANT('k', AtxKind.OTHER),
+    END(Char.MIN_VALUE, AtxKind.OTHER)
 }
 
 data class AtxToken(
@@ -118,7 +124,7 @@ class AtxLexer(private val source: CharSequence) {
     }
 
     private fun skipSpace() {
-        while (char.isWhitespace()) advance()
+        while (char == ' ') advance()
     }
 
 
@@ -127,6 +133,7 @@ class AtxLexer(private val source: CharSequence) {
         return when (char) {
             Char.MIN_VALUE -> AtxToken.END
             '@' -> lexAtx()
+            '\n' -> lexSpace(AtxType.NEWLINE, "\n")
             else -> lexText()
         }
     }
@@ -244,4 +251,51 @@ fun String.tokenizeAtx(): List<AtxToken> {
         current = lexer.next()
     }
     return tokens
+}
+
+data class AtxNode(
+    val kind: AtxKind,
+    val children: List<AtxToken>
+)
+
+class AtxParser(source: String) {
+    private val baseTokens = source.tokenizeAtx()
+
+    private var cursor = 0
+    private val token get() = baseTokens.getOrElse(cursor) { AtxToken.END }
+    private fun advance(amount: Int = 1) {
+        cursor += amount
+    }
+
+    private fun next(): AtxToken {
+        advance()
+        return token
+    }
+
+    fun parse(): List<AtxNode> {
+        val result = mutableListOf<AtxNode>()
+        var currentGroup = mutableListOf<AtxToken>()
+
+        var element = token
+        while (element.type != AtxType.END) {
+            val lastKind = currentGroup.lastOrNull()?.type?.kind ?: AtxKind.OTHER
+            if (currentGroup.isEmpty() || lastKind == element.type.kind) {
+                currentGroup.add(element)
+            } else {
+                val atxNode = AtxNode(lastKind, currentGroup)
+                result.add(atxNode)
+                currentGroup = mutableListOf(element)
+            }
+            element = next()
+        }
+
+        if (currentGroup.isNotEmpty()) {
+            val groupKind = currentGroup.last().type.kind
+            val atxNode = AtxNode(groupKind, currentGroup)
+            result.add(atxNode)
+        }
+
+        return result
+    }
+
 }
