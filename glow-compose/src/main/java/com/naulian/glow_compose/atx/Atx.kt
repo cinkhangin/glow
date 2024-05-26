@@ -3,7 +3,9 @@ package com.naulian.glow_compose.atx
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -52,6 +54,9 @@ import com.naulian.glow_core.atx.AtxParser
 import com.naulian.glow_core.atx.AtxToken
 import com.naulian.glow_core.atx.AtxType
 import com.naulian.glow_core.atx.SAMPLE
+import com.naulian.modify.table.Table
+import com.naulian.modify.table.TableHeader
+import com.naulian.modify.table.TableItems
 import android.graphics.Color as LegacyColor
 
 @Composable
@@ -64,12 +69,21 @@ fun AtxBlock(modifier: Modifier = Modifier, source: String) {
         nodes = AtxParser(source).parse()
     }
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        nodes.forEach {
-            when (it.kind) {
-                AtxKind.TEXT -> TextComponent(it)
-                AtxKind.LINK -> LinkComponent(it)
-                AtxKind.OTHER -> OtherComponent(it)
+    if (nodes.isNotEmpty()) {
+        Column(modifier = modifier.fillMaxWidth()) {
+            nodes.forEach {
+                when (it.kind) {
+                    AtxKind.TEXT -> TextComponent(it)
+                    AtxKind.LINK -> LinkComponent(it)
+                    AtxKind.OTHER -> OtherComponent(it)
+                    AtxKind.TABLE -> {
+                        TableComponent(it)
+                    }
+
+                    AtxKind.SPACE -> {
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
             }
         }
     }
@@ -254,11 +268,9 @@ fun OtherComponent(node: AtxNode) {
                     contentScale = ContentScale.FillWidth,
                 )
             }
-            AtxType.VIDEO -> {}
 
+            AtxType.VIDEO -> {}
             AtxType.LIST -> {}
-            AtxType.TABLE -> {}
-            AtxType.ROW -> {}
             AtxType.ELEMENT -> {}
             AtxType.ORDERED_ELEMENT -> {}
             AtxType.DIVIDER -> {}
@@ -268,6 +280,49 @@ fun OtherComponent(node: AtxNode) {
             else -> {}
         }
     }
+}
+
+@Composable
+fun TableComponent(node: AtxNode) {
+    var columns by remember { mutableStateOf(listOf<String>()) }
+    var rows by remember { mutableStateOf(listOf<List<String>>()) }
+
+    LaunchedEffect(key1 = Unit) {
+        logDebug("launch")
+        node.children.trim().forEach { token ->
+            when (token.type) {
+                AtxType.TABLE -> {
+                    columns = token.text.split(",").map { it.trim() }
+                }
+
+                AtxType.ROW -> {
+                    val cellCol = if (columns.isEmpty()) 1 else columns.size
+                    rows = token.text.split(",")
+                        .map { it.trim() }.chunked(cellCol)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    Table(
+        header = {
+            if (columns.isNotEmpty()) {
+                TableHeader(items = columns)
+            }
+        },
+        content = {
+            if (rows.isNotEmpty()) {
+                TableItems(items = rows)
+            }
+        }
+    )
+}
+
+fun log(vararg input: Any) {
+    val message = input.joinToString { it.toString() }
+    println(message)
 }
 
 
@@ -285,7 +340,6 @@ fun CodeBlock(
 
     val context = LocalContext.current
     LaunchedEffect(key1 = Unit) {
-        logDebug(source)
         glowCode = Glow.highlight(source, language, codeTheme).value
     }
 

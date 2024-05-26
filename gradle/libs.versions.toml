@@ -1,5 +1,6 @@
 [versions]
 anhance = "2024.3.0"
+modify = "0.0.1-alpha19"
 appcompat = "1.6.1"
 composeBom = "2024.05.00"
 constraintlayout = "2.1.4"
@@ -29,7 +30,8 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
+naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
+naulian-modify = { module = "com.naulian:modify", version.ref = "modify" }
 junit = { module = "junit:junit", version.ref = "junit" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 jetbrains-markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }

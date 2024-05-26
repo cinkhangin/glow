@@ -1,6 +1,8 @@
 package com.naulian.glow_core.atx
 
 
+fun CharSequence.trimStr(): String = toString().trim()
+
 val SAMPLE = """
     @w this is heading 1
     @x this is heading 2
@@ -10,10 +12,11 @@ val SAMPLE = """
     @n
     
     this is @b bold @b text
+    @g #00FF00 green text @g
     this is @i italic @i text
     this is @u underline @u text
     this is @s strikethrough @s text
-    this is @c code @c text
+    this is @c code @c text @j
     this is @m italic bold @m text
     
     @f comment
@@ -68,8 +71,25 @@ val SAMPLE = """
     
     @n
     
-    @t a, b, c
-    @r 1, 2, 3, 4, 5, 6, 7, 8, 9
+    @z Logical And
+    @n
+    
+    @t a, b, result
+    @r 
+    true, true, true, 
+    true, false, false,
+    false, false, false
+    
+    @n
+    
+    @z Logical Or
+    @n
+    
+    @t a, b, result
+    @r 
+    true, true, true, 
+    true, false, true,
+    false, false, false
     
     @d -
     
@@ -85,7 +105,9 @@ val SAMPLE = """
 
 enum class AtxKind {
     TEXT,
+    SPACE,
     LINK,
+    TABLE,
     OTHER
 }
 
@@ -116,15 +138,15 @@ enum class AtxType(val code: Char, val kind: AtxKind = AtxKind.TEXT) {
     COLORED('g', AtxKind.TEXT),
 
     LIST('l', AtxKind.OTHER),
-    TABLE('t', AtxKind.OTHER),
-    ROW('r', AtxKind.OTHER),
+    TABLE('t', AtxKind.TABLE),
+    ROW('r', AtxKind.TABLE),
 
     ELEMENT('e', AtxKind.OTHER),
     ORDERED_ELEMENT('o', AtxKind.OTHER),
 
     JOIN('j', AtxKind.TEXT),
     DIVIDER('d', AtxKind.OTHER),
-    NEWLINE('n', AtxKind.TEXT),
+    NEWLINE('n', AtxKind.SPACE),
 
     CONSTANT('k', AtxKind.OTHER),
     END(Char.MIN_VALUE, AtxKind.OTHER)
@@ -151,12 +173,21 @@ class AtxLexer(private val source: CharSequence) {
         while (char.isWhitespace()) advance()
     }
 
+    private fun skipNl() {
+        while (char == '\n') advance()
+    }
+
 
     fun next(): AtxToken {
+        skipNl()
         return when (char) {
             Char.MIN_VALUE -> AtxToken.END
             '@' -> lexAtx()
-            '\n' -> lexSpace(AtxType.NEWLINE, "\n")
+            '\n' -> {
+                advance()
+                AtxToken(AtxType.TEXT, "\n")
+            }
+
             else -> lexText()
         }
     }
@@ -164,36 +195,46 @@ class AtxLexer(private val source: CharSequence) {
     private fun lexAtx(): AtxToken {
         advance()
         return when (val c = char) {
-            'a' -> lexLine(AtxType.LINK)
+            'a' -> lexNormal(AtxType.LINK)
             'b' -> lexBlock(AtxType.BOLD)
             'c' -> lexBlock(AtxType.CODE_BLOCK)
-            'd' -> lexLine(AtxType.DIVIDER)
-            'e' -> lexLine(AtxType.ELEMENT)
+            'd' -> lexNormal(AtxType.DIVIDER)
+            'e' -> lexNormal(AtxType.ELEMENT)
             'f' -> lexCode()
             'g' -> lexBlock(AtxType.COLORED)
-            'h' -> lexLine(AtxType.HYPER)
+            'h' -> lexNormal(AtxType.HYPER)
             'i' -> lexBlock(AtxType.ITALIC)
-            'j' -> lexSpace(AtxType.JOIN, " ")
-            'k' -> lexLine(AtxType.CONSTANT)
+            'j' -> {
+                advance()
+                skipSpace()
+                return AtxToken(AtxType.JOIN, " ")
+            }
 
-            'l' -> lexLine(AtxType.LIST)
+            'k' -> lexNormal(AtxType.CONSTANT)
+
+            'l' -> lexNormal(AtxType.LIST)
             'm' -> lexBlock(AtxType.BOLD_ITALIC)
-            'n' -> lexSpace(AtxType.NEWLINE, "\n")
-            'o' -> lexLine(AtxType.ORDERED_ELEMENT)
+            'n' -> {
+                advance()
+                skipSpace()
+                AtxToken(AtxType.NEWLINE, "")
+            }
 
-            'p' -> lexLine(AtxType.PICTURE)
+            'o' -> lexNormal(AtxType.ORDERED_ELEMENT)
+
+            'p' -> lexNormal(AtxType.PICTURE)
             'q' -> lexBlock(AtxType.QUOTE)
 
-            'r' -> lexLine(AtxType.ROW)
+            'r' -> lexNormal(AtxType.ROW)
             's' -> lexBlock(AtxType.STRIKE) // done
-            't' -> lexLine(AtxType.TABLE)
+            't' -> lexNormal(AtxType.TABLE)
             'u' -> lexBlock(AtxType.UNDERLINE)
-            'v' -> lexLine(AtxType.VIDEO)
+            'v' -> lexNormal(AtxType.VIDEO)
 
-            'w' -> lexLine(AtxType.HEADER)
-            'x' -> lexLine(AtxType.SUB_HEADER)
-            'y' -> lexLine(AtxType.TITLE)
-            'z' -> lexLine(AtxType.SUB_TITLE)
+            'w' -> lexNormal(AtxType.HEADER)
+            'x' -> lexNormal(AtxType.SUB_HEADER)
+            'y' -> lexNormal(AtxType.TITLE)
+            'z' -> lexNormal(AtxType.SUB_TITLE)
             else -> {
                 advance()
                 AtxToken(AtxType.TEXT, "$c")
@@ -203,7 +244,7 @@ class AtxLexer(private val source: CharSequence) {
 
     private fun lexText(): AtxToken {
         val start = cursor
-        while (char != '\n' && char != '@' && char != Char.MIN_VALUE) {
+        while (char != '@' && char != Char.MIN_VALUE) {
             advance()
         }
         val end = cursor
@@ -225,7 +266,7 @@ class AtxLexer(private val source: CharSequence) {
         }
 
         val text = source.subSequence(start, end)
-        return AtxToken(type, text.toString().trim())
+        return AtxToken(type, text.trimStr())
     }
 
     private fun lexCode(): AtxToken {
@@ -242,26 +283,20 @@ class AtxLexer(private val source: CharSequence) {
         val end = cursor
         advance(2)
         val text = source.subSequence(start, end)
-        return AtxToken(AtxType.CODE, text.toString().trim())
+        return AtxToken(AtxType.CODE, text.trimStr())
     }
 
-    private fun lexLine(type: AtxType): AtxToken {
+    private fun lexNormal(type: AtxType): AtxToken {
         advance()
         skipSpace()
         val start = cursor
-        while (char != '\n' && char != '@' && char != Char.MIN_VALUE) {
+        while (char != '@' && char != Char.MIN_VALUE) {
             advance()
         }
 
         val end = cursor
         val text = source.subSequence(start, end)
-        return AtxToken(type, text.toString())
-    }
-
-    private fun lexSpace(type: AtxType, value: String): AtxToken {
-        advance()
-        skipSpace()
-        return AtxToken(type, value)
+        return AtxToken(type, text.trimStr())
     }
 }
 
@@ -273,6 +308,7 @@ fun String.tokenizeAtx(): List<AtxToken> {
         tokens.add(current)
         current = lexer.next()
     }
+    tokens.forEach(::println)
     return tokens
 }
 

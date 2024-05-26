@@ -69,7 +69,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
 
-    implementation(libs.anhance)
+    implementation(libs.naulian.anhance)
 
     implementation(fileTree("libs") {
         include("*.jar")
