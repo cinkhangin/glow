@@ -150,11 +150,18 @@ fun TextComponent(node: AtxNode) {
 
 @Composable
 fun LinkComponent(node: AtxNode) {
-    val content = buildAnnotatedString {
-        append(node.children.joinToString(""))
+    var link = ""
+    var hyper = ""
+
+    node.children.forEach {
+        when (it.type) {
+            AtxType.LINK -> link = it.text
+            AtxType.HYPER -> hyper = it.text
+            else -> {}
+        }
     }
 
-    Text(text = content)
+    Text(text = hyper.ifEmpty { link }, color = Color.Blue)
 }
 
 fun List<AtxToken>.trim(): List<AtxToken> {
@@ -380,8 +387,8 @@ fun QuoteBlock(modifier: Modifier = Modifier, quote: String) {
 @Composable
 private fun AtxBlockPreview() {
     MaterialTheme {
-        Surface {
-            AtxBlock(source = SAMPLE)
+        Surface(color = Color.LightGray) {
+            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE)
         }
     }
 }

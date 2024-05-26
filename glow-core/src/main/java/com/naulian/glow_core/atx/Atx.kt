@@ -50,7 +50,7 @@ val SAMPLE = """
     
     @n
    
-    @a http://www.google.com @h Google 
+    @h Google @a http://www.google.com
     
     @n
     
@@ -98,7 +98,7 @@ enum class AtxType(val code: Char, val kind: AtxKind = AtxKind.TEXT) {
     CODE_BLOCK('c', AtxKind.TEXT),
 
     LINK('a', AtxKind.LINK),
-    HYPER('h', AtxKind.TEXT),
+    HYPER('h', AtxKind.LINK),
 
     PICTURE('p', AtxKind.OTHER),
     VIDEO('v', AtxKind.OTHER),
