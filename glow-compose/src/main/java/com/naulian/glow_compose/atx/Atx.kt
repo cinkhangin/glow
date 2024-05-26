@@ -50,6 +50,7 @@ import com.naulian.glow_core.atx.AtxParser
 import com.naulian.glow_core.atx.AtxToken
 import com.naulian.glow_core.atx.AtxType
 import com.naulian.glow_core.atx.SAMPLE
+import android.graphics.Color as LegacyColor
 
 @Composable
 fun AtxBlock(modifier: Modifier = Modifier, source: String) {
@@ -121,7 +122,16 @@ fun TextComponent(node: AtxNode) {
 
                 AtxType.TEXT -> append(it.text)
                 AtxType.COLORED -> {
-                    appendWithStyle(
+                    val color = it.text.split(" ").firstOrNull() ?: ""
+                    if (color.contains("#")) {
+                        val hexColor = color.trim()
+                        val intColor = LegacyColor.parseColor(hexColor)
+                        val composeColor = Color(intColor)
+                        appendWithStyle(
+                            it.text.replace(color, ""),
+                            style = SpanStyle(color = composeColor)
+                        )
+                    } else appendWithStyle(
                         it.text,
                         style = SpanStyle(color = Color.Green)
                     )
@@ -163,6 +173,14 @@ fun List<AtxToken>.trim(): List<AtxToken> {
 
     return result.toList()
 }
+
+val atxSupportedLang = listOf(
+    "java",
+    "kotlin", "kt",
+    "javascript", "js",
+    "python", "py",
+    "text", "txt"
+)
 
 @Composable
 fun OtherComponent(node: AtxNode) {
@@ -209,7 +227,12 @@ fun OtherComponent(node: AtxNode) {
             }
 
             AtxType.CODE -> {
-                CodeBlock(source = it.text)
+                val language = it.text.split("\n").firstOrNull() ?: ""
+                when (language) {
+                    "comment" -> {}
+                    in atxSupportedLang -> CodeBlock(source = it.text, language = language)
+                    else -> CodeBlock(source = it.text, language = "txt")
+                }
             }
 
             AtxType.PICTURE -> {}
@@ -312,18 +335,7 @@ fun CodeBlock(
 }
 
 @Composable
-fun QuoteBlock(modifier: Modifier = Modifier, quote: String, author: String = "") {
-    val content by remember {
-        mutableStateOf(
-            buildAnnotatedString {
-                append(quote)
-                if (author.isNotEmpty()) {
-                    append("\n")
-                    append("- $author")
-                }
-            }
-        )
-    }
+fun QuoteBlock(modifier: Modifier = Modifier, quote: String) {
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
@@ -350,11 +362,13 @@ fun QuoteBlock(modifier: Modifier = Modifier, quote: String, author: String = ""
                 .constrainAs(text) {
                     start.linkTo(accent.end)
                     end.linkTo(parent.end)
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
                     width = Dimension.fillToConstraints
                 }
         ) {
             Text(
-                text = content,
+                text = quote,
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.bodyMedium
             )

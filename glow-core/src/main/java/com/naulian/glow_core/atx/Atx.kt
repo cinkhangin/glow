@@ -6,7 +6,9 @@ val SAMPLE = """
     @x this is heading 2
     @y this is heading 3
     @z this is heading 4
-
+    
+    @n
+    
     this is @b bold @b text
     this is @i italic @i text
     this is @u underline @u text
@@ -27,17 +29,26 @@ val SAMPLE = """
          @k random will be replaced with a random number
     @f
     
-    @g colored text #222222 @g
+    @n
+    
+    this is a @g #FF0000 colored @g text
+    
+    @n
     
     @q 
     this is quote text
+    - naulian
     @q
+    
+    @n
     
     @f kotlin
     fun main(varargs args: String) {
         println("Hello World!")
     }
     @f
+    
+    @n
    
     @a http://www.google.com @h Google 
     
@@ -46,12 +57,16 @@ val SAMPLE = """
     @p http://www.google.com/images/srpr/logo3w.png
     @v https://www.youtube.com/watch?v=dQw4w9WgXcQ
     
+    @n
+    
     @t a, b, c
     @r 1, 2, 3, 4, 5, 6, 7, 8, 9
     
     @d -
     
     @l a, b, c, d
+    
+    @n
     
     @e unordered element 1
     @e unordered element 2
@@ -124,12 +139,11 @@ class AtxLexer(private val source: CharSequence) {
     }
 
     private fun skipSpace() {
-        while (char == ' ') advance()
+        while (char.isWhitespace()) advance()
     }
 
 
     fun next(): AtxToken {
-        skipSpace()
         return when (char) {
             Char.MIN_VALUE -> AtxToken.END
             '@' -> lexAtx()
@@ -202,7 +216,7 @@ class AtxLexer(private val source: CharSequence) {
         }
 
         val text = source.subSequence(start, end)
-        return AtxToken(type, text.toString())
+        return AtxToken(type, text.toString().trim())
     }
 
     private fun lexCode(): AtxToken {
@@ -219,7 +233,7 @@ class AtxLexer(private val source: CharSequence) {
         val end = cursor
         advance(2)
         val text = source.subSequence(start, end)
-        return AtxToken(AtxType.CODE, text.toString())
+        return AtxToken(AtxType.CODE, text.toString().trim())
     }
 
     private fun lexLine(type: AtxType): AtxToken {
