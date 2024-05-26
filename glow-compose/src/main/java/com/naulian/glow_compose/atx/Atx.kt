@@ -43,7 +43,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.naulian.anhance.copyString
-import com.naulian.anhance.logDebug
 import com.naulian.glow.CodeTheme
 import com.naulian.glow.Theme
 import com.naulian.glow_compose.Glow
@@ -207,11 +206,11 @@ val atxSupportedLang = listOf(
 
 @Composable
 fun OtherComponent(node: AtxNode) {
-    node.children.trim().forEach {
-        when (it.type) {
+    node.children.trim().forEach { token ->
+        when (token.type) {
             AtxType.HEADER -> {
                 Text(
-                    text = it.text,
+                    text = token.text,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 36.sp
@@ -220,7 +219,7 @@ fun OtherComponent(node: AtxNode) {
 
             AtxType.SUB_HEADER -> {
                 Text(
-                    text = it.text,
+                    text = token.text,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 28.sp
@@ -229,7 +228,7 @@ fun OtherComponent(node: AtxNode) {
 
             AtxType.TITLE -> {
                 Text(
-                    text = it.text,
+                    text = token.text,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 24.sp
@@ -238,7 +237,7 @@ fun OtherComponent(node: AtxNode) {
 
             AtxType.SUB_TITLE -> {
                 Text(
-                    text = it.text,
+                    text = token.text,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
@@ -246,21 +245,21 @@ fun OtherComponent(node: AtxNode) {
             }
 
             AtxType.QUOTE -> {
-                QuoteBlock(quote = it.text)
+                QuoteBlock(quote = token.text)
             }
 
             AtxType.CODE -> {
-                val language = it.text.split("\n").firstOrNull() ?: ""
+                val language = token.text.split("\n").firstOrNull() ?: ""
                 when (language) {
                     "comment" -> {}
-                    in atxSupportedLang -> CodeBlock(source = it.text, language = language)
-                    else -> CodeBlock(source = it.text, language = "txt")
+                    in atxSupportedLang -> CodeBlock(source = token.text, language = language)
+                    else -> CodeBlock(source = token.text, language = "txt")
                 }
             }
 
             AtxType.PICTURE -> {
                 AsyncImage(
-                    model = it.text,
+                    model = token.text,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.small),
@@ -270,7 +269,24 @@ fun OtherComponent(node: AtxNode) {
             }
 
             AtxType.VIDEO -> {}
-            AtxType.LIST -> {}
+            AtxType.LIST -> {
+                val title = token.text.split("\n").firstOrNull() ?: ""
+                val content = when (title) {
+                    "" -> token.text
+                    else -> token.text.replace(title, "").trim()
+                }
+                val items = content.split(",")
+                    .map { listOf(it.trim()) }
+                Table(
+                    header = {
+                        TableHeader(title = title)
+                    },
+                    content = {
+                        TableItems(items = items)
+                    }
+                )
+            }
+
             AtxType.ELEMENT -> {}
             AtxType.ORDERED_ELEMENT -> {}
             AtxType.DIVIDER -> {}
@@ -288,7 +304,6 @@ fun TableComponent(node: AtxNode) {
     var rows by remember { mutableStateOf(listOf<List<String>>()) }
 
     LaunchedEffect(key1 = Unit) {
-        logDebug("launch")
         node.children.trim().forEach { token ->
             when (token.type) {
                 AtxType.TABLE -> {
