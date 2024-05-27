@@ -60,7 +60,7 @@ val SAMPLE_ATX = """
     false, false, false
     )[a, b, result]
     
-    @d(-)
+    @d(------***------)
     
     @t(
     Char 1 Byte,

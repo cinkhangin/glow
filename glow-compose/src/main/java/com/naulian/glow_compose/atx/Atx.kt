@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,6 +151,9 @@ fun LinkComponent(tokens: List<AtxToken>) {
     }
 }
 
+val a2z = ('a'..'z').toList()
+val A2Z = ('A'..'Z').toList()
+
 @Composable
 fun OtherComponent(tokens: List<AtxToken>) {
     tokens.forEach { token ->
@@ -175,7 +180,7 @@ fun OtherComponent(tokens: List<AtxToken>) {
                 val content = """
                     |${token.value}
                     |- ${token.argument.ifEmpty { "unknown" }}
-                """.trimIndent()
+                """.trimMargin()
                 QuoteBlock(quote = content)
             }
 
@@ -200,8 +205,43 @@ fun OtherComponent(tokens: List<AtxToken>) {
 
             AtxType.VIDEO -> {}
 
-            AtxType.ELEMENT -> {}
-            AtxType.DIVIDER -> {}
+            AtxType.ELEMENT -> {
+                val elements = token.value.split("\n")
+                elements.forEachIndexed { i, s ->
+                    when (token.argument) {
+                        in "0".."9" -> {
+                            val index = i + 1
+                            Text(text = "$index. $s")
+                        }
+
+                        in "a".."z" -> {
+                            val index = i % 26
+                            val letter = a2z[index]
+                            Text(text = "$letter. $s")
+                        }
+
+                        in "A".."Z" -> {
+                            val index = i % 26
+                            val letter = A2Z[index]
+                            Text(text = "$letter. $s")
+                        }
+
+                        "" -> Text(text = "- $s")
+                        else -> Text(text = "${token.argument} $s")
+                    }
+                }
+            }
+
+            AtxType.DIVIDER -> {
+                if (token.value == "") {
+                    HorizontalDivider()
+                } else Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = token.value,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             else -> {}
         }
     }
