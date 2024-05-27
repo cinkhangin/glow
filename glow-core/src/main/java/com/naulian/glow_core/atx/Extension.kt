@@ -1,3 +1,3 @@
 package com.naulian.glow_core.atx
 
-fun CharSequence.trimStr(): String = toString().trim()
+fun CharSequence.str(): String = toString().trim()

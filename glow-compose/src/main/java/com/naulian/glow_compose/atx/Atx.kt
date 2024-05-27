@@ -1,11 +1,10 @@
 package com.naulian.glow_compose.atx
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -47,12 +46,12 @@ import com.naulian.glow.CodeTheme
 import com.naulian.glow.Theme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.font
-import com.naulian.glow_core.atx.AtxKind
-import com.naulian.glow_core.atx.AtxNode
+import com.naulian.glow_core.atx.AtxContentType
+import com.naulian.glow_core.atx.AtxGroup
 import com.naulian.glow_core.atx.AtxParser
 import com.naulian.glow_core.atx.AtxToken
 import com.naulian.glow_core.atx.AtxType
-import com.naulian.glow_core.atx.SAMPLE
+import com.naulian.glow_core.atx.SAMPLE_ATX
 import com.naulian.modify.table.Table
 import com.naulian.modify.table.TableHeader
 import com.naulian.modify.table.TableItems
@@ -61,7 +60,7 @@ import android.graphics.Color as LegacyColor
 @Composable
 fun AtxBlock(modifier: Modifier = Modifier, source: String) {
     var nodes by remember {
-        mutableStateOf(emptyList<AtxNode>())
+        mutableStateOf(emptyList<AtxGroup>())
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -69,19 +68,16 @@ fun AtxBlock(modifier: Modifier = Modifier, source: String) {
     }
 
     if (nodes.isNotEmpty()) {
-        Column(modifier = modifier.fillMaxWidth()) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             nodes.forEach {
-                when (it.kind) {
-                    AtxKind.TEXT -> TextComponent(it)
-                    AtxKind.LINK -> LinkComponent(it)
-                    AtxKind.OTHER -> OtherComponent(it)
-                    AtxKind.TABLE -> {
-                        TableComponent(it)
-                    }
-
-                    AtxKind.SPACE -> {
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
+                when (it.type) {
+                    AtxContentType.TEXT -> TextComponent(tokens = it.children)
+                    AtxContentType.OTHER -> OtherComponent(tokens = it.children)
+                    AtxContentType.TABLE -> TableComponent(tokens = it.children)
+                    AtxContentType.LINK -> LinkComponent(tokens = it.children)
                 }
             }
         }
@@ -95,65 +91,48 @@ fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
 }
 
 @Composable
-fun TextComponent(node: AtxNode) {
-    if (node.children.size == 1 && node.children[0].text == "\n") {
-        return
-    }
-
+fun TextComponent(tokens: List<AtxToken>) {
     val content = buildAnnotatedString {
-        node.children.trim().forEach {
+        tokens.forEach {
             when (it.type) {
                 AtxType.BOLD -> appendWithStyle(
-                    it.text,
+                    it.value,
                     style = SpanStyle(fontWeight = FontWeight.Bold)
                 )
 
                 AtxType.ITALIC -> appendWithStyle(
-                    it.text,
+                    it.value,
                     style = SpanStyle(fontStyle = FontStyle.Italic)
                 )
 
-                AtxType.BOLD_ITALIC -> appendWithStyle(
-                    it.text,
-                    style = SpanStyle(fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic)
-                )
-
                 AtxType.UNDERLINE -> appendWithStyle(
-                    it.text,
+                    it.value,
                     style = SpanStyle(textDecoration = TextDecoration.Underline)
                 )
 
                 AtxType.STRIKE -> appendWithStyle(
-                    it.text,
+                    it.value,
                     style = SpanStyle(textDecoration = TextDecoration.LineThrough)
                 )
 
-                AtxType.CODE_BLOCK -> {
-                    appendWithStyle(
-                        it.text,
-                        style = SpanStyle(background = Color.LightGray)
-                    )
-                }
-
-                AtxType.TEXT -> append(it.text)
+                AtxType.TEXT -> append(it.value)
                 AtxType.COLORED -> {
-                    val color = it.text.split(" ").firstOrNull() ?: ""
+                    val color = it.argument
                     if (color.contains("#")) {
                         val hexColor = color.trim()
                         val intColor = LegacyColor.parseColor(hexColor)
                         val composeColor = Color(intColor)
                         appendWithStyle(
-                            it.text.replace(color, ""),
+                            it.value,
                             style = SpanStyle(color = composeColor)
                         )
                     } else appendWithStyle(
-                        it.text,
+                        it.value,
                         style = SpanStyle(color = Color.Green)
                     )
                 }
 
-                AtxType.JOIN -> append(it.text)
-                AtxType.NEWLINE -> append(it.text)
+                AtxType.NEWLINE -> append(it.value)
                 else -> append("")
             }
         }
@@ -164,102 +143,53 @@ fun TextComponent(node: AtxNode) {
 
 
 @Composable
-fun LinkComponent(node: AtxNode) {
-    var link = ""
-    var hyper = ""
-
-    node.children.forEach {
-        when (it.type) {
-            AtxType.LINK -> link = it.text
-            AtxType.HYPER -> hyper = it.text
-            else -> {}
-        }
+fun LinkComponent(tokens: List<AtxToken>) {
+    tokens.forEach {
+        Text(text = it.argument.ifEmpty { it.value }, color = Color.Blue)
     }
-
-    Text(text = hyper.ifEmpty { link }, color = Color.Blue)
 }
-
-fun List<AtxToken>.trim(): List<AtxToken> {
-    var result = toMutableList()
-    if (isNotEmpty()) {
-        if (first().type == AtxType.NEWLINE) {
-            result = result.drop(1).toMutableList()
-        }
-    }
-
-    if (result.isNotEmpty()) {
-        if (last().type == AtxType.NEWLINE) {
-            result = result.dropLast(1).toMutableList()
-        }
-    }
-
-    return result.toList()
-}
-
-val atxSupportedLang = listOf(
-    "java",
-    "kotlin", "kt",
-    "javascript", "js",
-    "python", "py",
-    "text", "txt"
-)
 
 @Composable
-fun OtherComponent(node: AtxNode) {
-    node.children.trim().forEach { token ->
+fun OtherComponent(tokens: List<AtxToken>) {
+    tokens.forEach { token ->
         when (token.type) {
             AtxType.HEADER -> {
+                val sizePair = when (token.argument) {
+                    "1" -> 32.sp to 42.sp
+                    "2" -> 28.sp to 36.sp
+                    "3" -> 24.sp to 32.sp
+                    "4" -> 20.sp to 28.sp
+                    "5" -> 18.sp to 24.sp
+                    "6" -> 16.sp to 22.sp
+                    else -> 24.sp to 32.sp
+                }
                 Text(
-                    text = token.text,
-                    fontSize = 28.sp,
+                    text = token.value,
+                    fontSize = sizePair.first,
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 36.sp
-                )
-            }
-
-            AtxType.SUB_HEADER -> {
-                Text(
-                    text = token.text,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 28.sp
-                )
-            }
-
-            AtxType.TITLE -> {
-                Text(
-                    text = token.text,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 24.sp
-                )
-            }
-
-            AtxType.SUB_TITLE -> {
-                Text(
-                    text = token.text,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 20.sp
+                    lineHeight = sizePair.second
                 )
             }
 
             AtxType.QUOTE -> {
-                QuoteBlock(quote = token.text)
+                val content = """
+                    |${token.value}
+                    |- ${token.argument.ifEmpty { "unknown" }}
+                """.trimIndent()
+                QuoteBlock(quote = content)
             }
 
-            AtxType.CODE -> {
-                val language = token.text.split("\n").firstOrNull() ?: ""
+            AtxType.FUN -> {
+                val language = token.argument.ifEmpty { "txt" }
                 when (language) {
                     "comment" -> {}
-                    in atxSupportedLang -> CodeBlock(source = token.text, language = language)
-                    else -> CodeBlock(source = token.text, language = "txt")
+                    else -> CodeBlock(source = token.value, language = language)
                 }
             }
 
             AtxType.PICTURE -> {
                 AsyncImage(
-                    model = token.text,
+                    model = token.value,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.small),
@@ -269,70 +199,37 @@ fun OtherComponent(node: AtxNode) {
             }
 
             AtxType.VIDEO -> {}
-            AtxType.LIST -> {
-                val title = token.text.split("\n").firstOrNull() ?: ""
-                val content = when (title) {
-                    "" -> token.text
-                    else -> token.text.replace(title, "").trim()
-                }
-                val items = content.split(",")
-                    .map { listOf(it.trim()) }
-                Table(
-                    header = {
-                        TableHeader(title = title)
-                    },
-                    content = {
-                        TableItems(items = items)
-                    }
-                )
-            }
 
             AtxType.ELEMENT -> {}
-            AtxType.ORDERED_ELEMENT -> {}
             AtxType.DIVIDER -> {}
-
-            AtxType.CONSTANT -> {}
-            AtxType.END -> {}
             else -> {}
         }
     }
 }
 
 @Composable
-fun TableComponent(node: AtxNode) {
-    var columns by remember { mutableStateOf(listOf<String>()) }
-    var rows by remember { mutableStateOf(listOf<List<String>>()) }
+fun TableComponent(tokens: List<AtxToken>) {
+    tokens.forEach { token ->
+        val columns = token.argument.split(",").map { it.trim() }
+        val cellCol = if (columns.isEmpty()) 1 else columns.size
+        val rows = token.value.split(",")
+            .map { it.trim() }.chunked(cellCol)
 
-    LaunchedEffect(key1 = Unit) {
-        node.children.trim().forEach { token ->
-            when (token.type) {
-                AtxType.TABLE -> {
-                    columns = token.text.split(",").map { it.trim() }
+        Table(
+            header = {
+                if (columns.isNotEmpty()) {
+                    if (columns.size == 1) {
+                        TableHeader(title = columns.first())
+                    } else TableHeader(items = columns)
                 }
-
-                AtxType.ROW -> {
-                    val cellCol = if (columns.isEmpty()) 1 else columns.size
-                    rows = token.text.split(",")
-                        .map { it.trim() }.chunked(cellCol)
+            },
+            content = {
+                if (rows.isNotEmpty()) {
+                    TableItems(items = rows)
                 }
-
-                else -> {}
             }
-        }
+        )
     }
-
-    Table(
-        header = {
-            if (columns.isNotEmpty()) {
-                TableHeader(items = columns)
-            }
-        },
-        content = {
-            if (rows.isNotEmpty()) {
-                TableItems(items = rows)
-            }
-        }
-    )
 }
 
 fun log(vararg input: Any) {
@@ -468,7 +365,7 @@ fun QuoteBlock(modifier: Modifier = Modifier, quote: String) {
 private fun AtxBlockPreview() {
     MaterialTheme {
         Surface(color = Color.LightGray) {
-            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE)
+            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE_ATX)
         }
     }
 }

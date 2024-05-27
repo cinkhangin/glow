@@ -1,140 +1,209 @@
 package com.naulian.glow_core.atx
 
-class AtxLexer(private val source: CharSequence) {
+class BaseLexer(input: String) {
     private var cursor = 0
+    private val source = input.replace(" @j\n", " ")
     private val char get() = source.getOrElse(cursor) { Char.MIN_VALUE }
-    private val peek get() = source.getOrElse(cursor + 1) { Char.MIN_VALUE }
+
     private fun advance(amount: Int = 1) {
         cursor += amount
     }
 
-    private fun skipSpace() {
-        while (char.isWhitespace()) advance()
+    fun tokenize(): List<BaseToken> {
+        val tokens = mutableListOf<BaseToken>()
+        var current = next()
+        while (current.type != BaseType.EOF) {
+            tokens.add(current)
+            current = next()
+        }
+        //tokens.forEach(::println)
+        return tokens
     }
 
-    private fun skipNl() {
+    fun next(): BaseToken {
         while (char == '\n') advance()
-    }
 
-
-    fun next(): AtxToken {
-        skipNl()
         return when (char) {
-            Char.MIN_VALUE -> AtxToken.END
-            '@' -> lexAtx()
-            '\n' -> {
+            Char.MIN_VALUE -> BaseToken.EOF
+            '@' -> lexKeyword()
+            '(' -> lexValue()
+            '[' -> lexArgument()
+            /*'\n' -> {
                 advance()
-                AtxToken(AtxType.TEXT, "\n")
-            }
+                BaseToken(BaseType.NEWLINE, "\n")
+            }*/
 
             else -> lexText()
         }
     }
 
-    private fun lexAtx(): AtxToken {
-        advance()
+    private fun lexValue(): BaseToken {
+        advance() //skip opening parenthesis
+        val start = cursor
+        var level = 0
+        while (char != Char.MIN_VALUE) {
+            if (char == '(') {
+                level++
+            }
+            if (char == ')') {
+                if (level == 0) {
+                    break
+                } else level--
+            }
+            advance()
+        }
+        val end = cursor
+        advance() //skip closing parenthesis
+        val value = source.subSequence(start, end)
+        return BaseToken(BaseType.VALUE, value.str())
+    }
+
+    private fun lexArgument(): BaseToken {
+        advance() //skip opening bracket
+        val start = cursor
+        var level = 0
+        while (char != Char.MIN_VALUE) {
+            if (char == '[') {
+                level++
+            }
+            if (char == ']') {
+                if (level == 0) {
+                    break
+                } else level--
+            }
+            advance()
+        }
+        val end = cursor
+        advance() //skip closing bracket
+        val value = source.subSequence(start, end)
+        return BaseToken(BaseType.ARGUMENT, value.str())
+    }
+
+    private fun lexKeyword(): BaseToken {
+        advance() //skip the symbol
         return when (val c = char) {
-            'a' -> lexNormal(AtxType.LINK)
-            'b' -> lexBlock(AtxType.BOLD)
-            'c' -> lexBlock(AtxType.CODE_BLOCK)
-            'd' -> lexNormal(AtxType.DIVIDER)
-            'e' -> lexNormal(AtxType.ELEMENT)
-            'f' -> lexCode()
-            'g' -> lexBlock(AtxType.COLORED)
-            'h' -> lexNormal(AtxType.HYPER)
-            'i' -> lexBlock(AtxType.ITALIC)
-            'j' -> {
-                advance()
-                skipSpace()
-                return AtxToken(AtxType.JOIN, " ")
+            in 'a'..'z' -> {
+                advance() //skip the keyword
+                BaseToken(BaseType.KEYWORD, "@$c")
             }
 
-            'k' -> lexNormal(AtxType.CONSTANT)
+            else -> {
+                advance() //skip the keyword
+                BaseToken(BaseType.TEXT, "$c")
+            }
+        }
+    }
 
-            'l' -> lexNormal(AtxType.LIST)
-            'm' -> lexBlock(AtxType.BOLD_ITALIC)
-            'n' -> {
+    private fun lexText(): BaseToken {
+        val start = cursor
+        while (char != '@' && char != '\n' && char != Char.MIN_VALUE) {
+            advance()
+        }
+        val end = cursor
+        val text = source.subSequence(start, end)
+        return BaseToken(BaseType.TEXT, text.toString())
+    }
+}
+
+class AtxLexer(source: String) {
+    private val baseLexer = BaseLexer(source)
+    private val baseTokens = baseLexer.tokenize()
+
+    private var cursor = 0
+    private fun token() = baseTokens.getOrElse(cursor) { BaseToken.EOF }
+    private fun advance(amount: Int = 1) {
+        cursor += amount
+    }
+
+    fun tokenize(): List<AtxToken> {
+        val tokens = mutableListOf<AtxToken>()
+        var current = next()
+        while (current.type != AtxType.EOF) {
+            tokens.add(current)
+            current = next()
+        }
+        return tokens
+    }
+
+    fun next(): AtxToken {
+        val token = token()
+        return when (token.type) {
+            BaseType.KEYWORD -> lex(token.text)
+            BaseType.TEXT -> {
                 advance()
-                skipSpace()
-                AtxToken(AtxType.NEWLINE, "")
+                AtxToken(AtxType.TEXT, token.text)
             }
 
-            'o' -> lexNormal(AtxType.ORDERED_ELEMENT)
+            BaseType.NEWLINE -> {
+                advance()
+                AtxToken.NEWLINE
+            }
 
-            'p' -> lexNormal(AtxType.PICTURE)
-            'q' -> lexBlock(AtxType.QUOTE)
-
-            'r' -> lexNormal(AtxType.ROW)
-            's' -> lexBlock(AtxType.STRIKE) // done
-            't' -> lexNormal(AtxType.TABLE)
-            'u' -> lexBlock(AtxType.UNDERLINE)
-            'v' -> lexNormal(AtxType.VIDEO)
-
-            'w' -> lexNormal(AtxType.HEADER)
-            'x' -> lexNormal(AtxType.SUB_HEADER)
-            'y' -> lexNormal(AtxType.TITLE)
-            'z' -> lexNormal(AtxType.SUB_TITLE)
+            BaseType.EOF -> AtxToken.EOF
             else -> {
                 advance()
-                AtxToken(AtxType.TEXT, "$c")
+                AtxToken.OTHER
             }
         }
     }
 
-    private fun lexText(): AtxToken {
-        val start = cursor
-        while (char != '@' && char != Char.MIN_VALUE) {
-            advance()
+    private fun lex(value: String): AtxToken {
+        return when (value) {
+            "@h" -> lexVA(AtxType.HEADER)
+            "@b" -> lexV(AtxType.BOLD)
+            "@i" -> lexV(AtxType.ITALIC)
+            "@u" -> lexV(AtxType.UNDERLINE)
+            "@s" -> lexV(AtxType.STRIKE)
+            "@c" -> lexVA(AtxType.COLORED)
+            "@f" -> lexVA(AtxType.FUN)
+            "@q" -> lexVA(AtxType.QUOTE)
+            "@l" -> lexVA(AtxType.LINK)
+            "@p" -> lexV(AtxType.PICTURE)
+            "@y" -> lexV(AtxType.YOUTUBE)
+            "@m" -> lexV(AtxType.MEDIA)
+            "@v" -> lexV(AtxType.VIDEO)
+            "@t" -> lexVA(AtxType.TABLE)
+            "@d" -> lexV(AtxType.DIVIDER)
+            "@e" -> lexVA(AtxType.ELEMENT)
+            "@n" -> {
+                advance()
+                AtxToken.NEWLINE
+            }
+
+            else -> AtxToken.EOF
         }
-        val end = cursor
-        val text = source.subSequence(start, end)
-        return AtxToken(AtxType.TEXT, text.toString())
     }
 
-    private fun lexBlock(type: AtxType): AtxToken {
+    private fun lexVA(type: AtxType): AtxToken {
         advance()
-        skipSpace()
-        val start = cursor
-        while (char != '@' && char != Char.MIN_VALUE) {
+        val value = token()
+
+        if (value.type == BaseType.EOF) {
+            return AtxToken.EOF
+        }
+
+        return if (value.type == BaseType.VALUE) {
             advance()
-        }
-
-        val end = cursor
-        if (peek == type.code) {
-            advance(2)
-        }
-
-        val text = source.subSequence(start, end)
-        return AtxToken(type, text.trimStr())
+            val argument = token()
+            if (argument.type == BaseType.ARGUMENT) {
+                advance()
+                AtxToken(type, value.text, argument.text)
+            } else AtxToken(type, value.text)
+        } else AtxToken.OTHER
     }
 
-    private fun lexCode(): AtxToken {
-        advance()
-        skipSpace()
-        val start = cursor
 
-        var stop = false
-        while (!stop && char != Char.MIN_VALUE) {
-            advance()
-            stop = char == '@' && peek == 'f'
+    private fun lexV(type: AtxType): AtxToken {
+        advance() //skip symbol
+        val token = token()
+        if (token.type == BaseType.EOF) {
+            return AtxToken.EOF
         }
 
-        val end = cursor
-        advance(2)
-        val text = source.subSequence(start, end)
-        return AtxToken(AtxType.CODE, text.trimStr())
-    }
-
-    private fun lexNormal(type: AtxType): AtxToken {
-        advance()
-        skipSpace()
-        val start = cursor
-        while (char != '@' && char != Char.MIN_VALUE) {
+        return if (token.type == BaseType.VALUE) {
             advance()
-        }
-
-        val end = cursor
-        val text = source.subSequence(start, end)
-        return AtxToken(type, text.trimStr())
+            AtxToken(type, token.text)
+        } else AtxToken.OTHER
     }
+
 }

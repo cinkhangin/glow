@@ -18,7 +18,8 @@ import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.atx.AtxBlock
 import com.naulian.glow_compose.hexToColor
-import com.naulian.glow_core.atx.SAMPLE
+import com.naulian.glow_core.atx.SAMPLE_ATX
+
 
 class MainActivity : AppCompatActivity() {
     @Suppress("unused")
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
                     composeView.setContent {
                         Column {
-                            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE)
+                            AtxBlock(modifier = Modifier.padding(16.dp), source = SAMPLE_ATX)
                             LazyRow(
                                 modifier = Modifier
                                     .background(darkTheme.background.hexToColor())

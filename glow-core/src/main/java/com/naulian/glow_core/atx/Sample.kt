@@ -1,22 +1,20 @@
 package com.naulian.glow_core.atx
 
-val SAMPLE = """
-    @w this is heading 1
-    @x this is heading 2
-    @y this is heading 3
-    @z this is heading 4
+val SAMPLE_ATX = """
+    @h(this is heading 1)[1]
+    @h(this is heading 2)[2]
+    @h(this is heading 3)[3]
+    @h(this is heading 4)[4]
+    @h(this is heading 5)[5]
+    @h(this is heading 6)[6]
     
-    @n
+    this is @b(bold) text @j
+    this is @c(colored)[#00FF00] text @n
+    this is @i(italic) text @n
+    this is @u(underline) text @j
+    this is @s(strikethrough) text @n
     
-    this is @b bold @b text
-    @g #00FF00 green text @g
-    this is @i italic @i text
-    this is @u underline @u text
-    this is @s strikethrough @s text
-    this is @c code @c text @j
-    this is @m italic bold @m text
-    
-    @f comment
+    @f(
     j -> join (replace newline character with space)
     m -> for bold italic (aka mark)
     g -> for hex colored text (default is gray)
@@ -27,79 +25,65 @@ val SAMPLE = """
          @k data will be replaced with the current date
          @k time will be replaced with the current time
          @k random will be replaced with a random number
-    @f
+    )[comment]
     
-    @n
-    
-    this is a @g #FF0000 colored @g text
-    
-    @n
-    
-    @q 
+    @q(
     this is quote text
-    - naulian
-    @q
+    )[naulian]
     
-    @n
-    
-    @f kotlin
+    @f(
     fun main(varargs args: String) {
         println("Hello World!")
     }
-    @f
+    )[kotlin]
     
-    @f python
+    @f(
     def main():
         print("Hello World!")
         
     
     if __name__ == '__main__':
         main()
-    @f
-    
-    @n
+    )[python]
    
-    @h Google @a http://www.google.com
+    @l(http://www.google.com)[Google]
     
-    @n
+    @p(https://picsum.photos/id/67/300/200)
+    @y(https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+    @m(https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+    @v(https://www.youtube.com/watch?v=dQw4w9WgXcQ)
     
-    @p https://picsum.photos/id/67/300/200
-    @v https://www.youtube.com/watch?v=dQw4w9WgXcQ
-    
-    @n
-    
-    @z Logical And
-    @n
-    
-    @t a, b, result
-    @r 
+    @h(Logical And)[6]
+    @t(
     true, true, true, 
     true, false, false,
     false, false, false
+    )[a, b, result]
     
-    @n
+    @d(-)
     
-    @z Logical Or
-    @n
-    
-    @t a, b, result
-    @r 
-    true, true, true, 
-    true, false, true,
-    false, false, false
-    
-    @d -
-    
-    @l Primitive Types
+    @t(
     Char 1 Byte,
     Short 2 Bytes,
     Int 4 Bytes,
     Long 8 Bytes
+    )[Primitive Types]
     
-    @n
+    @e(
+    unordered element 1
+    unordered element 2
+    )[*]
+    @e(
+    ordered element 1
+    ordered element 2
+    )[1]
+    @e(
+    alphabetical element 1
+    alphabetical element 2
+    )[a]
     
-    @e unordered element 1
-    @e unordered element 2
-    @o ordered element 1
-    @o ordered element 2
+    @f(
+    these are not used yet
+    @a @r @h @o @w @x @z @n @f @g
+    )[comment]
 """.trimIndent()
