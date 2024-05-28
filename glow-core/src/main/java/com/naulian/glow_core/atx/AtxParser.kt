@@ -51,6 +51,7 @@ class AtxParser(source: String) {
             AtxType.UNDERLINE,
             AtxType.STRIKE,
             AtxType.COLORED,
+            AtxType.ELEMENT,
             AtxType.NEWLINE -> AtxContentType.TEXT
 
             AtxType.TABLE -> AtxContentType.TABLE

@@ -87,3 +87,9 @@ val SAMPLE_ATX = """
     @a @r @h @o @w @x @z @n @f @g
     )[comment]
 """.trimIndent()
+
+val SAMPLE_KT = """
+    fun main(args: Array<String>) {
+        println("Hello World!")
+    }
+""".trimIndent()
