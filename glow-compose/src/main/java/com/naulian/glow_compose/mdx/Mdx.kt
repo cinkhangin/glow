@@ -1,4 +1,4 @@
-package com.naulian.glow_compose.atx
+package com.naulian.glow_compose.mdx
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,20 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.naulian.glow_core.atx.ATX_SAMPLE
-import com.naulian.glow_core.atx.AtxContentType
-import com.naulian.glow_core.atx.AtxGroup
-import com.naulian.glow_core.atx.AtxParser
-import com.naulian.glow_core.atx.AtxToken
+import com.naulian.glow_core.mdx.MDX_SAMPLE
+import com.naulian.glow_core.mdx.MdxComponentGroup
+import com.naulian.glow_core.mdx.MdxComponentType
+import com.naulian.glow_core.mdx.MdxParser
+import com.naulian.glow_core.mdx.MdxToken
 
 @Composable
-fun AtxBlock(modifier: Modifier = Modifier, source: String) {
+fun MdxBlock(modifier: Modifier = Modifier, source: String) {
     var nodes by remember {
-        mutableStateOf(emptyList<AtxGroup>())
+        mutableStateOf(emptyList<MdxComponentGroup>())
     }
 
     LaunchedEffect(key1 = Unit) {
-        nodes = AtxParser(source).parse()
+        nodes = MdxParser(source).parse()
+        println(nodes)
     }
 
     if (nodes.isNotEmpty()) {
@@ -40,10 +41,10 @@ fun AtxBlock(modifier: Modifier = Modifier, source: String) {
         ) {
             nodes.forEach {
                 when (it.type) {
-                    AtxContentType.TEXT -> TextComponent(tokens = it.children)
-                    AtxContentType.OTHER -> OtherComponent(tokens = it.children)
-                    AtxContentType.TABLE -> TableComponent(tokens = it.children)
-                    AtxContentType.LINK -> LinkComponent(tokens = it.children)
+                    MdxComponentType.TEXT -> TextComponent(tokens = it.children)
+                    MdxComponentType.OTHER -> OtherComponent(tokens = it.children)
+                    MdxComponentType.TABLE -> TableComponent(tokens = it.children)
+                    MdxComponentType.LINK -> LinkComponent(tokens = it.children)
                 }
             }
         }
@@ -51,18 +52,19 @@ fun AtxBlock(modifier: Modifier = Modifier, source: String) {
 }
 
 @Composable
-fun LinkComponent(tokens: List<AtxToken>) {
+fun LinkComponent(tokens: List<MdxToken>) {
     tokens.forEach {
-        Text(text = it.argument.ifEmpty { it.value }, color = Color.Blue)
+        val (hyper, link) = it.getHyperLink()
+        Text(text = hyper.ifEmpty { link }, color = Color.Blue)
     }
 }
 
 @Preview
 @Composable
-private fun AtxBlockPreview() {
+private fun MdxBlockPreview() {
     MaterialTheme {
         Surface(color = Color.LightGray) {
-            AtxBlock(modifier = Modifier.padding(16.dp), source = ATX_SAMPLE)
+            MdxBlock(modifier = Modifier.padding(16.dp), source = MDX_SAMPLE)
         }
     }
 }

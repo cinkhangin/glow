@@ -1,4 +1,4 @@
-package com.naulian.glow_compose.atx
+package com.naulian.glow_compose.mdx
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.naulian.glow_compose.Preview
 import com.naulian.glow_compose.R
-import com.naulian.glow_core.atx.AtxToken
-import com.naulian.glow_core.atx.AtxType
+import com.naulian.glow_core.mdx.MdxToken
+import com.naulian.glow_core.mdx.MdxType
 
 @Composable
-fun AtxImageBlock(modifier: Modifier = Modifier, token: AtxToken) {
+fun MdxImageBlock(modifier: Modifier = Modifier, token: MdxToken) {
     AsyncImage(
-        model = token.value,
+        model = token.text,
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small),
@@ -33,12 +33,11 @@ fun AtxImageBlock(modifier: Modifier = Modifier, token: AtxToken) {
 @Composable
 private fun AtxImageBlockPreview() {
     Preview {
-        val token = AtxToken(
-            type = AtxType.PICTURE,
-            value = "https://picsum.photos/id/67/300/200",
-            argument = ""
+        val token = MdxToken(
+            type = MdxType.IMAGE,
+            text = "https://picsum.photos/id/67/300/200",
         )
-        AtxImageBlock(
+        MdxImageBlock(
             modifier = Modifier.padding(16.dp),
             token = token
         )

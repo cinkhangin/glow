@@ -1,6 +1,6 @@
 package com.naulian.glow_core.atx
 
-val SAMPLE_ATX = """
+val ATX_SAMPLE = """
     @h(this is heading 1)[1]
     @h(this is heading 2)[2]
     @h(this is heading 3)[3]
