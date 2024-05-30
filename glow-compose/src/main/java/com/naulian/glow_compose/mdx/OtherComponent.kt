@@ -12,6 +12,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
+import com.naulian.modify.table.Table
+import com.naulian.modify.table.TableHeader
+import com.naulian.modify.table.TableItems
 
 val a2z = ('a'..'z').toList()
 val A2Z = ('A'..'Z').toList()
@@ -61,6 +64,24 @@ fun OtherComponent(tokens: List<MdxToken>) {
                     "" -> Spacer(modifier = Modifier.height(12.dp))
                     else -> Text(text = token.text, modifier = Modifier.fillMaxWidth())
                 }
+            }
+            MdxType.TABLE -> {
+                val (cols, rows) = token.getTableItemPairs()
+
+                Table(
+                    header = {
+                        if (cols.isNotEmpty()) {
+                            if (cols.size == 1) {
+                                TableHeader(title = cols.first())
+                            } else TableHeader(items = cols)
+                        }
+                    },
+                    content = {
+                        if (rows.isNotEmpty()) {
+                            TableItems(items = rows)
+                        }
+                    }
+                )
             }
 
             else -> {}

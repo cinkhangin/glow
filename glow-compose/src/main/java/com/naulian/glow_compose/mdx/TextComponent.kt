@@ -2,6 +2,7 @@ package com.naulian.glow_compose.mdx
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -9,6 +10,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import com.naulian.glow_compose.hexToColor
 import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
 import com.naulian.glow_core.mdx.mdxAdhocMap
@@ -55,6 +57,33 @@ fun TextComponent(tokens: List<MdxToken>) {
                     val content = mdxAdhocMap[token.text] ?: ""
                     append(content)
                 }
+
+                MdxType.LINK -> appendWithStyle(
+                    token.text,
+                    style = SpanStyle(color = Color.Blue)
+                )
+
+                MdxType.HYPER_LINK -> {
+                    val (hyper, link) = token.getHyperLink()
+                    appendWithStyle(
+                        hyper.ifEmpty { link },
+                        style = SpanStyle(color = Color.Blue)
+                    )
+                }
+
+                MdxType.ESCAPE -> {
+                    append(token.text)
+                }
+
+                MdxType.COLORED -> {
+                    val (text, hexColor) = token.getTextColorPair()
+                    val color = hexColor.hexToColor()
+                    appendWithStyle(
+                        text,
+                        style = SpanStyle(color = color)
+                    )
+                }
+
 
                 else -> append("")
             }

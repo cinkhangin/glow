@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,7 +20,6 @@ import com.naulian.glow_core.mdx.MDX_SAMPLE
 import com.naulian.glow_core.mdx.MdxComponentGroup
 import com.naulian.glow_core.mdx.MdxComponentType
 import com.naulian.glow_core.mdx.MdxParser
-import com.naulian.glow_core.mdx.MdxToken
 
 @Composable
 fun MdxBlock(modifier: Modifier = Modifier, source: String) {
@@ -30,7 +28,7 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
     }
 
     LaunchedEffect(key1 = Unit) {
-        nodes = MdxParser(source).parse()
+        nodes = MdxParser.parse(source)
         println(nodes)
     }
 
@@ -43,21 +41,12 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
                 when (it.type) {
                     MdxComponentType.TEXT -> TextComponent(tokens = it.children)
                     MdxComponentType.OTHER -> OtherComponent(tokens = it.children)
-                    MdxComponentType.TABLE -> TableComponent(tokens = it.children)
-                    MdxComponentType.LINK -> LinkComponent(tokens = it.children)
                 }
             }
         }
     }
 }
 
-@Composable
-fun LinkComponent(tokens: List<MdxToken>) {
-    tokens.forEach {
-        val (hyper, link) = it.getHyperLink()
-        Text(text = hyper.ifEmpty { link }, color = Color.Blue)
-    }
-}
 
 @Preview
 @Composable
