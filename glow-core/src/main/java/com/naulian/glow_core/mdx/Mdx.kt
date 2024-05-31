@@ -414,9 +414,20 @@ object MdxParser {
                 }
 
                 if (currentGroup.isNotEmpty()) {
-                    val last = currentGroup.removeLast()
-                    val updatedLast = last.copy(text = last.text.trim())
-                    currentGroup.add(updatedLast)
+
+                    if (currentGroup.size == 1) {
+                        val last = currentGroup.removeLast()
+                        val updatedLast = last.copy(text = last.text.trim())
+                        currentGroup.add(updatedLast)
+                    } else {
+                        val last = currentGroup.removeLast()
+                        val updatedLast = last.copy(text = last.text.trimEnd())
+                        currentGroup.add(updatedLast)
+                    }
+
+                    if (currentGroup.first().isBlackText()) {
+                        currentGroup.removeFirst()
+                    }
 
                     val atxGroup = MdxComponentGroup(lastType, currentGroup)
                     tokenGroups.add(atxGroup)
@@ -529,7 +540,7 @@ val MDX_SAMPLE = """
         main()
     ~
     
-    Search here (Google Website@http://www.google.com).
+    Search (here@http://www.google.com) for anything.
     
     (img@https://picsum.photos/id/67/300/200)
     
