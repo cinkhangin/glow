@@ -27,7 +27,7 @@ class MdxPreProcessor(private val input: String) {
             val block = when (val char = char()) {
                 '"' -> consumeBlock(char)
                 '=' -> consumeBlock(char)
-                '{' -> consumeContainer(char, '}')
+                '~' -> consumeBlock(char)
                 '[' -> consumeContainer(char, ']')
                 else -> consumeLine()
             }
@@ -61,6 +61,7 @@ class MdxPreProcessor(private val input: String) {
         return input.subSequence(start, cursor).toString()
     }
 
+    @Suppress("SameParameterValue")
     private fun consumeContainer(openChar: Char, closeChar: Char): String {
         val start = cursor
         var level = 0
@@ -182,7 +183,7 @@ class MdxLexer(input: String) {
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
-    private val symbolChars = "\"&/<->[]()_\n"
+    private val symbolChars = "\"&/<>{}[~](-)_\n"
     private val charIsNotSymbol get() = char() !in symbolChars
     private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 
@@ -208,11 +209,11 @@ class MdxLexer(input: String) {
             '"' -> createBlockToken(MdxType.QUOTE, char)
             '=' -> createBlockToken(MdxType.DIVIDER, char)
             '\'' -> createBlockToken(MdxType.ESCAPE, char)
-            '~' -> createBlockToken(MdxType.COLORED, char)
+            '~' -> createBlockToken(MdxType.CODE, char)
             '[' -> createTableToken()
-            '<' -> createAdhocToken()
+            '<' -> createColoredToken()
             '#' -> createHeaderToken()
-            '{' -> createCodeToken()
+            '{' -> createAdhocToken()
             '*' -> createElementToken()
             '(' -> createLinkToken()
             in symbolChars -> {
@@ -230,10 +231,10 @@ class MdxLexer(input: String) {
         val start = cursor
         var level = 0
         while (isNotEndChar) {
-            if (char() == '<') {
+            if (char() == '{') {
                 level++
             }
-            if (char() == '>') {
+            if (char() == '}') {
                 if (level == 0) {
                     break
                 } else level--
@@ -308,6 +309,15 @@ class MdxLexer(input: String) {
         }
         val valueText = source.subSequence(start, cursor)
         advance()
+
+        if (type == MdxType.CODE) {
+            var code = valueText.toString()
+            mdxAdhocMap.forEach {
+                code = code.replace(it.key, it.value)
+            }
+
+            return MdxToken(type, code)
+        }
         return MdxToken(type, valueText.str())
     }
 
@@ -354,15 +364,15 @@ class MdxLexer(input: String) {
         return MdxToken(MdxType.TABLE, value.str())
     }
 
-    private fun createCodeToken(): MdxToken {
+    private fun createColoredToken(): MdxToken {
         advance() //skip opening bracket
         val start = cursor
         var level = 0
         while (isNotEndChar) {
-            if (char() == '{') {
+            if (char() == '<') {
                 level++
             }
-            if (char() == '}') {
+            if (char() == '>') {
                 if (level == 0) {
                     break
                 } else level--
@@ -372,13 +382,7 @@ class MdxLexer(input: String) {
         val end = cursor
         advance() //skip closing bracket
         val value = source.subSequence(start, end).str()
-
-        var code = value
-        mdxAdhocMap.forEach {
-            code = code.replace(it.key, it.value)
-        }
-
-        return MdxToken(MdxType.CODE, code)
+        return MdxToken(MdxType.COLORED, value)
     }
 }
 
@@ -490,22 +494,22 @@ val MDX_SAMPLE = """
     #5 this is heading 5
     #6 this is heading 6
    
-    =line=
+    ==
     
     'ignore -syntax- here'
     
-    ~color this text#FF0000~
+    <color this text#FF0000>
     
     this is &bold& text
     this is /italic/ text
     this is _underline_ text
     this is -strikethrough- text.
     
-    Current time : <mdx.time>
+    Current time : {mdx.time}
     
     "this is quote text -author"
     
-    { 
+    ~
     .kt
     fun main(varargs args: String) {
         println("Hello World!")
@@ -513,9 +517,9 @@ val MDX_SAMPLE = """
         println("Current time in millis: ${dollarSign}millis")
         // output : mdx.millis
     }
-    }
+    ~
     
-    { 
+    ~
     .py
     def main():
         print("Hello World!")
@@ -523,7 +527,7 @@ val MDX_SAMPLE = """
     
     if __name__ == '__main__':
         main()
-    }
+    ~
     
     Search here (Google Website@http://www.google.com).
     

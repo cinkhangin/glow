@@ -1,14 +1,11 @@
 package com.naulian.glow_compose.mdx
 
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
@@ -61,7 +58,7 @@ fun OtherComponent(tokens: List<MdxToken>) {
             MdxType.DIVIDER -> {
                 when (token.text) {
                     "line" -> HorizontalDivider()
-                    "" -> Spacer(modifier = Modifier.height(12.dp))
+                    "" -> {}
                     else -> Text(text = token.text, modifier = Modifier.fillMaxWidth())
                 }
             }
