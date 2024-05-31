@@ -18,7 +18,7 @@ import com.naulian.glow.setCodeTheme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.hexToColor
 import com.naulian.glow_compose.mdx.MdxBlock
-import com.naulian.glow_core.mdx.MDX_TEST
+import com.naulian.glow_core.mdx.MDX_SAMPLE
 
 
 class MainActivity : AppCompatActivity() {
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                     composeView.setContent {
                         Column {
                             //AtxBlock(modifier = Modifier.padding(16.dp), source = ATX_SAMPLE)
-                            MdxBlock(modifier = Modifier.padding(16.dp), source = MDX_TEST)
+                            MdxBlock(modifier = Modifier.padding(16.dp), source = MDX_SAMPLE)
                             LazyRow(
                                 modifier = Modifier
                                     .background(darkTheme.background.hexToColor())

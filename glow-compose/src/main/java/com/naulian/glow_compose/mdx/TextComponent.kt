@@ -13,7 +13,6 @@ import androidx.compose.ui.text.withStyle
 import com.naulian.glow_compose.hexToColor
 import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
-import com.naulian.glow_core.mdx.mdxAdhocMap
 
 fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
     withStyle(style = style) {
@@ -51,12 +50,22 @@ fun TextComponent(tokens: List<MdxToken>) {
                 )
 
                 MdxType.TEXT -> append(token.text)
-                MdxType.ELEMENT -> append("\u25CF ${token.text}")
-                MdxType.WHITESPACE -> append(token.text)
-                MdxType.ADHOC -> {
-                    val content = mdxAdhocMap[token.text] ?: ""
-                    append(content)
+                MdxType.ELEMENT -> {
+                    when {
+                        token.text.startsWith("o ") -> {
+                            val text = token.text.replace("o ", "")
+                            append("\u2610 $text")
+                        }
+
+                        token.text.startsWith("x ") -> {
+                            val text = token.text.replace("x ", "")
+                            append("\u2611 $text")
+                        }
+
+                        else -> append("\u25CF ${token.text}")
+                    }
                 }
+                MdxType.WHITESPACE -> append(token.text)
 
                 MdxType.LINK -> appendWithStyle(
                     token.text,
