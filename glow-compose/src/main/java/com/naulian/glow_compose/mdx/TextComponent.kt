@@ -53,12 +53,12 @@ fun TextComponent(tokens: List<MdxToken>) {
                 MdxType.ELEMENT -> {
                     when {
                         token.text.startsWith("o ") -> {
-                            val text = token.text.replace("o ", "")
+                            val text = token.text.removePrefix("o ")
                             append("\u2610 $text")
                         }
 
                         token.text.startsWith("x ") -> {
-                            val text = token.text.replace("x ", "")
+                            val text = token.text.removePrefix("x ")
                             append("\u2611 $text")
                         }
 
