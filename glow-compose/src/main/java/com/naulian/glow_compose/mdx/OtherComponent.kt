@@ -65,6 +65,7 @@ fun OtherComponent(tokens: List<MdxToken>) {
                     else -> Text(text = token.text, modifier = Modifier.fillMaxWidth())
                 }
             }
+
             MdxType.TABLE -> {
                 val (cols, rows) = token.getTableItemPairs()
 

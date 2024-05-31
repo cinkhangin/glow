@@ -51,7 +51,7 @@ fun TextComponent(tokens: List<MdxToken>) {
                 )
 
                 MdxType.TEXT -> append(token.text)
-                MdxType.ELEMENT -> append(token.text)
+                MdxType.ELEMENT -> append("\u25CF ${token.text}")
                 MdxType.WHITESPACE -> append(token.text)
                 MdxType.ADHOC -> {
                     val content = mdxAdhocMap[token.text] ?: ""

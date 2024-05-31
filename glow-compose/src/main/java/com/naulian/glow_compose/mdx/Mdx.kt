@@ -29,7 +29,6 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
 
     LaunchedEffect(key1 = Unit) {
         nodes = MdxParser.parse(source)
-        println(nodes)
     }
 
     if (nodes.isNotEmpty()) {
@@ -48,7 +47,7 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
 }
 
 
-@Preview
+@Preview(heightDp = 1200)
 @Composable
 private fun MdxBlockPreview() {
     MaterialTheme {
