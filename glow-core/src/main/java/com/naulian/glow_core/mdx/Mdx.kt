@@ -208,7 +208,7 @@ class MdxLexer(input: String) {
             '_' -> createBlockToken(MdxType.UNDERLINE, char)
             '"' -> createBlockToken(MdxType.QUOTE, char)
             '=' -> createBlockToken(MdxType.DIVIDER, char)
-            '\'' -> createBlockToken(MdxType.ESCAPE, char)
+            '`' -> createBlockToken(MdxType.ESCAPE, char)
             '~' -> createBlockToken(MdxType.CODE, char)
             '[' -> createTableToken()
             '<' -> createColoredToken()
@@ -496,7 +496,7 @@ val MDX_SAMPLE = """
    
     =line=
     
-    'ignore -syntax- here'
+    `ignore -syntax- here`
     
     <color this text#FF0000>
     
