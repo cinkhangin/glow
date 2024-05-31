@@ -3,7 +3,7 @@ package com.naulian.glow_core.mdx
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-const val mdxVirtualNewline = "mdx.virtual.newline"
+const val mdxNewline = "mdx.newline"
 fun CharSequence.str(): String = toString().trim()
 fun CharSequence.str(textToReplace: String) = str().replace(textToReplace, "")
 
@@ -27,8 +27,8 @@ class MdxPreProcessor(private val input: String) {
             val block = when (val char = char()) {
                 '"' -> consumeBlock(char)
                 '=' -> consumeBlock(char)
-                '~' -> consumeBlock(char)
                 '[' -> consumeContainer(char, ']')
+                '{' -> consumeContainer(char, '}')
                 else -> consumeLine()
             }
 
@@ -45,7 +45,7 @@ class MdxPreProcessor(private val input: String) {
             advance()
         }
         val value = input.subSequence(start, cursor).toString()
-        return "${value}$mdxVirtualNewline"
+        return "${value}$mdxNewline"
     }
 
     private fun consumeBlock(containerChar: Char): String {
@@ -85,7 +85,7 @@ enum class MdxType {
     H1, H2, H3, H4, H5, H6,
     TEXT, BOLD, ITALIC, UNDERLINE, STRIKE,
     QUOTE, LINK, HYPER_LINK, IMAGE, CODE,
-    TABLE, ELEMENT, ADHOC, ESCAPE, COLORED,
+    TABLE, ELEMENT, ESCAPE, COLORED,
     WHITESPACE, DIVIDER, EOF,
 }
 
@@ -159,7 +159,7 @@ data class MdxToken(
 
 object MdxTokenizer {
 
-    fun tokenize(input: String): List<MdxToken> {
+    fun tokenize(input: String, showLog: Boolean = false): List<MdxToken> {
         val preprocess = MdxPreProcessor(input).process()
         val tokens = mutableListOf<MdxToken>()
 
@@ -172,7 +172,10 @@ object MdxTokenizer {
             }
         }
 
-        //tokens.forEach(::println)
+        if (showLog) {
+            tokens.forEach(::println)
+        }
+
         return tokens
     }
 }
@@ -183,7 +186,7 @@ class MdxLexer(input: String) {
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
-    private val symbolChars = "\"&/<>{}[~](-)_\n"
+    private val symbolChars = "\"&/<>{}[~]\\(-)_\n"
     private val charIsNotSymbol get() = char() !in symbolChars
     private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 
@@ -204,18 +207,18 @@ class MdxLexer(input: String) {
         return when (val char = char()) {
             '&' -> createBlockToken(MdxType.BOLD, char)
             '/' -> createBlockToken(MdxType.ITALIC, char)
-            '-' -> createBlockToken(MdxType.STRIKE, char)
             '_' -> createBlockToken(MdxType.UNDERLINE, char)
             '"' -> createBlockToken(MdxType.QUOTE, char)
             '=' -> createBlockToken(MdxType.DIVIDER, char)
             '`' -> createBlockToken(MdxType.ESCAPE, char)
-            '~' -> createBlockToken(MdxType.CODE, char)
+            '~' -> createBlockToken(MdxType.STRIKE, char)
             '[' -> createTableToken()
             '<' -> createColoredToken()
             '#' -> createHeaderToken()
-            '{' -> createAdhocToken()
+            '{' -> createCodeToken()
             '*' -> createElementToken()
             '(' -> createLinkToken()
+            '\\' -> createEscapedToken()
             in symbolChars -> {
                 advance()
                 MdxToken(MdxType.TEXT, char.toString())
@@ -226,7 +229,16 @@ class MdxLexer(input: String) {
         }
     }
 
-    private fun createAdhocToken(): MdxToken {
+    private fun createEscapedToken(): MdxToken {
+        advance()
+        val escapedChar = char()
+        return if (escapedChar in symbolChars) {
+            advance()
+            MdxToken(MdxType.TEXT, escapedChar.toString())
+        } else createTextToken()
+    }
+
+    private fun createCodeToken(): MdxToken {
         advance() //skip opening bracket
         val start = cursor
         var level = 0
@@ -244,7 +256,12 @@ class MdxLexer(input: String) {
         val end = cursor
         advance() //skip closing bracket
         val value = source.subSequence(start, end)
-        return MdxToken(MdxType.ADHOC, value.str())
+
+        var code = value.str()
+        mdxAdhocMap.forEach {
+            code = code.replace(it.key, it.value)
+        }
+        return MdxToken(MdxType.CODE, code)
     }
 
     private fun createLinkToken(): MdxToken {
@@ -287,7 +304,7 @@ class MdxLexer(input: String) {
             advance()
         }
         val text = source.subSequence(start, cursor).toString()
-            .replace(mdxVirtualNewline, "\n")
+            .replace(mdxNewline, "\n")
         return MdxToken(MdxType.ELEMENT, text)
     }
 
@@ -296,8 +313,13 @@ class MdxLexer(input: String) {
         while (charIsNotSymbol && isNotEndChar) {
             advance()
         }
-        val text = source.subSequence(start, cursor).toString()
-            .replace(mdxVirtualNewline, "\n")
+        val value = source.subSequence(start, cursor).toString()
+            .replace(mdxNewline, "\n")
+
+        var text = value
+        mdxAdhocMap.forEach {
+            text = text.replace(it.key, it.value)
+        }
         return MdxToken(MdxType.TEXT, text)
     }
 
@@ -309,15 +331,6 @@ class MdxLexer(input: String) {
         }
         val valueText = source.subSequence(start, cursor)
         advance()
-
-        if (type == MdxType.CODE) {
-            var code = valueText.str()
-            mdxAdhocMap.forEach {
-                code = code.replace(it.key, it.value)
-            }
-
-            return MdxToken(type, code)
-        }
         return MdxToken(type, valueText.str())
     }
 
@@ -340,7 +353,7 @@ class MdxLexer(input: String) {
             advance()
         }
         val text = source.subSequence(start, cursor)
-        return MdxToken(type, text.str(mdxVirtualNewline))
+        return MdxToken(type, text.str(mdxNewline))
     }
 
     private fun createTableToken(): MdxToken {
@@ -397,8 +410,8 @@ enum class MdxComponentType {
 
 object MdxParser {
 
-    fun parse(source: String): List<MdxComponentGroup> {
-        val generatedTokens = MdxTokenizer.tokenize(source)
+    fun parse(source: String, showLog: Boolean = false): List<MdxComponentGroup> {
+        val generatedTokens = MdxTokenizer.tokenize(source, showLog)
         val tokenGroups = mutableListOf<MdxComponentGroup>()
         var currentGroup = mutableListOf<MdxToken>()
 
@@ -468,7 +481,6 @@ object MdxParser {
             MdxType.UNDERLINE,
             MdxType.WHITESPACE,
             MdxType.STRIKE,
-            MdxType.ADHOC,
             MdxType.HYPER_LINK,
             MdxType.LINK,
             MdxType.ESCAPE,
@@ -536,13 +548,13 @@ val MDX_SAMPLE = """
     this is &bold& text
     this is /italic/ text
     this is _underline_ text
-    this is -strikethrough- text.
+    this is ~strikethrough~ text.
     
-    Current time : {mdx.time}
+    Current time : mdx.time
     
     "this is quote text -author"
     
-    ~
+    {
     .kt
     fun main(varargs args: String) {
         println("Hello World!")
@@ -550,9 +562,11 @@ val MDX_SAMPLE = """
         println("Current time in millis: ${dollarSign}millis")
         // output : mdx.millis
     }
-    ~
+    }
     
-    ~
+    \"this should not show quote\"
+    
+    {
     .py
     def main():
         print("Hello World!")
@@ -560,7 +574,7 @@ val MDX_SAMPLE = """
     
     if __name__ == '__main__':
         main()
-    ~
+    }
     
     Search (here@http://www.google.com) for anything.
     
@@ -577,68 +591,78 @@ val MDX_SAMPLE = """
     
     * unordered item
     * unordered item
+    
+    *o un done item
+    *x done item
 """.trimIndent()
 
-
-object MdxTextRenderer {
-    fun renderer(source: String) {
-        MdxParser.parse(source).forEach { group ->
-            when (group.type) {
-                MdxComponentType.TEXT -> {
-                    group.children.forEach { token ->
-                        when (token.type) {
-                            MdxType.COLORED -> {
-                                val (value, hexColor) = token.getTextColorPair()
-                                print("$value: $hexColor")
-                            }
-
-                            MdxType.LINK,
-                            MdxType.HYPER_LINK -> {
-                                val (hyper, link) = token.getHyperLink()
-                                print("$hyper: $link")
-                            }
-
-                            MdxType.ELEMENT -> {
-                                print("*: ${token.text}")
-                            }
-
-                            else -> print(token.text)
+fun List<MdxComponentGroup>.getFormattedString(): String {
+    val strBuilder = StringBuilder()
+    forEach { group ->
+        when (group.type) {
+            MdxComponentType.TEXT -> {
+                group.children.forEach { token ->
+                    when (token.type) {
+                        MdxType.COLORED -> {
+                            val (value, hexColor) = token.getTextColorPair()
+                            strBuilder.append("$value: $hexColor")
                         }
+
+                        MdxType.LINK,
+                        MdxType.HYPER_LINK -> {
+                            val (hyper, link) = token.getHyperLink()
+                            strBuilder.append("$hyper: $link")
+                        }
+
+                        MdxType.ELEMENT -> {
+                            when {
+                                token.text.startsWith("o ") -> {
+                                    val text = token.text.replace("o ", "")
+                                    strBuilder.append("\u2610 $text")
+                                }
+
+                                token.text.startsWith("x ") -> {
+                                    val text = token.text.replace("x ", "")
+                                    strBuilder.append("\u2611 $text")
+                                }
+
+                                else -> strBuilder.append("\u25CF ${token.text}")
+                            }
+                        }
+
+                        else -> strBuilder.append(token.text)
                     }
                 }
+                strBuilder.append("\n")
+            }
 
-                MdxComponentType.OTHER -> {
-                    group.children.forEach { token ->
-                        when (token.type) {
-                            MdxType.CODE -> {
-                                val (lang, code) = token.getLangCodePair()
-                                println("$lang: $code")
-                            }
-
-                            MdxType.DIVIDER -> {
-                                println("---")
-                            }
-
-                            MdxType.ADHOC -> {
-                                val text = when (token.text) {
-                                    in mdxAdhocMap -> mdxAdhocMap[token.text]
-                                    else -> "Adhoc: ${token.text}"
-                                }
-                                println(text)
-                            }
-
-                            MdxType.TABLE -> {
-                                val rows = token.getTableItemPairs()
-                                println(rows)
-                            }
-
-                            else -> println(token.text)
+            MdxComponentType.OTHER -> {
+                group.children.forEach { token ->
+                    when (token.type) {
+                        MdxType.CODE -> {
+                            val (lang, code) = token.getLangCodePair()
+                            strBuilder.append("$lang: $code")
                         }
+
+                        MdxType.DIVIDER -> {
+                            strBuilder.append("---")
+                        }
+
+                        MdxType.TABLE -> {
+                            val rows = token.getTableItemPairs()
+                            strBuilder.append(rows)
+                        }
+
+                        else -> strBuilder.append(token.text)
                     }
+
+                    strBuilder.append("\n")
                 }
             }
         }
     }
+
+    return strBuilder.toString()
 }
 
 fun formattedDateTime(pattern: String): String {
@@ -648,5 +672,6 @@ fun formattedDateTime(pattern: String): String {
 }
 
 fun main() {
-    MdxTextRenderer.renderer(MDX_TEST)
+    val text = MdxParser.parse(MDX_SAMPLE).getFormattedString()
+    println(text)
 }
