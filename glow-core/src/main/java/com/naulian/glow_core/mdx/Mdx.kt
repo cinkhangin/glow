@@ -311,7 +311,7 @@ class MdxLexer(input: String) {
         advance()
 
         if (type == MdxType.CODE) {
-            var code = valueText.toString()
+            var code = valueText.str()
             mdxAdhocMap.forEach {
                 code = code.replace(it.key, it.value)
             }
@@ -494,7 +494,7 @@ val MDX_SAMPLE = """
     #5 this is heading 5
     #6 this is heading 6
    
-    ==
+    =line=
     
     'ignore -syntax- here'
     
