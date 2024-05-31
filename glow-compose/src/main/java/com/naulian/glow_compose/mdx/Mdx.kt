@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.naulian.glow_core.mdx.MDX_SAMPLE
+import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxComponentGroup
 import com.naulian.glow_core.mdx.MdxComponentType
 import com.naulian.glow_core.mdx.MdxParser
@@ -52,7 +52,7 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
 private fun MdxBlockPreview() {
     MaterialTheme {
         Surface(color = Color.LightGray) {
-            MdxBlock(modifier = Modifier.padding(16.dp), source = MDX_SAMPLE)
+            MdxBlock(modifier = Modifier.padding(16.dp), source = MDX_TEST)
         }
     }
 }

@@ -413,40 +413,51 @@ object MdxParser {
                     currentGroup.removeLast()
                 }
 
-                if (currentGroup.isNotEmpty()) {
-
-                    if (currentGroup.size == 1) {
-                        val last = currentGroup.removeLast()
-                        val updatedLast = last.copy(text = last.text.trim())
-                        currentGroup.add(updatedLast)
-                    } else {
-                        val last = currentGroup.removeLast()
-                        val updatedLast = last.copy(text = last.text.trimEnd())
-                        currentGroup.add(updatedLast)
-                    }
-
-                    if (currentGroup.first().isBlackText()) {
-                        currentGroup.removeFirst()
-                    }
-
-                    val atxGroup = MdxComponentGroup(lastType, currentGroup)
+                val handled = handleTokens(currentGroup)
+                if (handled.isNotEmpty()) {
+                    val atxGroup = MdxComponentGroup(lastType, handled)
                     tokenGroups.add(atxGroup)
                 }
+
                 currentGroup = mutableListOf(token)
             }
         }
 
-        if (currentGroup.isNotEmpty()) {
-            val last = currentGroup.removeLast()
-            val type = last.getComponentType()
-            val updatedLast = last.copy(text = last.text.trim())
-            currentGroup.add(updatedLast)
-
-            val atxGroup = MdxComponentGroup(type, currentGroup)
+        //add the last group
+        val type = currentGroup.getComponentType()
+        val handled = handleTokens(currentGroup)
+        if (handled.isNotEmpty()) {
+            val atxGroup = MdxComponentGroup(type, handled)
             tokenGroups.add(atxGroup)
         }
 
+        tokenGroups.forEach(::println)
         return tokenGroups
+    }
+
+    private fun handleTokens(group: List<MdxToken>): List<MdxToken> {
+        if (group.isEmpty()) return emptyList()
+
+        val currentGroup = group.toMutableList()
+        if (currentGroup.size == 1) {
+            val last = currentGroup.removeLast()
+            val updatedLast = last.copy(text = last.text.trim())
+            currentGroup.add(updatedLast)
+        } else {
+            val last = currentGroup.removeLast()
+            val updatedLast = last.copy(text = last.text.trimEnd())
+            currentGroup.add(updatedLast)
+        }
+
+        if (currentGroup.first().isBlackText()) {
+            currentGroup.removeFirst()
+        }
+
+        return currentGroup
+    }
+
+    private fun List<MdxToken>.getComponentType(): MdxComponentType {
+        return if (isEmpty()) MdxComponentType.OTHER else last().getComponentType()
     }
 
     private fun MdxToken.getComponentType(): MdxComponentType {
@@ -497,6 +508,17 @@ val mdxAdhocMap = hashMapOf(
     mdxTime to formattedDateTime("hh:mm:ss a")
 )
 
+val MDX_TEST = """
+    #1 heading
+    * item
+    
+    some text
+    
+    (img@https://picsum.photos/id/67/300/200)
+    
+    some more text
+""".trimIndent()
+
 val MDX_SAMPLE = """
     #1 this is heading 1
     #2 this is heading 2
@@ -544,6 +566,8 @@ val MDX_SAMPLE = """
     
     (img@https://picsum.photos/id/67/300/200)
     
+    image space bug test
+    
     [
     a    |b    |result
     true |true |true  
@@ -573,9 +597,11 @@ object MdxTextRenderer {
                                 val (hyper, link) = token.getHyperLink()
                                 print("$hyper: $link")
                             }
+
                             MdxType.ELEMENT -> {
                                 print("*: ${token.text}")
                             }
+
                             else -> print(token.text)
                         }
                     }
@@ -622,5 +648,5 @@ fun formattedDateTime(pattern: String): String {
 }
 
 fun main() {
-    MdxTextRenderer.renderer(MDX_SAMPLE)
+    MdxTextRenderer.renderer(MDX_TEST)
 }
