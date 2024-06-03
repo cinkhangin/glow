@@ -22,7 +22,11 @@ import com.naulian.glow_core.mdx.MdxComponentType
 import com.naulian.glow_core.mdx.MdxParser
 
 @Composable
-fun MdxBlock(modifier: Modifier = Modifier, source: String) {
+fun MdxBlock(
+    modifier: Modifier = Modifier,
+    source: String,
+    components: MdxComponents = mdxComponents()
+) {
     var nodes by remember {
         mutableStateOf(emptyList<MdxComponentGroup>())
     }
@@ -39,7 +43,10 @@ fun MdxBlock(modifier: Modifier = Modifier, source: String) {
             nodes.forEach {
                 when (it.type) {
                     MdxComponentType.TEXT -> TextComponent(tokens = it.children)
-                    MdxComponentType.OTHER -> OtherComponent(tokens = it.children)
+                    MdxComponentType.OTHER -> OtherComponent(
+                        tokens = it.children,
+                        components = components
+                    )
                 }
             }
         }

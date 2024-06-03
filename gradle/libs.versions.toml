@@ -8,7 +8,6 @@ coreKtx = "1.13.1"
 espressoCore = "3.5.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
-markdown = "0.7.2"
 material = "1.12.0"
 constraintCompose = "1.0.1"
 coilCompose = "2.6.0"
@@ -34,7 +33,6 @@ naulian-anhance = { module = "com.naulian:anhance", version.ref = "anhance" }
 naulian-modify = { module = "com.naulian:modify", version.ref = "modify" }
 junit = { module = "junit:junit", version.ref = "junit" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-jetbrains-markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 [plugins]
 

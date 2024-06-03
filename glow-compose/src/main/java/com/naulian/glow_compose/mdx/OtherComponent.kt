@@ -13,8 +13,31 @@ import com.naulian.modify.table.Table
 import com.naulian.modify.table.TableHeader
 import com.naulian.modify.table.TableItems
 
-val a2z = ('a'..'z').toList()
-val A2Z = ('A'..'Z').toList()
+data class MdxComponents(
+    val header: @Composable (MdxToken) -> Unit,
+    val quote: @Composable (MdxToken) -> Unit,
+    val codeBlock: @Composable (MdxToken) -> Unit,
+    val image: @Composable (MdxToken) -> Unit,
+    val divider: @Composable (MdxToken) -> Unit,
+    val table: @Composable (MdxToken) -> Unit,
+)
+
+fun mdxComponents(
+    header: @Composable (MdxToken) -> Unit = { HeaderBlock(token = it) },
+    quote: @Composable (MdxToken) -> Unit = { QuoteBlock(quote = it.text) },
+    codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },
+    image: @Composable (MdxToken) -> Unit = { MdxImageBlock(token = it) },
+    divider: @Composable (MdxToken) -> Unit = { MdxDivider(token = it) },
+    table: @Composable (MdxToken) -> Unit = { MdxTable(token = it) },
+) = MdxComponents(
+    header = header,
+    quote = quote,
+    codeBlock = codeBlock,
+    image = image,
+    divider = divider,
+    table = table,
+)
+
 
 @Composable
 fun HeaderBlock(modifier: Modifier = Modifier, token: MdxToken) {
@@ -38,7 +61,7 @@ fun HeaderBlock(modifier: Modifier = Modifier, token: MdxToken) {
 }
 
 @Composable
-fun OtherComponent(tokens: List<MdxToken>) {
+fun OtherComponent(tokens: List<MdxToken>, components: MdxComponents) {
     tokens.forEach { token ->
         when (token.type) {
             MdxType.H1,
@@ -46,43 +69,44 @@ fun OtherComponent(tokens: List<MdxToken>) {
             MdxType.H3,
             MdxType.H4,
             MdxType.H5,
-            MdxType.H6 -> HeaderBlock(token = token)
+            MdxType.H6 -> components.header(token)
 
-            MdxType.QUOTE -> {
-                QuoteBlock(quote = token.text)
-            }
-
-            MdxType.CODE -> MdxCodeBlock(token = token)
-
-            MdxType.IMAGE -> MdxImageBlock(token = token)
-            MdxType.DIVIDER -> {
-                when (token.text) {
-                    "line" -> HorizontalDivider()
-                    "" -> {}
-                    else -> Text(text = token.text, modifier = Modifier.fillMaxWidth())
-                }
-            }
-
-            MdxType.TABLE -> {
-                val (cols, rows) = token.getTableItemPairs()
-
-                Table(
-                    header = {
-                        if (cols.isNotEmpty()) {
-                            if (cols.size == 1) {
-                                TableHeader(title = cols.first())
-                            } else TableHeader(items = cols)
-                        }
-                    },
-                    content = {
-                        if (rows.isNotEmpty()) {
-                            TableItems(items = rows)
-                        }
-                    }
-                )
-            }
-
+            MdxType.QUOTE -> components.quote(token)
+            MdxType.CODE -> components.codeBlock(token)
+            MdxType.IMAGE -> components.image(token)
+            MdxType.DIVIDER -> components.divider(token)
+            MdxType.TABLE -> components.table(token)
             else -> {}
         }
+    }
+}
+
+@Composable
+fun MdxTable(modifier: Modifier = Modifier, token: MdxToken) {
+    val (cols, rows) = token.getTableItemPairs()
+
+    Table(
+        modifier = modifier,
+        header = {
+            if (cols.isNotEmpty()) {
+                if (cols.size == 1) {
+                    TableHeader(title = cols.first())
+                } else TableHeader(items = cols)
+            }
+        },
+        content = {
+            if (rows.isNotEmpty()) {
+                TableItems(items = rows)
+            }
+        }
+    )
+}
+
+@Composable
+fun MdxDivider(token: MdxToken) {
+    when (token.text) {
+        "line" -> HorizontalDivider()
+        "" -> {}
+        else -> Text(text = token.text, modifier = Modifier.fillMaxWidth())
     }
 }
