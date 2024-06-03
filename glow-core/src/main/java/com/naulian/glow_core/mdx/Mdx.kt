@@ -35,7 +35,6 @@ class MdxPreProcessor(private val input: String) {
             blockList.add(block)
         }
 
-        //blockList.forEach(::println)
         return blockList
     }
 
@@ -159,7 +158,7 @@ data class MdxToken(
 
 object MdxTokenizer {
 
-    fun tokenize(input: String, showLog: Boolean = false): List<MdxToken> {
+    fun tokenize(input: String): List<MdxToken> {
         val preprocess = MdxPreProcessor(input).process()
         val tokens = mutableListOf<MdxToken>()
 
@@ -170,10 +169,6 @@ object MdxTokenizer {
                 tokens.add(current)
                 current = lexer.next()
             }
-        }
-
-        if (showLog) {
-            tokens.forEach(::println)
         }
 
         return tokens
@@ -410,8 +405,8 @@ enum class MdxComponentType {
 
 object MdxParser {
 
-    fun parse(source: String, showLog: Boolean = false): List<MdxComponentGroup> {
-        val generatedTokens = MdxTokenizer.tokenize(source, showLog)
+    fun parse(source: String): List<MdxComponentGroup> {
+        val generatedTokens = MdxTokenizer.tokenize(source)
         val tokenGroups = mutableListOf<MdxComponentGroup>()
         var currentGroup = mutableListOf<MdxToken>()
 
@@ -443,8 +438,6 @@ object MdxParser {
             val atxGroup = MdxComponentGroup(type, handled)
             tokenGroups.add(atxGroup)
         }
-
-        tokenGroups.forEach(::println)
         return tokenGroups
     }
 

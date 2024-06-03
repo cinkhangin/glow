@@ -13,32 +13,6 @@ import com.naulian.modify.table.Table
 import com.naulian.modify.table.TableHeader
 import com.naulian.modify.table.TableItems
 
-data class MdxComponents(
-    val header: @Composable (MdxToken) -> Unit,
-    val quote: @Composable (MdxToken) -> Unit,
-    val codeBlock: @Composable (MdxToken) -> Unit,
-    val image: @Composable (MdxToken) -> Unit,
-    val divider: @Composable (MdxToken) -> Unit,
-    val table: @Composable (MdxToken) -> Unit,
-)
-
-fun mdxComponents(
-    header: @Composable (MdxToken) -> Unit = { HeaderBlock(token = it) },
-    quote: @Composable (MdxToken) -> Unit = { QuoteBlock(quote = it.text) },
-    codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },
-    image: @Composable (MdxToken) -> Unit = { MdxImageBlock(token = it) },
-    divider: @Composable (MdxToken) -> Unit = { MdxDivider(token = it) },
-    table: @Composable (MdxToken) -> Unit = { MdxTable(token = it) },
-) = MdxComponents(
-    header = header,
-    quote = quote,
-    codeBlock = codeBlock,
-    image = image,
-    divider = divider,
-    table = table,
-)
-
-
 @Composable
 fun HeaderBlock(modifier: Modifier = Modifier, token: MdxToken) {
     val sizePair = when (token.type) {

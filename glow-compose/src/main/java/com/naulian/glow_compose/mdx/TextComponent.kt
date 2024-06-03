@@ -1,6 +1,5 @@
 package com.naulian.glow_compose.mdx
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -21,7 +20,7 @@ fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
 }
 
 @Composable
-fun TextComponent(tokens: List<MdxToken>) {
+fun TextComponent(tokens: List<MdxToken>, components: MdxComponents) {
     if (tokens.size == 1 && tokens.first().type == MdxType.WHITESPACE) {
         return
     }
@@ -99,5 +98,5 @@ fun TextComponent(tokens: List<MdxToken>) {
         }
     }
 
-    Text(text = content)
+    components.text(content)
 }
