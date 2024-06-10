@@ -534,7 +534,7 @@ val MDX_SAMPLE = """
    
     =line=
     
-    `ignore -syntax- here`
+    `ignore ~syntax~ here`
     
     <color this text#FF0000>
     
@@ -572,6 +572,7 @@ val MDX_SAMPLE = """
     Search (here@http://www.google.com) for anything.
     
     (img@https://picsum.photos/id/67/300/200)
+    (ytb@https://www.youtube.com/watch?v=dQw4w9WgXcQ)
     
     image space bug test
     
@@ -585,8 +586,8 @@ val MDX_SAMPLE = """
     * unordered item
     * unordered item
     
-    *o un done item
-    *x done item
+    *o uncheck item
+    *x checked item
 """.trimIndent()
 
 fun List<MdxComponentGroup>.getFormattedString(): String {

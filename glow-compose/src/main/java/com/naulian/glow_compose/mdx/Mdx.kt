@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,7 +28,8 @@ import com.naulian.glow_core.mdx.MdxToken
 fun MdxBlock(
     modifier: Modifier = Modifier,
     source: String,
-    components: MdxComponents = mdxComponents()
+    onClickLink: (String) -> Unit = {},
+    components: MdxComponents = mdxComponents(),
 ) {
     var nodes by remember {
         mutableStateOf(emptyList<MdxComponentGroup>())
@@ -47,7 +48,8 @@ fun MdxBlock(
                 when (it.type) {
                     MdxComponentType.TEXT -> TextComponent(
                         tokens = it.children,
-                        components = components
+                        components = components,
+                        onClickLink = onClickLink
                     )
 
                     MdxComponentType.OTHER -> OtherComponent(
@@ -61,7 +63,7 @@ fun MdxBlock(
 }
 
 data class MdxComponents(
-    val text: @Composable (AnnotatedString) -> Unit,
+    val text: @Composable (AnnotatedString, linkMap: Map<String, String>, onClickLink: (String) -> Unit) -> Unit,
     val header: @Composable (MdxToken) -> Unit,
     val quote: @Composable (MdxToken) -> Unit,
     val codeBlock: @Composable (MdxToken) -> Unit,
@@ -71,7 +73,12 @@ data class MdxComponents(
 )
 
 fun mdxComponents(
-    text: @Composable (AnnotatedString) -> Unit = { Text(text = it) },
+    text: @Composable (AnnotatedString, linkMap: Map<String, String>, onClickLink: (String) -> Unit) -> Unit = { content, linkMap, onClickLink ->
+        ClickableText(text = content) { offset ->
+            content.getStringAnnotations(start = offset, end = offset)
+                .firstOrNull()?.let { linkMap[it.tag]?.let(onClickLink) }
+        }
+    },
     header: @Composable (MdxToken) -> Unit = { HeaderBlock(token = it) },
     quote: @Composable (MdxToken) -> Unit = { QuoteBlock(quote = it.text) },
     codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },

@@ -4,17 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.isVisible
 import com.example.glow.databinding.ActivityMainBinding
 import com.naulian.anhance.readStringAsset
+import com.naulian.anhance.showToast
 import com.naulian.glow.CodeTheme
 import com.naulian.glow.setCodeTheme
-import com.naulian.glow_compose.font
 import com.naulian.glow_compose.mdx.MdxBlock
-import com.naulian.glow_compose.mdx.mdxComponents
 import com.naulian.glow_core.mdx.MDX_SAMPLE
 
 
@@ -48,16 +47,15 @@ class MainActivity : AppCompatActivity() {
                     //val highLightedCompose = Glow.highlight(source, language, darkTheme)
 
                     composeView.setContent {
+                        val context = LocalContext.current
                         Column {
                             //AtxBlock(modifier = Modifier.padding(16.dp), source = ATX_SAMPLE)
                             MdxBlock(
                                 modifier = Modifier.padding(16.dp),
                                 source = MDX_SAMPLE,
-                                components = mdxComponents(
-                                    text = {
-                                        Text(text = it, fontFamily = font)
-                                    }
-                                )
+                                onClickLink = {
+                                    context.showToast(it)
+                                }
                             )
                             /*LazyRow(
                                 modifier = Modifier

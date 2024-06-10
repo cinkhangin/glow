@@ -20,10 +20,17 @@ fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
 }
 
 @Composable
-fun TextComponent(tokens: List<MdxToken>, components: MdxComponents) {
+fun TextComponent(
+    tokens: List<MdxToken>,
+    components: MdxComponents,
+    onClickLink: (String) -> Unit
+) {
     if (tokens.size == 1 && tokens.first().type == MdxType.WHITESPACE) {
         return
     }
+
+    val linkMap = hashMapOf<String, String>()
+    var linkIndex = 0
 
     val content = buildAnnotatedString {
         tokens.forEach { token ->
@@ -64,19 +71,32 @@ fun TextComponent(tokens: List<MdxToken>, components: MdxComponents) {
                         else -> append("\u25CF ${token.text}")
                     }
                 }
+
                 MdxType.WHITESPACE -> append(token.text)
 
-                MdxType.LINK -> appendWithStyle(
-                    token.text,
-                    style = SpanStyle(color = Color.Blue)
-                )
+                MdxType.LINK -> {
+                    val tag = "link$linkIndex"
+                    pushStringAnnotation(tag, "link")
+                    appendWithStyle(
+                        token.text,
+                        style = SpanStyle(color = Color.Blue)
+                    )
+                    linkMap[tag] = token.text
+                    linkIndex++
+                    pop()
+                }
 
                 MdxType.HYPER_LINK -> {
+                    val tag = "link$linkIndex"
                     val (hyper, link) = token.getHyperLink()
+                    pushStringAnnotation(tag, "link")
                     appendWithStyle(
                         hyper.ifEmpty { link },
                         style = SpanStyle(color = Color.Blue)
                     )
+                    linkMap[tag] = link
+                    linkIndex++
+                    pop()
                 }
 
                 MdxType.ESCAPE -> {
@@ -98,5 +118,5 @@ fun TextComponent(tokens: List<MdxToken>, components: MdxComponents) {
         }
     }
 
-    components.text(content)
+    components.text(content, linkMap, onClickLink)
 }
