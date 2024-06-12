@@ -48,6 +48,8 @@ fun OtherComponent(tokens: List<MdxToken>, components: MdxComponents) {
             MdxType.QUOTE -> components.quote(token)
             MdxType.CODE -> components.codeBlock(token)
             MdxType.IMAGE -> components.image(token)
+            MdxType.VIDEO -> components.video(token)
+            MdxType.YOUTUBE -> components.youtube(token)
             MdxType.DIVIDER -> components.divider(token)
             MdxType.TABLE -> components.table(token)
             else -> {}
