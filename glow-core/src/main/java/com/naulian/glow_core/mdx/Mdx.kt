@@ -83,8 +83,9 @@ enum class MdxType {
     //Headers
     H1, H2, H3, H4, H5, H6,
     TEXT, BOLD, ITALIC, UNDERLINE, STRIKE,
-    QUOTE, LINK, HYPER_LINK, IMAGE, CODE,
+    QUOTE, LINK, HYPER_LINK, CODE,
     TABLE, ELEMENT, ESCAPE, COLORED,
+    IMAGE, VIDEO, YOUTUBE,
     WHITESPACE, DIVIDER, EOF,
 }
 
@@ -282,12 +283,15 @@ class MdxLexer(input: String) {
             val index = value.indexOf("@")
             val hyper = value.take(index)
             val link = value.str().replace("$hyper@", "")
-            if (hyper == "img") {
-                return MdxToken(MdxType.IMAGE, link)
-            }
 
-            return MdxToken(MdxType.HYPER_LINK, value.str())
+            return when (hyper) {
+                "img" -> MdxToken(MdxType.IMAGE, link)
+                "ytb" -> MdxToken(MdxType.YOUTUBE, link)
+                "vid" -> MdxToken(MdxType.VIDEO, link)
+                else -> MdxToken(MdxType.HYPER_LINK, value.str())
+            }
         }
+
         return MdxToken(MdxType.LINK, value.str())
     }
 

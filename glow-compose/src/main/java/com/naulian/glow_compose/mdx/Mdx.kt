@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,12 +69,18 @@ data class MdxComponents(
     val quote: @Composable (MdxToken) -> Unit,
     val codeBlock: @Composable (MdxToken) -> Unit,
     val image: @Composable (MdxToken) -> Unit,
+    val youtube: @Composable (MdxToken) -> Unit,
+    val video: @Composable (MdxToken) -> Unit,
     val divider: @Composable (MdxToken) -> Unit,
     val table: @Composable (MdxToken) -> Unit,
 )
 
 fun mdxComponents(
-    text: @Composable (AnnotatedString, linkMap: Map<String, String>, onClickLink: (String) -> Unit) -> Unit = { content, linkMap, onClickLink ->
+    text: @Composable (
+        content: AnnotatedString,
+        linkMap: Map<String, String>,
+        onClickLink: (String) -> Unit
+    ) -> Unit = { content, linkMap, onClickLink ->
         ClickableText(text = content) { offset ->
             content.getStringAnnotations(start = offset, end = offset)
                 .firstOrNull()?.let { linkMap[it.tag]?.let(onClickLink) }
@@ -83,6 +90,8 @@ fun mdxComponents(
     quote: @Composable (MdxToken) -> Unit = { QuoteBlock(quote = it.text) },
     codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },
     image: @Composable (MdxToken) -> Unit = { MdxImageBlock(token = it) },
+    youtube: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
+    video: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
     divider: @Composable (MdxToken) -> Unit = { MdxDivider(token = it) },
     table: @Composable (MdxToken) -> Unit = { MdxTable(token = it) },
 ) = MdxComponents(
@@ -91,6 +100,8 @@ fun mdxComponents(
     quote = quote,
     codeBlock = codeBlock,
     image = image,
+    youtube = youtube,
+    video = video,
     divider = divider,
     table = table,
 )
