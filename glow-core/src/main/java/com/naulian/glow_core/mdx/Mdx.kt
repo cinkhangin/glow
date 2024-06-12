@@ -83,7 +83,7 @@ enum class MdxType {
     //Headers
     H1, H2, H3, H4, H5, H6,
     TEXT, BOLD, ITALIC, UNDERLINE, STRIKE,
-    QUOTE, LINK, HYPER_LINK, CODE,
+    QUOTE, LINK, HYPER_LINK, CODE, DATETIME,
     TABLE, ELEMENT, ESCAPE, COLORED,
     IMAGE, VIDEO, YOUTUBE,
     WHITESPACE, DIVIDER, EOF,
@@ -182,7 +182,7 @@ class MdxLexer(input: String) {
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
-    private val symbolChars = "\"&/<>{}[~]\\(-)_\n"
+    private val symbolChars = "\"</>&{%}[~]\\(-)_\n"
     private val charIsNotSymbol get() = char() !in symbolChars
     private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 
@@ -208,6 +208,7 @@ class MdxLexer(input: String) {
             '=' -> createBlockToken(MdxType.DIVIDER, char)
             '`' -> createBlockToken(MdxType.ESCAPE, char)
             '~' -> createBlockToken(MdxType.STRIKE, char)
+            '%' -> createBlockToken(MdxType.DATETIME, char)
             '[' -> createTableToken()
             '<' -> createColoredToken()
             '#' -> createHeaderToken()
@@ -323,14 +324,23 @@ class MdxLexer(input: String) {
     }
 
     private fun createBlockToken(type: MdxType, char: Char): MdxToken {
-        advance()
+        advance() //skip the opening char
         val start = cursor
         while (char() != char && isNotEndChar) {
             advance()
         }
-        val valueText = source.subSequence(start, cursor)
-        advance()
-        return MdxToken(type, valueText.str())
+        val valueText = source.subSequence(start, cursor).str()
+        advance() //skip the closing char
+
+        return when (type) {
+            MdxType.DATETIME -> {
+                println("datatime: $valueText")
+                val value = formattedDateTime(valueText)
+                MdxToken(type, value)
+            }
+
+            else -> MdxToken(type, valueText)
+        }
     }
 
     private fun createHeaderToken(): MdxToken {
@@ -482,6 +492,7 @@ object MdxParser {
             MdxType.LINK,
             MdxType.ESCAPE,
             MdxType.ELEMENT,
+            MdxType.DATETIME,
             MdxType.COLORED -> MdxComponentType.TEXT
 
             else -> MdxComponentType.OTHER
@@ -546,6 +557,7 @@ val MDX_SAMPLE = """
     this is /italic/ text
     this is _underline_ text
     this is ~strikethrough~ text.
+    this is %dd/MM/yyyy% text
     
     Current time : mdx.time
     

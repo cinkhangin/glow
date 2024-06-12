@@ -55,7 +55,11 @@ fun CodeSnippet(
 
     LazyRow(
         modifier = modifier
-            .combinedClickable(onLongClick = onLongClick) {}
+            .combinedClickable(
+                enabled = onLongClick != null,
+                onLongClick = onLongClick,
+                onClick = {}
+            )
     ) {
         item {
             Text(

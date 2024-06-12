@@ -55,7 +55,6 @@ fun TextComponent(
                     style = SpanStyle(textDecoration = TextDecoration.LineThrough)
                 )
 
-                MdxType.TEXT -> append(token.text)
                 MdxType.ELEMENT -> {
                     when {
                         token.text.startsWith("o ") -> {
@@ -71,8 +70,6 @@ fun TextComponent(
                         else -> append("\u25CF ${token.text}")
                     }
                 }
-
-                MdxType.WHITESPACE -> append(token.text)
 
                 MdxType.LINK -> {
                     val tag = "link$linkIndex"
@@ -99,10 +96,6 @@ fun TextComponent(
                     pop()
                 }
 
-                MdxType.ESCAPE -> {
-                    append(token.text)
-                }
-
                 MdxType.COLORED -> {
                     val (text, hexColor) = token.getTextColorPair()
                     val color = hexColor.hexToColor()
@@ -112,8 +105,7 @@ fun TextComponent(
                     )
                 }
 
-
-                else -> append("")
+                else -> append(token.text)
             }
         }
     }
