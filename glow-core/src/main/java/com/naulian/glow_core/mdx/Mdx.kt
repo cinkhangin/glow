@@ -27,11 +27,11 @@ class MdxPreProcessor(private val input: String) {
             val block = when (val char = char()) {
                 '"' -> consumeBlock(char)
                 '=' -> consumeBlock(char)
+                '`' -> consumeBlock(char)
                 '[' -> consumeContainer(char, ']')
                 '{' -> consumeContainer(char, '}')
                 else -> consumeLine()
             }
-
             blockList.add(block)
         }
 
@@ -49,12 +49,14 @@ class MdxPreProcessor(private val input: String) {
 
     private fun consumeBlock(containerChar: Char): String {
         val start = cursor
+        var prevChar = char()
         advance()
         while (isNotEndChar) {
-            if (char() == containerChar) {
+            if (char() == containerChar && prevChar != '\\') {
                 advance()
                 break
             }
+            prevChar = char()
             advance()
         }
         return input.subSequence(start, cursor).toString()
@@ -326,15 +328,17 @@ class MdxLexer(input: String) {
     private fun createBlockToken(type: MdxType, char: Char): MdxToken {
         advance() //skip the opening char
         val start = cursor
-        while (char() != char && isNotEndChar) {
+        var prevChar = char()
+        while (!(char() == char && prevChar != '\\') && isNotEndChar) {
+            prevChar = char()
             advance()
         }
+
         val valueText = source.subSequence(start, cursor).str()
         advance() //skip the closing char
 
         return when (type) {
             MdxType.DATETIME -> {
-                println("datatime: $valueText")
                 val value = formattedDateTime(valueText)
                 MdxToken(type, value)
             }
@@ -550,6 +554,7 @@ val MDX_SAMPLE = """
     =line=
     
     `ignore ~syntax~ here`
+    ==
     
     <color this text#FF0000>
     
@@ -557,7 +562,7 @@ val MDX_SAMPLE = """
     this is /italic/ text
     this is _underline_ text
     this is ~strikethrough~ text.
-    this is %dd/MM/yyyy% text
+    date: %dd/MM/yyyy%
     
     Current time : mdx.time
     
