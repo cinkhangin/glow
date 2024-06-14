@@ -7,11 +7,12 @@ const val mdxNewline = "mdx.newline"
 fun CharSequence.str(): String = toString().trim()
 fun CharSequence.str(textToReplace: String) = str().replace(textToReplace, "")
 
-class MdxPreProcessor(private val input: String) {
+class MdxPreProcessor(source: String) {
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
 
+    private val input = source.replace("\n\n", "\n==\n")
 
     private var cursor = 0
     private fun char() = input.getOrElse(cursor) { endChar }
@@ -554,7 +555,10 @@ val MDX_SAMPLE = """
     =line=
     
     `ignore ~syntax~ here`
-    ==
+    
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+    
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     
     <color this text#FF0000>
     
