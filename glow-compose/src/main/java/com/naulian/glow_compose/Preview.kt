@@ -6,10 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-internal fun Preview(content: @Composable () -> Unit) {
+internal fun Preview(
+    background: Color = Color(0xFFF2F3F4),
+    content: @Composable () -> Unit
+) {
     MaterialTheme {
         Surface(
-            color = Color.LightGray,
+            color = background,
             content = content
         )
     }

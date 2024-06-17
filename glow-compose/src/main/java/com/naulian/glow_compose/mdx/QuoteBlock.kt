@@ -12,13 +12,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
 @Composable
-fun QuoteBlock(modifier: Modifier = Modifier, quote: String) {
+fun QuoteBlock(
+    modifier: Modifier = Modifier,
+    quote: String,
+    fontFamily: FontFamily = FontFamily.Default
+) {
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
@@ -53,7 +58,8 @@ fun QuoteBlock(modifier: Modifier = Modifier, quote: String) {
             Text(
                 text = quote,
                 modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                fontFamily = fontFamily
             )
         }
     }

@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.naulian.glow_compose.Preview
@@ -15,7 +16,11 @@ import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
 
 @Composable
-fun MdxCodeBlock(modifier: Modifier = Modifier, token: MdxToken) {
+fun MdxCodeBlock(
+    modifier: Modifier = Modifier,
+    token: MdxToken,
+    fontFamily: FontFamily = FontFamily.Default
+) {
     val (lang, code) = token.getLangCodePair()
     when (lang) {
         "comment" -> {}
@@ -28,6 +33,7 @@ fun MdxCodeBlock(modifier: Modifier = Modifier, token: MdxToken) {
                 )
                 .clip(MaterialTheme.shapes.small),
             source = code,
+            fontFamily = fontFamily,
             language = lang
         )
     }

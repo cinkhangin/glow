@@ -2,7 +2,7 @@
 anhance = "2024.3.0"
 modify = "0.0.1-beta01"
 appcompat = "1.7.0"
-composeBom = "2024.05.00"
+composeBom = "2024.06.00"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 espressoCore = "3.5.1"
