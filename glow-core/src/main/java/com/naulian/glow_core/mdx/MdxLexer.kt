@@ -172,21 +172,10 @@ class MdxLexer(input: String) {
         val blockValue = source.subSequence(start, cursor).str()
         advance() //skip the closing char
 
-        if (type == MdxType.ESCAPE) {
-            val escapedValue = blockValue.replace("\n==\n", "\n\n")
-            return MdxToken(type, escapedValue)
-        }
-
         return when (type) {
             MdxType.DATETIME -> {
                 val value = formattedDateTime(blockValue)
                 MdxToken(type, value)
-            }
-
-            MdxType.DIVIDER -> {
-                if (blockValue.isEmpty()) {
-                    MdxToken(MdxType.WHITESPACE, "\n")
-                } else MdxToken(type, blockValue)
             }
 
             else -> MdxToken(type, blockValue)
