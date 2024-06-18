@@ -35,6 +35,7 @@ import com.naulian.glow.CodeTheme
 import com.naulian.glow.Theme
 import com.naulian.glow_compose.Glow
 import com.naulian.glow_compose.R
+import com.naulian.glow_compose.font
 
 val emptyAnnotatedString = buildAnnotatedString { }
 
@@ -45,7 +46,7 @@ fun CodeSnippet(
     source: String,
     language: String = "txt",
     theme: Theme = CodeTheme.defaultLight,
-    fontFamily: FontFamily = FontFamily.Default,
+    fontFamily: FontFamily = font,
     onLongClick: (() -> Unit)? = null
 ) {
     var glowCode by remember { mutableStateOf(emptyAnnotatedString) }

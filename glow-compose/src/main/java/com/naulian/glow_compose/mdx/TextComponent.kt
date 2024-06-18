@@ -1,6 +1,11 @@
 package com.naulian.glow_compose.mdx
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -9,6 +14,10 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.naulian.glow_compose.Preview
 import com.naulian.glow_compose.hexToColor
 import com.naulian.glow_core.mdx.MdxToken
 import com.naulian.glow_core.mdx.MdxType
@@ -111,4 +120,17 @@ fun TextComponent(
     }
 
     components.text(content, linkMap, onClickLink)
+}
+
+@Preview
+@Composable
+private fun TextPreview() {
+    Preview {
+        Column {
+            Text(text = "Hello", fontSize = 16.sp)
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(text = "Hello")
+            Text(text = "Hello\n\nHello", lineHeight = 24.sp)
+        }
+    }
 }

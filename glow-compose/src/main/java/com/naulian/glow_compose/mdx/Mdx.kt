@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxComponentGroup
 import com.naulian.glow_core.mdx.MdxComponentType
@@ -34,7 +35,7 @@ fun MdxBlock(
     source: String,
     onClickLink: (String) -> Unit = {},
     components: MdxComponents = mdxComponents(),
-    contentSpacing: Dp = 20.dp
+    contentSpacing: Dp = 16.dp
 ) {
     var nodes by remember {
         mutableStateOf(emptyList<MdxComponentGroup>())
@@ -87,7 +88,10 @@ fun mdxComponents(
         linkMap: Map<String, String>,
         onClickLink: (String) -> Unit
     ) -> Unit = { content, linkMap, onClickLink ->
-        ClickableText(text = content, style = TextStyle(fontFamily = fontFamily)) { offset ->
+        ClickableText(
+            text = content,
+            style = TextStyle(fontFamily = fontFamily, lineHeight = 20.sp)
+        ) { offset ->
             content.getStringAnnotations(start = offset, end = offset)
                 .firstOrNull()?.let { linkMap[it.tag]?.let(onClickLink) }
         }
@@ -99,12 +103,7 @@ fun mdxComponents(
             fontFamily = fontFamily
         )
     },
-    codeBlock: @Composable (MdxToken) -> Unit = {
-        MdxCodeBlock(
-            token = it,
-            fontFamily = fontFamily
-        )
-    },
+    codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },
     image: @Composable (MdxToken) -> Unit = { MdxImageBlock(token = it) },
     youtube: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
     video: @Composable (MdxToken) -> Unit = { Text(text = it.text) },

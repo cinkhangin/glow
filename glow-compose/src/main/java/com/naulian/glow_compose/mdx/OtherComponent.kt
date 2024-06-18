@@ -38,10 +38,10 @@ fun HeaderBlock(
     fontFamily: FontFamily = FontFamily.Default
 ) {
     val sizePair = when (token.type) {
-        MdxType.H1 -> 32.sp to 40.sp
-        MdxType.H2 -> 28.sp to 34.sp
-        MdxType.H3 -> 24.sp to 30.sp
-        MdxType.H4 -> 20.sp to 26.sp
+        MdxType.H1 -> 32.sp to 36.sp
+        MdxType.H2 -> 28.sp to 32.sp
+        MdxType.H3 -> 24.sp to 38.sp
+        MdxType.H4 -> 20.sp to 24.sp
         MdxType.H5 -> 18.sp to 22.sp
         MdxType.H6 -> 16.sp to 20.sp
         else -> 24.sp to 32.sp
