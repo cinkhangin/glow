@@ -280,11 +280,11 @@ class MdxLexer(input: String) {
             advance()
         }
 
-        val value = source.subSequence(start, cursor)
+        val value = source.subSequence(start, cursor).str()
         advance() //skip closing parenthesis
 
         if (!value.contains("http")) {
-            return MdxToken(MdxType.TEXT, value.str())
+            return MdxToken(MdxType.TEXT, "($value)")
         }
 
         if (value.contains("@")) {
@@ -296,11 +296,11 @@ class MdxLexer(input: String) {
                 "img" -> MdxToken(MdxType.IMAGE, link)
                 "ytb" -> MdxToken(MdxType.YOUTUBE, link)
                 "vid" -> MdxToken(MdxType.VIDEO, link)
-                else -> MdxToken(MdxType.HYPER_LINK, value.str())
+                else -> MdxToken(MdxType.HYPER_LINK, value)
             }
         }
 
-        return MdxToken(MdxType.LINK, value.str())
+        return MdxToken(MdxType.LINK, value)
     }
 
     private fun createElementToken(): MdxToken {
