@@ -2,6 +2,7 @@ package com.naulian.glow_compose.mdx
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -120,6 +121,31 @@ fun TextComponent(
     }
 
     components.text(content, linkMap, onClickLink)
+}
+
+@Preview
+@Composable
+private fun MdxTextTestPreview() {
+    MdxBlock(
+        source = """
+        hello
+        
+        hello
+    """.trimIndent()
+    )
+}
+
+@Preview
+@Composable
+private fun NormalTextTestPreview() {
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = """
+        hello
+        
+        hello
+    """.trimIndent()
+    )
 }
 
 @Preview

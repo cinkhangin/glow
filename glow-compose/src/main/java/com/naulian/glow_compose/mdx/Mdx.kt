@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxComponentGroup
 import com.naulian.glow_core.mdx.MdxComponentType
@@ -90,7 +89,7 @@ fun mdxComponents(
     ) -> Unit = { content, linkMap, onClickLink ->
         ClickableText(
             text = content,
-            style = TextStyle(fontFamily = fontFamily, lineHeight = 20.sp)
+            style = TextStyle(fontFamily = fontFamily)
         ) { offset ->
             content.getStringAnnotations(start = offset, end = offset)
                 .firstOrNull()?.let { linkMap[it.tag]?.let(onClickLink) }

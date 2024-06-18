@@ -3,99 +3,80 @@ package com.naulian.glow_core.mdx
 object MdxParser {
 
     fun parse(source: String): List<MdxComponentGroup> {
-        val generatedTokens = MdxLexer(source).tokenize()
+        val tokens = MdxLexer(source).tokenize()
+        val firstIteration = parseIteration(tokens).flatten()
+        val secondIteration = parseIteration(firstIteration)
+        return secondIteration
+    }
+
+    private fun List<MdxComponentGroup>.flatten(): List<MdxToken> {
+        val tokens = mutableListOf<MdxToken>()
+        for (group in this) {
+            for (token in group.children) {
+                tokens.add(token)
+            }
+        }
+        return tokens.toList()
+    }
+
+    private fun parseIteration(source: List<MdxToken>): List<MdxComponentGroup> {
         val tokenGroups = mutableListOf<MdxComponentGroup>()
         var currentGroup = mutableListOf<MdxToken>()
 
-        for (token in generatedTokens) {
+        for (token in source) {
             val lastType = currentGroup.lastOrNull()?.getComponentType() ?: MdxComponentType.OTHER
             val type = token.getComponentType()
 
             if (currentGroup.isEmpty() || lastType == type) {
                 currentGroup.add(token)
             } else {
-                if (currentGroup.last().isBlankText()) {
-                    currentGroup.removeLast()
-                }
-
-                val handled = handleTokens(currentGroup)
-                if (handled.isNotEmpty()) {
-                    val atxGroup = MdxComponentGroup(lastType, handled)
+                val children = currentGroup.trimWhiteSpaces()
+                if (children.isNotEmpty()) {
+                    val atxGroup = MdxComponentGroup(lastType, children)
                     tokenGroups.add(atxGroup)
                 }
-
                 currentGroup = mutableListOf(token)
             }
         }
 
         //add the last group
         val type = currentGroup.getComponentType()
-        val handled = handleTokens(currentGroup)
-        if (handled.isNotEmpty()) {
-            val atxGroup = MdxComponentGroup(type, handled)
+        val children = currentGroup.trimWhiteSpaces()
+        if (children.isNotEmpty()) {
+            val atxGroup = MdxComponentGroup(type, children)
             tokenGroups.add(atxGroup)
         }
-        return tokenGroups.finalize()
+        return tokenGroups
     }
 
-    private fun List<MdxComponentGroup>.finalize(): List<MdxComponentGroup> {
-        val groups = mutableListOf<MdxComponentGroup>()
-        for (g in this) {
-            if (g.children.size == 1) {
-                val child = g.children.first()
-                if (child.type != MdxType.WHITESPACE) {
-                    groups.add(g)
-                }
-            } else {
-                var modifiedChildren = g.children
-
-                //println("before: $modifiedChildren")
-                while (modifiedChildren.first().type == MdxType.WHITESPACE) {
-                    // println("removing first")
-                    modifiedChildren = modifiedChildren.drop(1)
-                    if (modifiedChildren.isEmpty()) break
-                }
-
-                if (modifiedChildren.isEmpty()) {
-                    continue
-                }
-
-                while (modifiedChildren.last().type == MdxType.WHITESPACE) {
-                    // println("removing first")
-                    modifiedChildren = modifiedChildren.dropLast(1)
-                    if (modifiedChildren.isEmpty()) break
-                }
-
-                if (modifiedChildren.isNotEmpty()) {
-                    //println("after:$modifiedChildren")
-                    val modifiedComponent = g.copy(children = modifiedChildren)
-                    groups.add(modifiedComponent)
-                }
-            }
+    private fun List<MdxToken>.trimWhiteSpaces(): List<MdxToken> {
+        if (isEmpty()) {
+            return emptyList()
         }
 
-        return groups.toList()
-    }
-
-    private fun handleTokens(group: List<MdxToken>): List<MdxToken> {
-        if (group.isEmpty()) return emptyList()
-
-        val currentGroup = group.toMutableList()
-        if (currentGroup.size == 1) {
-            val last = currentGroup.removeLast()
-            val updatedLast = last.copy(text = last.text.trim())
-            currentGroup.add(updatedLast)
+        if (size == 1) {
+            val child = first()
+            return if (child.type != MdxType.WHITESPACE) this
+            else emptyList()
         } else {
-            val last = currentGroup.removeLast()
-            val updatedLast = last.copy(text = last.text.trimEnd())
-            currentGroup.add(updatedLast)
-        }
+            var modifiedList = this
+            while (modifiedList.first().type == MdxType.WHITESPACE) {
+                modifiedList = modifiedList.drop(1)
+                if (modifiedList.isEmpty()) break
+            }
 
-        if (currentGroup.first().isBlankText()) {
-            currentGroup.removeFirst()
-        }
+            if (modifiedList.isEmpty()) {
+                return emptyList()
+            }
 
-        return currentGroup
+            while (modifiedList.last().type == MdxType.WHITESPACE) {
+                modifiedList = modifiedList.dropLast(1)
+                if (modifiedList.isEmpty()) break
+            }
+
+            return if (modifiedList.isEmpty()) emptyList()
+            else modifiedList
+        }
     }
 
     private fun List<MdxToken>.getComponentType(): MdxComponentType {
