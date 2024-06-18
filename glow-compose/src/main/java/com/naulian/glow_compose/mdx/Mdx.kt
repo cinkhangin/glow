@@ -20,6 +20,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxComponentGroup
@@ -33,6 +34,7 @@ fun MdxBlock(
     source: String,
     onClickLink: (String) -> Unit = {},
     components: MdxComponents = mdxComponents(),
+    contentSpacing: Dp = 20.dp
 ) {
     var nodes by remember {
         mutableStateOf(emptyList<MdxComponentGroup>())
@@ -45,7 +47,7 @@ fun MdxBlock(
     if (nodes.isNotEmpty()) {
         Column(
             modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(contentSpacing)
         ) {
             nodes.forEach {
                 when (it.type) {
