@@ -35,7 +35,7 @@ fun MdxBlock(
     source: String,
     onClickLink: (String) -> Unit = {},
     components: MdxComponents = mdxComponents(),
-    contentSpacing: Dp = 16.dp
+    contentSpacing: Dp = 12.dp
 ) {
     var nodes by remember {
         mutableStateOf(emptyList<MdxComponentGroup>())
