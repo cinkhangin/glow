@@ -110,6 +110,7 @@ fun MdxDivider(token: MdxToken, customMap: Map<String, @Composable () -> Unit> =
     when (token.text) {
         "line" -> HorizontalDivider()
         "dash" -> HorizontalDashDivider()
+        "br" -> Spacer(modifier = Modifier.height(2.dp))
         "" -> {}
         else -> {
             if (token.text.isDigitsOnly()) {
@@ -130,6 +131,7 @@ private fun MdxDividerPreview() {
             MdxDivider(token = MdxToken(MdxType.DIVIDER, "line"))
             MdxDivider(token = MdxToken(MdxType.DIVIDER, "20"))
             MdxDivider(token = MdxToken(MdxType.DIVIDER, "dash"))
+            MdxDivider(token = MdxToken(MdxType.DIVIDER, "br"))
             MdxDivider(
                 token = MdxToken(MdxType.DIVIDER, "text"),
                 customMap = mapOf("text" to { Text(text = "oooooooooooooo") })

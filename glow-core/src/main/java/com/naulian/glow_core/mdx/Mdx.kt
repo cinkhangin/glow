@@ -283,6 +283,10 @@ class MdxLexer(input: String) {
         val value = source.subSequence(start, cursor)
         advance() //skip closing parenthesis
 
+        if (!value.contains("http")) {
+            return MdxToken(MdxType.TEXT, value.str())
+        }
+
         if (value.contains("@")) {
             val index = value.indexOf("@")
             val hyper = value.take(index)
