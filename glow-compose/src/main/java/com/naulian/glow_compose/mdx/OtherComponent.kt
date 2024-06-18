@@ -108,10 +108,10 @@ fun MdxTable(
 @Composable
 fun MdxDivider(token: MdxToken, customMap: Map<String, @Composable () -> Unit> = emptyMap()) {
     when (token.text) {
+        "" -> {}
         "line" -> HorizontalDivider()
         "dash" -> HorizontalDashDivider()
         "br" -> Spacer(modifier = Modifier.height(2.dp))
-        "" -> {}
         else -> {
             if (token.text.isDigitsOnly()) {
                 val sizeInt = token.text.toInt()

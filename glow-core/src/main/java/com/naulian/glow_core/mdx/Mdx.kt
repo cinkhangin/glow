@@ -60,7 +60,13 @@ class MdxPreProcessor(source: String) {
             prevChar = char()
             advance()
         }
-        return input.subSequence(start, cursor).toString()
+
+        val blockValue = input.subSequence(start, cursor)
+        if (blockValue.startsWith("`") && blockValue.endsWith("`")) {
+            return blockValue.toString().replace("\n==\n", "\n\n")
+        }
+
+        return blockValue.toString()
     }
 
     @Suppress("SameParameterValue")
