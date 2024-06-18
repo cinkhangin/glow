@@ -1,6 +1,29 @@
 package com.naulian.glow_core.mdx
 
+
 val MDX_SAMPLE = """
+    #3 Mdx Example
+    
+    =line=
+    
+    #5 Lorem Ipsum
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut~
+    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco~
+    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in~
+    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat~
+    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut~
+    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco~
+    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in~
+    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat~
+    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    
+    Lorem ipsum dolor sit amet
+""".trimIndent().replace("~\n", " ")
+
+
+val MDX_TEST = """
     #1 this is heading 1
     #2 this is heading 2
     #3 this is heading 3
@@ -45,7 +68,6 @@ val MDX_SAMPLE = """
     def main():
         print("Hello World!")
         
-    
     if __name__ == '__main__':
         main()
     }
@@ -54,8 +76,6 @@ val MDX_SAMPLE = """
     
     (img@https://picsum.photos/id/67/300/200)
     (ytb@https://www.youtube.com/watch?v=dQw4w9WgXcQ)
-    
-    image space bug test
     
     [
     a    |b    |result

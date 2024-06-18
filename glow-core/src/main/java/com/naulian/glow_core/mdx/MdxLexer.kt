@@ -2,7 +2,7 @@ package com.naulian.glow_core.mdx
 
 class MdxLexer(input: String) {
     private var cursor = 0
-    private val source = input.replace(" ~\n", " ")
+    private val source = input
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
@@ -14,8 +14,14 @@ class MdxLexer(input: String) {
         while (char().isWhitespace()) advance()
     }
 
-    private fun skipNewline() {
-        while (char() == '\n') advance()
+    fun tokenize(): List<MdxToken> {
+        val tokens = mutableListOf<MdxToken>()
+        var current = next()
+        while (current.type != MdxType.EOF) {
+            tokens.add(current)
+            current = next()
+        }
+        return tokens
     }
 
     private fun advance(amount: Int = 1) {
@@ -23,7 +29,6 @@ class MdxLexer(input: String) {
     }
 
     fun next(): MdxToken {
-        skipNewline()
         return when (val char = char()) {
             '&' -> createBlockToken(MdxType.BOLD, char)
             '/' -> createBlockToken(MdxType.ITALIC, char)
@@ -40,6 +45,11 @@ class MdxLexer(input: String) {
             '*' -> createElementToken()
             '(' -> createLinkToken()
             '\\' -> createEscapedToken()
+            '\n' -> {
+                advance()
+                MdxToken(MdxType.WHITESPACE, "\n")
+            }
+
             in symbolChars -> {
                 advance()
                 MdxToken(MdxType.TEXT, char.toString())
@@ -132,7 +142,7 @@ class MdxLexer(input: String) {
             advance()
         }
         val text = source.subSequence(start, cursor).toString()
-            .replace(mdxNl, "\n")
+
         return MdxToken(MdxType.ELEMENT, text)
     }
 
@@ -142,7 +152,6 @@ class MdxLexer(input: String) {
             advance()
         }
         val value = source.subSequence(start, cursor).toString()
-            .replace(mdxNl, "\n")
 
         var text = value
         mdxAdhocMap.forEach {
@@ -160,16 +169,27 @@ class MdxLexer(input: String) {
             advance()
         }
 
-        val valueText = source.subSequence(start, cursor).str()
+        val blockValue = source.subSequence(start, cursor).str()
         advance() //skip the closing char
+
+        if (type == MdxType.ESCAPE) {
+            val escapedValue = blockValue.replace("\n==\n", "\n\n")
+            return MdxToken(type, escapedValue)
+        }
 
         return when (type) {
             MdxType.DATETIME -> {
-                val value = formattedDateTime(valueText)
+                val value = formattedDateTime(blockValue)
                 MdxToken(type, value)
             }
 
-            else -> MdxToken(type, valueText)
+            MdxType.DIVIDER -> {
+                if (blockValue.isEmpty()) {
+                    MdxToken(MdxType.WHITESPACE, "\n")
+                } else MdxToken(type, blockValue)
+            }
+
+            else -> MdxToken(type, blockValue)
         }
     }
 
@@ -192,7 +212,7 @@ class MdxLexer(input: String) {
             advance()
         }
         val text = source.subSequence(start, cursor)
-        return MdxToken(type, text.str(mdxNl))
+        return MdxToken(type, text.str())
     }
 
     private fun createTableToken(): MdxToken {

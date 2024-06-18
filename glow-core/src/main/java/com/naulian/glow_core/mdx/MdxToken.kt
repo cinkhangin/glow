@@ -18,7 +18,7 @@ data class MdxToken(
         val EOF = MdxToken(MdxType.EOF, "")
     }
 
-    fun isBlackText() = type == MdxType.TEXT && text.isBlank()
+    fun isBlankText() = type == MdxType.TEXT && text.isBlank()
     fun getHyperLink(): Pair<String, String> {
         if (text.contains("@")) {
             val index = text.indexOf("@")
@@ -74,25 +74,5 @@ data class MdxToken(
         }
 
         return "txt" to text
-    }
-}
-
-
-object MdxTokenizer {
-
-    fun tokenize(input: String): List<MdxToken> {
-        val preprocess = MdxPreProcessor(input).process()
-        val tokens = mutableListOf<MdxToken>()
-
-        preprocess.forEach {
-            val lexer = MdxLexer(it)
-            var current = lexer.next()
-            while (current.type != MdxType.EOF) {
-                tokens.add(current)
-                current = lexer.next()
-            }
-        }
-
-        return tokens
     }
 }

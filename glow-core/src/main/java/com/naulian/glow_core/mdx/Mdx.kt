@@ -3,20 +3,14 @@ package com.naulian.glow_core.mdx
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-const val mdxNl = "mdx.nl"
-const val mdxBr = "mdx.br"
 fun CharSequence.str(): String = toString().trim()
-fun CharSequence.str(textToReplace: String) = str().replace(textToReplace, "")
 
 data class MdxComponentGroup(
     val type: MdxComponentType,
     val children: List<MdxToken>,
 )
 
-enum class MdxComponentType {
-    TEXT, OTHER,
-}
-
+enum class MdxComponentType { TEXT, OTHER }
 
 const val dollarSign = "$"
 const val mdxMillis = "mdx.millis"
@@ -44,17 +38,6 @@ val mdxAdhocMap = hashMapOf(
     mdxDateTime to formattedDateTime("dd/MM/yyyy hh:mm:ss a"),
     mdxTime to formattedDateTime("hh:mm:ss a")
 )
-
-val MDX_TEST = """
-    #1 heading
-    * item
-    
-    some text
-    
-    (img@https://picsum.photos/id/67/300/200)
-    
-    some more text
-""".trimIndent()
 
 fun List<MdxComponentGroup>.getFormattedString(): String {
     val strBuilder = StringBuilder()
@@ -132,6 +115,16 @@ fun formattedDateTime(pattern: String): String {
 }
 
 fun main() {
-    val text = MdxParser.parse(MDX_SAMPLE).getFormattedString()
-    println(text)
+    /*val tokens = MdxTokenizer.tokenize(MDX_SAMPLE)
+    tokens.forEach{
+        println("${it.type} -> ${it.text}")
+    }*/
+
+    val groups = MdxParser.parse(MDX_TEST)
+    groups.forEach {
+        if (it.type == MdxComponentType.OTHER)
+            println("-----other------")
+        else println("-----text------")
+        it.children.forEach(::println)
+    }
 }

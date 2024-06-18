@@ -3,7 +3,7 @@ package com.naulian.glow_core.mdx
 object MdxParser {
 
     fun parse(source: String): List<MdxComponentGroup> {
-        val generatedTokens = MdxTokenizer.tokenize(source)
+        val generatedTokens = MdxLexer(source).tokenize()
         val tokenGroups = mutableListOf<MdxComponentGroup>()
         var currentGroup = mutableListOf<MdxToken>()
 
@@ -14,7 +14,7 @@ object MdxParser {
             if (currentGroup.isEmpty() || lastType == type) {
                 currentGroup.add(token)
             } else {
-                if (currentGroup.last().isBlackText()) {
+                if (currentGroup.last().isBlankText()) {
                     currentGroup.removeLast()
                 }
 
@@ -35,7 +35,46 @@ object MdxParser {
             val atxGroup = MdxComponentGroup(type, handled)
             tokenGroups.add(atxGroup)
         }
-        return tokenGroups
+        return tokenGroups.finalize()
+    }
+
+    private fun List<MdxComponentGroup>.finalize(): List<MdxComponentGroup> {
+        val groups = mutableListOf<MdxComponentGroup>()
+        for (g in this) {
+            if (g.children.size == 1) {
+                val child = g.children.first()
+                if (child.type != MdxType.WHITESPACE) {
+                    groups.add(g)
+                }
+            } else {
+                var modifiedChildren = g.children
+
+                //println("before: $modifiedChildren")
+                while (modifiedChildren.first().type == MdxType.WHITESPACE) {
+                    // println("removing first")
+                    modifiedChildren = modifiedChildren.drop(1)
+                    if (modifiedChildren.isEmpty()) break
+                }
+
+                if (modifiedChildren.isEmpty()) {
+                    continue
+                }
+
+                while (modifiedChildren.last().type == MdxType.WHITESPACE) {
+                    // println("removing first")
+                    modifiedChildren = modifiedChildren.dropLast(1)
+                    if (modifiedChildren.isEmpty()) break
+                }
+
+                if (modifiedChildren.isNotEmpty()) {
+                    //println("after:$modifiedChildren")
+                    val modifiedComponent = g.copy(children = modifiedChildren)
+                    groups.add(modifiedComponent)
+                }
+            }
+        }
+
+        return groups.toList()
     }
 
     private fun handleTokens(group: List<MdxToken>): List<MdxToken> {
@@ -52,7 +91,7 @@ object MdxParser {
             currentGroup.add(updatedLast)
         }
 
-        if (currentGroup.first().isBlackText()) {
+        if (currentGroup.first().isBlankText()) {
             currentGroup.removeFirst()
         }
 
