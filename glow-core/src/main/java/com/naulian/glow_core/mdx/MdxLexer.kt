@@ -174,8 +174,12 @@ class MdxLexer(input: String) {
 
         return when (type) {
             MdxType.DATETIME -> {
-                val value = formattedDateTime(blockValue)
-                MdxToken(type, value)
+                try {
+                    val value = formattedDateTime(blockValue)
+                    MdxToken(type, value)
+                } catch (e: Exception) {
+                    MdxToken(MdxType.TEXT, blockValue)
+                }
             }
 
             else -> MdxToken(type, blockValue)

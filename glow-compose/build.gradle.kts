@@ -83,15 +83,6 @@ dependencies {
     implementation(project(":glow-core"))
 }
 
-android {
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-            withJavadocJar()
-        }
-    }
-}
-
 afterEvaluate {
     publishing {
         publications {
@@ -99,7 +90,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow-compose"
-                version = "1.5.5"
+                version = "1.5.6"
             }
         }
     }
