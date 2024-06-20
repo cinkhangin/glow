@@ -40,31 +40,34 @@ fun MdxBlock(
         mutableStateOf(emptyList<MdxComponentGroup>())
     }
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = source) {
         nodes = MdxParser.parse(source)
     }
 
-    if (nodes.isNotEmpty()) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(contentSpacing)
-        ) {
-            nodes.forEach {
-                when (it.type) {
-                    MdxComponentType.TEXT -> TextComponent(
-                        tokens = it.children,
-                        components = components,
-                        onClickLink = onClickLink
-                    )
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(contentSpacing)
+    ) {
+        nodes.forEach {
+            when (it.type) {
+                MdxComponentType.TEXT -> TextComponent(
+                    tokens = it.children,
+                    components = components,
+                    onClickLink = onClickLink
+                )
 
-                    MdxComponentType.OTHER -> OtherComponent(
-                        tokens = it.children,
-                        components = components
-                    )
-                }
+                MdxComponentType.OTHER -> OtherComponent(
+                    tokens = it.children,
+                    components = components
+                )
             }
         }
     }
+}
+
+@Composable
+fun MdxUI(modifier: Modifier = Modifier, nodes: List<MdxComponentGroup>) {
+
 }
 
 data class MdxComponents(

@@ -51,7 +51,7 @@ fun CodeSnippet(
 ) {
     var glowCode by remember { mutableStateOf(emptyAnnotatedString) }
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = source) {
         glowCode = Glow.highlight(source, language, theme).value
     }
 

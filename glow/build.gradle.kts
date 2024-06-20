@@ -53,7 +53,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow"
-                version = "1.5.6"
+                version = "1.5.7"
             }
         }
     }
