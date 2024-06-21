@@ -94,9 +94,9 @@ object MdxParser {
             MdxType.HYPER_LINK,
             MdxType.LINK,
             MdxType.ESCAPE,
-            MdxType.ELEMENT,
             MdxType.DATETIME,
             MdxType.COLORED -> MdxComponentType.TEXT
+            MdxType.ELEMENT -> MdxComponentType.ELEMENT
 
             else -> MdxComponentType.OTHER
         }

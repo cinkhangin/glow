@@ -10,7 +10,7 @@ data class MdxComponentGroup(
     val children: List<MdxToken>,
 )
 
-enum class MdxComponentType { TEXT, OTHER }
+enum class MdxComponentType { TEXT, OTHER, ELEMENT }
 
 const val dollarSign = "$"
 const val mdxMillis = "mdx.millis"
@@ -57,22 +57,6 @@ fun List<MdxComponentGroup>.getFormattedString(): String {
                             strBuilder.append("$hyper: $link")
                         }
 
-                        MdxType.ELEMENT -> {
-                            when {
-                                token.text.startsWith("o ") -> {
-                                    val text = token.text.replace("o ", "")
-                                    strBuilder.append("\u2610 $text")
-                                }
-
-                                token.text.startsWith("x ") -> {
-                                    val text = token.text.replace("x ", "")
-                                    strBuilder.append("\u2611 $text")
-                                }
-
-                                else -> strBuilder.append("\u25CF ${token.text}")
-                            }
-                        }
-
                         else -> strBuilder.append(token.text)
                     }
                 }
@@ -100,6 +84,24 @@ fun List<MdxComponentGroup>.getFormattedString(): String {
                     }
 
                     strBuilder.append("\n")
+                }
+            }
+
+            MdxComponentType.ELEMENT -> {
+                group.children.forEach { token ->
+                    when {
+                        token.text.startsWith("o ") -> {
+                            val text = token.text.replace("o ", "")
+                            strBuilder.append("\u2610 $text")
+                        }
+
+                        token.text.startsWith("x ") -> {
+                            val text = token.text.replace("x ", "")
+                            strBuilder.append("\u2611 $text")
+                        }
+
+                        else -> strBuilder.append("\u25CF ${token.text}")
+                    }
                 }
             }
         }

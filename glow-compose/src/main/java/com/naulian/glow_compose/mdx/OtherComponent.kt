@@ -3,6 +3,7 @@ package com.naulian.glow_compose.mdx
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -77,6 +78,55 @@ fun OtherComponent(tokens: List<MdxToken>, components: MdxComponents) {
             MdxType.TABLE -> components.table(token)
             else -> {}
         }
+    }
+}
+
+@Composable
+fun MdxElement(
+    modifier: Modifier = Modifier,
+    tokens: List<MdxToken>,
+    fontFamily: FontFamily = FontFamily.Default
+) {
+    Column(modifier = modifier) {
+        tokens.forEach { token ->
+            when {
+                token.text.startsWith("o ") -> {
+                    val text = token.text.removePrefix("o ")
+                    MdxElementText(bullet = "\u2610", text = text, fontFamily = fontFamily)
+                }
+
+                token.text.startsWith("x ") -> {
+                    val text = token.text.removePrefix("x ")
+                    MdxElementText(bullet = "\u2611", text = text, fontFamily = fontFamily)
+                }
+
+                else -> {
+                    MdxElementText(bullet = "\u25CF", text = token.text, fontFamily = fontFamily)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MdxElementText(
+    modifier: Modifier = Modifier,
+    bullet: String,
+    text: String,
+    fontFamily: FontFamily
+) {
+    Row(modifier = modifier.fillMaxWidth()) {
+        Text(text = bullet)
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(text = text, fontFamily = fontFamily)
+    }
+}
+
+@Preview
+@Composable
+private fun MdxElementTextPreview() {
+    Preview {
+        MdxElementText(bullet = "\u25CF", text = "hello", fontFamily = FontFamily.Default)
     }
 }
 

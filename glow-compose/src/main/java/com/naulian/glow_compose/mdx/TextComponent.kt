@@ -65,22 +65,6 @@ fun TextComponent(
                     style = SpanStyle(textDecoration = TextDecoration.LineThrough)
                 )
 
-                MdxType.ELEMENT -> {
-                    when {
-                        token.text.startsWith("o ") -> {
-                            val text = token.text.removePrefix("o ")
-                            append("\u2610 $text")
-                        }
-
-                        token.text.startsWith("x ") -> {
-                            val text = token.text.removePrefix("x ")
-                            append("\u2611 $text")
-                        }
-
-                        else -> append("\u25CF ${token.text}")
-                    }
-                }
-
                 MdxType.LINK -> {
                     val tag = "link$linkIndex"
                     pushStringAnnotation(tag, "link")

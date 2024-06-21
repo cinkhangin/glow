@@ -6,7 +6,7 @@ class MdxLexer(input: String) {
     private val endChar = Char.MIN_VALUE
     private val isNotEndChar get() = char() != endChar
     private val isNotNewLine get() = char() != '\n'
-    private val symbolChars = "\"</>&{%}[~]\\(-)_\n"
+    private val symbolChars = "\"</>&`{%}[~]\\(-)_\n"
     private val charIsNotSymbol get() = char() !in symbolChars
     private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 

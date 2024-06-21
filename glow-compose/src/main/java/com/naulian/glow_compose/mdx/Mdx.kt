@@ -60,14 +60,11 @@ fun MdxBlock(
                     tokens = it.children,
                     components = components
                 )
+
+                MdxComponentType.ELEMENT -> components.elements(it.children)
             }
         }
     }
-}
-
-@Composable
-fun MdxUI(modifier: Modifier = Modifier, nodes: List<MdxComponentGroup>) {
-
 }
 
 data class MdxComponents(
@@ -81,6 +78,7 @@ data class MdxComponents(
     val video: @Composable (MdxToken) -> Unit,
     val divider: @Composable (MdxToken) -> Unit,
     val table: @Composable (MdxToken) -> Unit,
+    val elements: @Composable (List<MdxToken>) -> Unit,
 )
 
 fun mdxComponents(
@@ -111,6 +109,12 @@ fun mdxComponents(
     video: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
     divider: @Composable (MdxToken) -> Unit = { MdxDivider(token = it) },
     table: @Composable (MdxToken) -> Unit = { MdxTable(token = it, fontFamily = fontFamily) },
+    elements: @Composable (List<MdxToken>) -> Unit = {
+        MdxElement(
+            tokens = it,
+            fontFamily = fontFamily
+        )
+    }
 ) = MdxComponents(
     fontFamily = fontFamily,
     text = text,
@@ -122,10 +126,11 @@ fun mdxComponents(
     video = video,
     divider = divider,
     table = table,
+    elements = elements
 )
 
 
-@Preview(heightDp = 1200)
+@Preview(heightDp = 1500)
 @Composable
 private fun MdxBlockPreview() {
     MaterialTheme {
