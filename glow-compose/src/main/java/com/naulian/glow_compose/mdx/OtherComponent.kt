@@ -101,7 +101,7 @@ fun MdxElement(
                 }
 
                 else -> {
-                    MdxElementText(bullet = "\u25CF", text = token.text, fontFamily = fontFamily)
+                    MdxElementText(bullet = "\u2022", text = token.text, fontFamily = fontFamily)
                 }
             }
         }
@@ -126,7 +126,7 @@ fun MdxElementText(
 @Composable
 private fun MdxElementTextPreview() {
     Preview {
-        MdxElementText(bullet = "\u25CF", text = "hello", fontFamily = FontFamily.Default)
+        MdxElementText(bullet = "\ud81a\uddf9", text = "hello", fontFamily = FontFamily.Default)
     }
 }
 

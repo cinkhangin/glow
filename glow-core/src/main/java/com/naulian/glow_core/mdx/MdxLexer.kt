@@ -98,16 +98,7 @@ class MdxLexer(input: String) {
     private fun createLinkToken(): MdxToken {
         advance() //skip opening parenthesis
         val start = cursor
-        var level = 0
-        while (isNotEndChar) {
-            if (char() == '(') {
-                level++
-            }
-            if (char() == ')') {
-                if (level == 0) {
-                    break
-                } else level--
-            }
+        while (char() != ')' && isNotEndChar) {
             advance()
         }
 
@@ -211,16 +202,7 @@ class MdxLexer(input: String) {
     private fun createTableToken(): MdxToken {
         advance() //skip opening bracket
         val start = cursor
-        var level = 0
-        while (isNotEndChar) {
-            if (char() == '[') {
-                level++
-            }
-            if (char() == ']') {
-                if (level == 0) {
-                    break
-                } else level--
-            }
+        while (char() != ']' && isNotEndChar) {
             advance()
         }
         val end = cursor
@@ -232,16 +214,7 @@ class MdxLexer(input: String) {
     private fun createColoredToken(): MdxToken {
         advance() //skip opening bracket
         val start = cursor
-        var level = 0
-        while (isNotEndChar) {
-            if (char() == '<') {
-                level++
-            }
-            if (char() == '>') {
-                if (level == 0) {
-                    break
-                } else level--
-            }
+        while (char() != '>' && isNotEndChar) {
             advance()
         }
         val end = cursor
