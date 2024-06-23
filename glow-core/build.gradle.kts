@@ -51,7 +51,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.naulian"
                 artifactId = "glow-core"
-                version = "1.6.0-beta01"
+                version = "1.6.0-beta02"
             }
         }
     }

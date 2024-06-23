@@ -36,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -93,7 +92,7 @@ fun HandleNode(node: MdxNode, components: MdxComponents, onClickLink: (String) -
             MdxType.ELEMENT -> components.elements(it)
 
             MdxType.TABLE -> components.table(it)
-            else -> components.text(it, 16.sp, 20.sp) {}
+            else -> components.text(it, components.textStyle) {}
         }
     }
 }
@@ -147,10 +146,10 @@ fun AnnotatedString.Builder.handleText(
 
 data class MdxComponents(
     val fontFamily: FontFamily,
+    val textStyle: TextStyle = TextStyle(fontFamily = fontFamily),
     val text: @Composable (
         node: MdxNode,
-        size: TextUnit,
-        height: TextUnit,
+        style: TextStyle,
         onClickLink: (String) -> Unit
     ) -> Unit,
     val paragraph: @Composable (MdxNode, onClickLink: (String) -> Unit) -> Unit,
@@ -181,23 +180,19 @@ data class MdxParagraphContent(
 
 fun mdxComponents(
     fontFamily: FontFamily = FontFamily.Default,
+    textStyle: TextStyle = TextStyle(fontFamily = fontFamily),
     text: @Composable (
         node: MdxNode,
-        size: TextUnit,
-        height: TextUnit,
+        style: TextStyle,
         onClickLink: (String) -> Unit
-    ) -> Unit = { node, size, height, onClickLink ->
+    ) -> Unit = { node, style, onClickLink ->
         when {
             node.children.isEmpty() && node.literal.isBlank() -> {}
             else -> {
                 val paragraphContent = buildContentPair(node)
                 ClickableText(
                     text = paragraphContent.annotatedString,
-                    style = TextStyle(
-                        fontFamily = fontFamily,
-                        fontSize = size,
-                        lineHeight = height
-                    ),
+                    style = style,
                 ) { offset ->
                     paragraphContent.annotatedString.getStringAnnotations(
                         start = offset,
@@ -208,19 +203,31 @@ fun mdxComponents(
         }
     },
     paragraph: @Composable (MdxNode, onClickLink: (String) -> Unit) -> Unit = { node, onClickLink ->
-        text(node, 16.sp, 20.sp, onClickLink)
+        val style = textStyle.copy(
+            fontFamily = fontFamily,
+            fontSize = 16.sp,
+            lineHeight = 20.sp,
+        )
+        text(node, style, onClickLink)
     },
     header: @Composable (MdxNode) -> Unit = { node ->
         val sizePair = when (node.type) {
-            MdxType.H1 -> 32.sp to 36.sp
-            MdxType.H2 -> 28.sp to 32.sp
-            MdxType.H3 -> 24.sp to 38.sp
-            MdxType.H4 -> 20.sp to 24.sp
-            MdxType.H5 -> 18.sp to 22.sp
-            MdxType.H6 -> 16.sp to 20.sp
+            MdxType.H1 -> 36.sp to 42.sp
+            MdxType.H2 -> 32.sp to 36.sp
+            MdxType.H3 -> 28.sp to 32.sp
+            MdxType.H4 -> 24.sp to 38.sp
+            MdxType.H5 -> 20.sp to 24.sp
+            MdxType.H6 -> 18.sp to 22.sp
             else -> 24.sp to 32.sp
         }
-        text(node, sizePair.first, sizePair.second) {}
+        val style = textStyle.copy(
+            fontFamily = fontFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = sizePair.first,
+            lineHeight = sizePair.second,
+        )
+
+        text(node, style) {}
     },
     quote: @Composable (MdxNode) -> Unit = { node ->
         ConstraintLayout(
@@ -257,7 +264,7 @@ fun mdxComponents(
             ) {
                 node.children.forEach {
                     when (it.type) {
-                        MdxType.PARAGRAPH -> text(it, 16.sp, 20.sp) {}
+                        MdxType.PARAGRAPH -> text(it, textStyle) {}
                         else -> {}
                     }
                 }
@@ -325,7 +332,7 @@ fun mdxComponents(
                         when (child.type) {
                             MdxType.PARAGRAPH -> {
                                 Box(modifier = Modifier.weight(1f)) {
-                                    text(child, 16.sp, 20.sp) {}
+                                    text(child, textStyle) {}
                                 }
                             }
                         }
@@ -344,7 +351,7 @@ fun mdxComponents(
                             Spacer(modifier = Modifier.width(12.dp))
                             element.children.forEach {
                                 when (it.type) {
-                                    MdxType.PARAGRAPH -> text(it, 16.sp, 20.sp) {}
+                                    MdxType.PARAGRAPH -> text(it, textStyle) {}
                                     else -> {}
                                 }
                             }
@@ -357,7 +364,7 @@ fun mdxComponents(
                             Spacer(modifier = Modifier.width(12.dp))
                             element.children.forEach {
                                 when (it.type) {
-                                    MdxType.PARAGRAPH -> text(it, 16.sp, 20.sp) {}
+                                    MdxType.PARAGRAPH -> text(it, textStyle) {}
                                     else -> {}
                                 }
                             }
@@ -370,7 +377,7 @@ fun mdxComponents(
                             Spacer(modifier = Modifier.width(12.dp))
                             element.children.forEach {
                                 when (it.type) {
-                                    MdxType.PARAGRAPH -> text(it, 16.sp, 20.sp) {}
+                                    MdxType.PARAGRAPH -> text(it, textStyle) {}
                                     else -> {}
                                 }
                             }
