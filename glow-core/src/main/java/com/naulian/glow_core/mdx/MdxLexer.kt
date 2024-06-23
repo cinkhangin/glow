@@ -118,9 +118,7 @@ data class MdxNode(
 }
 
 private const val MDX_END_CHAR = Char.MIN_VALUE
-private const val MDX_TEXT_CHARS =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- .,;:!?"
-private const val MDX_SYMBOL_CHARS = "\"</>&`|{%}[~]\\(-)_\n"
+private const val MDX_SYMBOL_CHARS = "\"</>&|#{%}[~]\\(`)_\n"
 private const val MDX_WHITESPACES = " \n"
 
 class MdxLexer(input: String) {
@@ -182,9 +180,8 @@ class MdxLexer(input: String) {
             '#' -> createHeaderToken()
             '*' -> createElementToken()
             '\\' -> createEscapedToken()
-            in MDX_TEXT_CHARS -> createTextToken()
             Char.MIN_VALUE -> MdxNode.EOF
-            else -> createSymbolToken(MdxType.ILLEGAL)
+            else -> createTextToken()
         }
     }
 
@@ -297,7 +294,7 @@ class MdxLexer(input: String) {
 
     private fun createTextToken(): MdxNode {
         val start = cursor
-        advanceWhile { it in MDX_TEXT_CHARS }
+        advanceWhile { it.isNotSymbols && it.isNotEndChar }
         val literal = source.subSequence(start, cursor).toString()
         return MdxNode.create(MdxType.TEXT, literal)
     }
