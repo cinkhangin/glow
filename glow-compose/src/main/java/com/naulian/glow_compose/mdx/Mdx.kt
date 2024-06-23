@@ -282,6 +282,7 @@ fun mdxComponents(
                         shape = MaterialTheme.shapes.small
                     )
                     .clip(MaterialTheme.shapes.small),
+                textStyle = textStyle,
                 source = code,
                 language = lang
             )
