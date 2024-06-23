@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -46,7 +46,7 @@ fun CodeSnippet(
     source: String,
     language: String = "txt",
     theme: Theme = CodeTheme.defaultLight,
-    fontFamily: FontFamily = font,
+    textStyle: TextStyle = TextStyle(fontFamily = font),
     onLongClick: (() -> Unit)? = null
 ) {
     var glowCode by remember { mutableStateOf(emptyAnnotatedString) }
@@ -66,8 +66,7 @@ fun CodeSnippet(
         item {
             Text(
                 text = glowCode,
-                fontFamily = fontFamily,
-                style = MaterialTheme.typography.bodyMedium,
+                style = textStyle,
                 modifier = Modifier.padding(12.dp),
             )
         }

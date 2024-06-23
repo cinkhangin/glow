@@ -180,7 +180,11 @@ data class MdxParagraphContent(
 
 fun mdxComponents(
     fontFamily: FontFamily = FontFamily.Default,
-    textStyle: TextStyle = TextStyle(fontFamily = fontFamily),
+    textStyle: TextStyle = TextStyle(
+        fontFamily = fontFamily,
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+    ),
     text: @Composable (
         node: MdxNode,
         style: TextStyle,
@@ -203,12 +207,7 @@ fun mdxComponents(
         }
     },
     paragraph: @Composable (MdxNode, onClickLink: (String) -> Unit) -> Unit = { node, onClickLink ->
-        val style = textStyle.copy(
-            fontFamily = fontFamily,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-        )
-        text(node, style, onClickLink)
+        text(node, textStyle, onClickLink)
     },
     header: @Composable (MdxNode) -> Unit = { node ->
         val sizePair = when (node.type) {
