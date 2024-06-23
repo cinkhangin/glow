@@ -11,13 +11,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.naulian.glow_compose.Preview
 import com.naulian.glow_core.atx.SAMPLE_KT
-import com.naulian.glow_core.mdx.MdxToken
+import com.naulian.glow_core.mdx.MdxNode
 import com.naulian.glow_core.mdx.MdxType
 
 @Composable
 fun MdxCodeBlock(
     modifier: Modifier = Modifier,
-    token: MdxToken,
+    token: MdxNode,
 ) {
     val (lang, code) = token.getLangCodePair()
     when (lang) {
@@ -40,9 +40,9 @@ fun MdxCodeBlock(
 @Composable
 private fun AtxCodeBlockPreview() {
     Preview {
-        val token = MdxToken(
+        val token = MdxNode(
             type = MdxType.CODE,
-            text = ".kt\n$SAMPLE_KT",
+            literal = ".kt\n$SAMPLE_KT",
         )
         MdxCodeBlock(
             modifier = Modifier.padding(16.dp),

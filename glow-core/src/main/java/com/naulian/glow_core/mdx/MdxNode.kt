@@ -10,28 +10,29 @@ enum class MdxType {
     WHITESPACE, DIVIDER, EOF,
 }
 
-data class MdxToken(
+data class MdxNode(
     val type: MdxType,
-    val text: String,
+    val literal: String,
+    val children: List<MdxNode> = emptyList(),
 ) {
     companion object {
-        val EOF = MdxToken(MdxType.EOF, "")
+        val EOF = MdxNode(MdxType.EOF, "")
     }
 
-    fun isBlankText() = type == MdxType.TEXT && text.isBlank()
+    fun isBlankText() = type == MdxType.TEXT && literal.isBlank()
     fun getHyperLink(): Pair<String, String> {
-        if (text.contains("@")) {
-            val index = text.indexOf("@")
-            val hyper = text.take(index)
-            val link = text.replace("$hyper@", "")
+        if (literal.contains("@")) {
+            val index = literal.indexOf("@")
+            val hyper = literal.take(index)
+            val link = literal.replace("$hyper@", "")
 
             return hyper to link
         }
-        return "" to text
+        return "" to literal
     }
 
     fun getTableItemPairs(): Pair<List<String>, List<List<String>>> {
-        val lines = text.split("\n")
+        val lines = literal.split("\n")
 
         if (lines.isEmpty()) {
             return emptyList<String>() to emptyList()
@@ -53,26 +54,26 @@ data class MdxToken(
     }
 
     fun getTextColorPair(): Pair<String, String> {
-        if (text.contains("#")) {
-            val index = text.indexOf("#")
-            val value = text.take(index)
-            val hexColor = text.drop(index).trim()
+        if (literal.contains("#")) {
+            val index = literal.indexOf("#")
+            val value = literal.take(index)
+            val hexColor = literal.drop(index).trim()
             return value to hexColor
         }
-        return text to "#222222"
+        return literal to "#222222"
     }
 
     fun getLangCodePair(): Pair<String, String> {
-        if (text.contains("\n")) {
-            val index = text.indexOf("\n")
-            val lang = text.take(index)
-            val code = text.drop(index).trim()
+        if (literal.contains("\n")) {
+            val index = literal.indexOf("\n")
+            val lang = literal.take(index)
+            val code = literal.drop(index).trim()
 
             if (lang.contains('.')) {
                 return lang.replace(".", "") to code
             }
         }
 
-        return "txt" to text
+        return "txt" to literal
     }
 }

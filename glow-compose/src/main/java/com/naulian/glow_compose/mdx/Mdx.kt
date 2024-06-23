@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxComponentGroup
 import com.naulian.glow_core.mdx.MdxComponentType
+import com.naulian.glow_core.mdx.MdxNode
 import com.naulian.glow_core.mdx.MdxParser
-import com.naulian.glow_core.mdx.MdxToken
 
 @Composable
 fun MdxBlock(
@@ -70,15 +70,15 @@ fun MdxBlock(
 data class MdxComponents(
     val fontFamily: FontFamily,
     val text: @Composable (AnnotatedString, linkMap: Map<String, String>, onClickLink: (String) -> Unit) -> Unit,
-    val header: @Composable (MdxToken) -> Unit,
-    val quote: @Composable (MdxToken) -> Unit,
-    val codeBlock: @Composable (MdxToken) -> Unit,
-    val image: @Composable (MdxToken) -> Unit,
-    val youtube: @Composable (MdxToken) -> Unit,
-    val video: @Composable (MdxToken) -> Unit,
-    val divider: @Composable (MdxToken) -> Unit,
-    val table: @Composable (MdxToken) -> Unit,
-    val elements: @Composable (List<MdxToken>) -> Unit,
+    val header: @Composable (MdxNode) -> Unit,
+    val quote: @Composable (MdxNode) -> Unit,
+    val codeBlock: @Composable (MdxNode) -> Unit,
+    val image: @Composable (MdxNode) -> Unit,
+    val youtube: @Composable (MdxNode) -> Unit,
+    val video: @Composable (MdxNode) -> Unit,
+    val divider: @Composable (MdxNode) -> Unit,
+    val table: @Composable (MdxNode) -> Unit,
+    val elements: @Composable (List<MdxNode>) -> Unit,
 )
 
 fun mdxComponents(
@@ -96,20 +96,20 @@ fun mdxComponents(
                 .firstOrNull()?.let { linkMap[it.tag]?.let(onClickLink) }
         }
     },
-    header: @Composable (MdxToken) -> Unit = { HeaderBlock(token = it, fontFamily = fontFamily) },
-    quote: @Composable (MdxToken) -> Unit = {
+    header: @Composable (MdxNode) -> Unit = { HeaderBlock(token = it, fontFamily = fontFamily) },
+    quote: @Composable (MdxNode) -> Unit = {
         QuoteBlock(
-            quote = it.text,
+            quote = it.literal,
             fontFamily = fontFamily
         )
     },
-    codeBlock: @Composable (MdxToken) -> Unit = { MdxCodeBlock(token = it) },
-    image: @Composable (MdxToken) -> Unit = { MdxImageBlock(token = it) },
-    youtube: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
-    video: @Composable (MdxToken) -> Unit = { Text(text = it.text) },
-    divider: @Composable (MdxToken) -> Unit = { MdxDivider(token = it) },
-    table: @Composable (MdxToken) -> Unit = { MdxTable(token = it, fontFamily = fontFamily) },
-    elements: @Composable (List<MdxToken>) -> Unit = {
+    codeBlock: @Composable (MdxNode) -> Unit = { MdxCodeBlock(token = it) },
+    image: @Composable (MdxNode) -> Unit = { MdxImageBlock(token = it) },
+    youtube: @Composable (MdxNode) -> Unit = { Text(text = it.literal) },
+    video: @Composable (MdxNode) -> Unit = { Text(text = it.literal) },
+    divider: @Composable (MdxNode) -> Unit = { MdxDivider(token = it) },
+    table: @Composable (MdxNode) -> Unit = { MdxTable(token = it, fontFamily = fontFamily) },
+    elements: @Composable (List<MdxNode>) -> Unit = {
         MdxElement(
             tokens = it,
             fontFamily = fontFamily

@@ -7,7 +7,7 @@ fun CharSequence.str(): String = toString().trim()
 
 data class MdxComponentGroup(
     val type: MdxComponentType,
-    val children: List<MdxToken>,
+    val children: List<MdxNode>,
 )
 
 enum class MdxComponentType { TEXT, OTHER, ELEMENT }
@@ -57,7 +57,7 @@ fun List<MdxComponentGroup>.getFormattedString(): String {
                             strBuilder.append("$hyper: $link")
                         }
 
-                        else -> strBuilder.append(token.text)
+                        else -> strBuilder.append(token.literal)
                     }
                 }
                 strBuilder.append("\n")
@@ -80,7 +80,7 @@ fun List<MdxComponentGroup>.getFormattedString(): String {
                             strBuilder.append(rows)
                         }
 
-                        else -> strBuilder.append(token.text)
+                        else -> strBuilder.append(token.literal)
                     }
 
                     strBuilder.append("\n")
@@ -90,17 +90,17 @@ fun List<MdxComponentGroup>.getFormattedString(): String {
             MdxComponentType.ELEMENT -> {
                 group.children.forEach { token ->
                     when {
-                        token.text.startsWith("o ") -> {
-                            val text = token.text.replace("o ", "")
+                        token.literal.startsWith("o ") -> {
+                            val text = token.literal.replace("o ", "")
                             strBuilder.append("\u2610 $text")
                         }
 
-                        token.text.startsWith("x ") -> {
-                            val text = token.text.replace("x ", "")
+                        token.literal.startsWith("x ") -> {
+                            val text = token.literal.replace("x ", "")
                             strBuilder.append("\u2611 $text")
                         }
 
-                        else -> strBuilder.append("\u25CF ${token.text}")
+                        else -> strBuilder.append("\u25CF ${token.literal}")
                     }
                 }
             }

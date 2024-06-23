@@ -9,8 +9,8 @@ object MdxParser {
         return secondIteration
     }
 
-    private fun List<MdxComponentGroup>.flatten(): List<MdxToken> {
-        val tokens = mutableListOf<MdxToken>()
+    private fun List<MdxComponentGroup>.flatten(): List<MdxNode> {
+        val tokens = mutableListOf<MdxNode>()
         for (group in this) {
             for (token in group.children) {
                 tokens.add(token)
@@ -19,9 +19,9 @@ object MdxParser {
         return tokens.toList()
     }
 
-    private fun parseIteration(source: List<MdxToken>): List<MdxComponentGroup> {
+    private fun parseIteration(source: List<MdxNode>): List<MdxComponentGroup> {
         val tokenGroups = mutableListOf<MdxComponentGroup>()
-        var currentGroup = mutableListOf<MdxToken>()
+        var currentGroup = mutableListOf<MdxNode>()
 
         for (token in source) {
             val lastType = currentGroup.lastOrNull()?.getComponentType() ?: MdxComponentType.OTHER
@@ -49,7 +49,7 @@ object MdxParser {
         return tokenGroups
     }
 
-    private fun List<MdxToken>.trimWhiteSpaces(): List<MdxToken> {
+    private fun List<MdxNode>.trimWhiteSpaces(): List<MdxNode> {
         if (isEmpty()) {
             return emptyList()
         }
@@ -79,11 +79,11 @@ object MdxParser {
         }
     }
 
-    private fun List<MdxToken>.getComponentType(): MdxComponentType {
+    private fun List<MdxNode>.getComponentType(): MdxComponentType {
         return if (isEmpty()) MdxComponentType.OTHER else last().getComponentType()
     }
 
-    private fun MdxToken.getComponentType(): MdxComponentType {
+    private fun MdxNode.getComponentType(): MdxComponentType {
         return when (type) {
             MdxType.TEXT,
             MdxType.BOLD,

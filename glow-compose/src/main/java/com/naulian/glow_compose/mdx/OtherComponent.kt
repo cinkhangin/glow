@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.naulian.glow_compose.Preview
-import com.naulian.glow_core.mdx.MdxToken
+import com.naulian.glow_core.mdx.MdxNode
 import com.naulian.glow_core.mdx.MdxType
 import com.naulian.modify.table.Table
 import com.naulian.modify.table.TableHeader
@@ -35,7 +35,7 @@ import com.naulian.modify.table.TableItems
 @Composable
 fun HeaderBlock(
     modifier: Modifier = Modifier,
-    token: MdxToken,
+    token: MdxNode,
     fontFamily: FontFamily = FontFamily.Default
 ) {
     val sizePair = when (token.type) {
@@ -50,7 +50,7 @@ fun HeaderBlock(
 
     Text(
         modifier = modifier,
-        text = token.text,
+        text = token.literal,
         fontFamily = fontFamily,
         fontSize = sizePair.first,
         fontWeight = FontWeight.Bold,
@@ -59,7 +59,7 @@ fun HeaderBlock(
 }
 
 @Composable
-fun OtherComponent(tokens: List<MdxToken>, components: MdxComponents) {
+fun OtherComponent(tokens: List<MdxNode>, components: MdxComponents) {
     tokens.forEach { token ->
         when (token.type) {
             MdxType.H1,
@@ -84,24 +84,24 @@ fun OtherComponent(tokens: List<MdxToken>, components: MdxComponents) {
 @Composable
 fun MdxElement(
     modifier: Modifier = Modifier,
-    tokens: List<MdxToken>,
+    tokens: List<MdxNode>,
     fontFamily: FontFamily = FontFamily.Default
 ) {
     Column(modifier = modifier) {
         tokens.forEach { token ->
             when {
-                token.text.startsWith("o ") -> {
-                    val text = token.text.removePrefix("o ")
+                token.literal.startsWith("o ") -> {
+                    val text = token.literal.removePrefix("o ")
                     MdxElementText(bullet = "\u2610", text = text, fontFamily = fontFamily)
                 }
 
-                token.text.startsWith("x ") -> {
-                    val text = token.text.removePrefix("x ")
+                token.literal.startsWith("x ") -> {
+                    val text = token.literal.removePrefix("x ")
                     MdxElementText(bullet = "\u2611", text = text, fontFamily = fontFamily)
                 }
 
                 else -> {
-                    MdxElementText(bullet = "\u2022", text = token.text, fontFamily = fontFamily)
+                    MdxElementText(bullet = "\u2022", text = token.literal, fontFamily = fontFamily)
                 }
             }
         }
@@ -133,7 +133,7 @@ private fun MdxElementTextPreview() {
 @Composable
 fun MdxTable(
     modifier: Modifier = Modifier,
-    token: MdxToken,
+    token: MdxNode,
     fontFamily: FontFamily = FontFamily.Default
 ) {
     val (cols, rows) = token.getTableItemPairs()
@@ -156,19 +156,19 @@ fun MdxTable(
 }
 
 @Composable
-fun MdxDivider(token: MdxToken, customMap: Map<String, @Composable () -> Unit> = emptyMap()) {
-    when (token.text) {
+fun MdxDivider(token: MdxNode, customMap: Map<String, @Composable () -> Unit> = emptyMap()) {
+    when (token.literal) {
         "" -> {}
         "br" -> Spacer(modifier = Modifier.height(1.dp))
         "line" -> HorizontalDivider()
         "dash" -> HorizontalDashDivider()
         else -> {
-            if (token.text.isDigitsOnly()) {
-                val sizeInt = token.text.toInt()
+            if (token.literal.isDigitsOnly()) {
+                val sizeInt = token.literal.toInt()
                 Spacer(modifier = Modifier.height(sizeInt.dp))
             }
 
-            customMap[token.text]?.invoke()
+            customMap[token.literal]?.invoke()
         }
     }
 }
@@ -178,11 +178,11 @@ fun MdxDivider(token: MdxToken, customMap: Map<String, @Composable () -> Unit> =
 private fun MdxDividerPreview() {
     Preview {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            MdxDivider(token = MdxToken(MdxType.DIVIDER, "line"))
-            MdxDivider(token = MdxToken(MdxType.DIVIDER, "20"))
-            MdxDivider(token = MdxToken(MdxType.DIVIDER, "dash"))
+            MdxDivider(token = MdxNode(MdxType.DIVIDER, "line"))
+            MdxDivider(token = MdxNode(MdxType.DIVIDER, "20"))
+            MdxDivider(token = MdxNode(MdxType.DIVIDER, "dash"))
             MdxDivider(
-                token = MdxToken(MdxType.DIVIDER, "text"),
+                token = MdxNode(MdxType.DIVIDER, "text"),
                 customMap = mapOf("text" to { Text(text = "oooooooooooooo") })
             )
         }

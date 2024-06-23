@@ -32,12 +32,12 @@ val MDX_SAMPLE = """
 
 
 val MDX_TEST = """
-    #1 this is heading 1
-    #2 this is heading 2
-    #3 this is heading 3
-    #4 this is heading 4
-    #5 this is heading 5
-    #6 this is heading 6
+    #1 heading 1
+    #2 heading 2
+    #3 heading 3
+    #4 heading 4
+    #5 heading 5
+    #6 heading 6
    
     =line=
     
@@ -89,7 +89,7 @@ val MDX_TEST = """
     a    |b    |result
     true |true |true  
     true |false|false 
-    false|false|false 
+    &false&|false|false 
     ]
     
     * unordered item
@@ -97,4 +97,136 @@ val MDX_TEST = """
     
     *o uncheck item
     *x checked item
+""".trimIndent()
+
+
+private val AST = """
+    root
+    |    h1
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    h2
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    h3
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    h4
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    h5
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    h6
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    divider
+    |    newline
+    |    ignore
+    |    newline
+    |    text
+    |    newline
+    |    text
+    |    newline
+    |    colored
+    |    |    text
+    |    |    color_hex
+    |    newline
+    |    text
+    |    bold
+    |    |    text
+    |    whitespace
+    |    text
+    |    newline
+    |    text
+    |    italic
+    |    |    text
+    |    whitespace
+    |    text
+    |    newline
+    |    text
+    |    underline
+    |    |    text
+    |    whitespace
+    |    text
+    |    newline
+    |    text
+    |    strike
+    |    |    text
+    |    whitespace
+    |    text
+    |    newline
+    |    text
+    |    datetime
+    |    newline
+    |    text
+    |    newline
+    |    quotation
+    |    |    text
+    |    newline
+    |    code
+    |    newline
+    |    escape
+    |    text
+    |    escape
+    |    newline
+    |    code
+    |    newline
+    |    text
+    |    hyper_link
+    |    whitespace
+    |    text
+    |    newline
+    |    image
+    |    newline
+    |    youtube
+    |    newline
+    |    table
+    |    |    newline
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    newline
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    newline
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    newline
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    pipe
+    |    |    text
+    |    |    newline
+    |    newline
+    |    element_bullet
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    element_bullet
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    element_unchecked
+    |    |    whitespace
+    |    |    text
+    |    newline
+    |    element_checked
+    |    |    whitespace
+    |    |    text
 """.trimIndent()

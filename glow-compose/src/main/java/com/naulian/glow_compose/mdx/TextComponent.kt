@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.naulian.glow_compose.Preview
 import com.naulian.glow_compose.hexToColor
-import com.naulian.glow_core.mdx.MdxToken
+import com.naulian.glow_core.mdx.MdxNode
 import com.naulian.glow_core.mdx.MdxType
 
 fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
@@ -31,7 +31,7 @@ fun AnnotatedString.Builder.appendWithStyle(text: String, style: SpanStyle) {
 
 @Composable
 fun TextComponent(
-    tokens: List<MdxToken>,
+    tokens: List<MdxNode>,
     components: MdxComponents,
     onClickLink: (String) -> Unit
 ) {
@@ -46,22 +46,22 @@ fun TextComponent(
         tokens.forEach { token ->
             when (token.type) {
                 MdxType.BOLD -> appendWithStyle(
-                    token.text,
+                    token.literal,
                     style = SpanStyle(fontWeight = FontWeight.Bold)
                 )
 
                 MdxType.ITALIC -> appendWithStyle(
-                    token.text,
+                    token.literal,
                     style = SpanStyle(fontStyle = FontStyle.Italic)
                 )
 
                 MdxType.UNDERLINE -> appendWithStyle(
-                    token.text,
+                    token.literal,
                     style = SpanStyle(textDecoration = TextDecoration.Underline)
                 )
 
                 MdxType.STRIKE -> appendWithStyle(
-                    token.text,
+                    token.literal,
                     style = SpanStyle(textDecoration = TextDecoration.LineThrough)
                 )
 
@@ -69,10 +69,10 @@ fun TextComponent(
                     val tag = "link$linkIndex"
                     pushStringAnnotation(tag, "link")
                     appendWithStyle(
-                        token.text,
+                        token.literal,
                         style = SpanStyle(color = Color.Blue)
                     )
-                    linkMap[tag] = token.text
+                    linkMap[tag] = token.literal
                     linkIndex++
                     pop()
                 }
@@ -99,7 +99,7 @@ fun TextComponent(
                     )
                 }
 
-                else -> append(token.text)
+                else -> append(token.literal)
             }
         }
     }
