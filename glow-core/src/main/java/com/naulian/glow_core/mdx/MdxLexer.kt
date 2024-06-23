@@ -21,7 +21,6 @@ object MdxType {
     const val STRIKE = "strike"
     const val TEXT = "text"
     const val PARAGRAPH = "paragraph"
-    const val COMPONENT = "component"
     const val IMAGE = "image"
     const val VIDEO = "video"
     const val YOUTUBE = "youtube"
@@ -58,7 +57,6 @@ data class MdxNode(
         fun create(type: String, literal: CharSequence) = MdxNode(type, literal.toString())
     }
 
-    fun isBlankText() = type == MdxType.TEXT && literal.isBlank()
     fun getHyperLink(): Pair<String, String> {
         if (literal.contains("@")) {
             val index = literal.indexOf("@")
@@ -68,38 +66,6 @@ data class MdxNode(
             return hyper to link
         }
         return "" to literal
-    }
-
-    fun getTableItemPairs(): Pair<List<String>, List<List<String>>> {
-        val lines = literal.split("\n")
-
-        if (lines.isEmpty()) {
-            return emptyList<String>() to emptyList()
-        }
-
-        var columns = emptyList<String>()
-        if (lines.first().isNotBlank()) {
-            columns = lines.first().split("|")
-                .map { it.trim() }
-        }
-
-        if (lines.size > 1) {
-            val rows = lines.drop(1)
-            return columns to rows.map { row ->
-                row.split("|").map { it.trim() }
-            }
-        }
-        return columns to emptyList()
-    }
-
-    fun getTextColorPair(): Pair<String, String> {
-        if (literal.contains("#")) {
-            val index = literal.indexOf("#")
-            val value = literal.take(index)
-            val hexColor = literal.drop(index).trim()
-            return value to hexColor
-        }
-        return literal to "#222222"
     }
 
     fun getLangCodePair(): Pair<String, String> {
@@ -118,7 +84,7 @@ data class MdxNode(
 }
 
 private const val MDX_END_CHAR = Char.MIN_VALUE
-private const val MDX_SYMBOL_CHARS = "\"</>&|#{%}[~]\\(`)_\n"
+private const val MDX_SYMBOL_CHARS = "\"</>&|#{%}[~]\\`(*)_\n"
 private const val MDX_WHITESPACES = " \n"
 
 class MdxLexer(input: String) {
@@ -148,6 +114,7 @@ class MdxLexer(input: String) {
     }
 
     fun next(): MdxNode {
+        println(char())
         return when (val char = char()) {
             in MDX_WHITESPACES -> createWhiteSpaceToken()
             '&' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
@@ -180,6 +147,7 @@ class MdxLexer(input: String) {
             '#' -> createHeaderToken()
             '*' -> createElementToken()
             '\\' -> createEscapedToken()
+            in MDX_SYMBOL_CHARS -> createSymbolToken(MdxType.TEXT) //prevent memory leak
             Char.MIN_VALUE -> MdxNode.EOF
             else -> createTextToken()
         }
@@ -332,8 +300,6 @@ class MdxLexer(input: String) {
     }
 
     private fun advanceWhile(condition: (Char) -> Boolean) {
-        while (condition(char())) {
-            advance()
-        }
+        while (condition(char())) advance()
     }
 }
