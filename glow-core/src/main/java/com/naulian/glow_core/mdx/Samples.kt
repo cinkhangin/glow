@@ -2,7 +2,10 @@ package com.naulian.glow_core.mdx
 
 
 val MDX_SAMPLE = """
-    #3 Mdx Example
+    #4 Mdx Example
+    
+    
+    "the quick brown fox jumps over the lazy dog - author" 
     
     =line=
     
@@ -32,12 +35,12 @@ val MDX_SAMPLE = """
 
 
 val MDX_TEST = """
-    #1 this is heading 1
-    #2 this is heading 2
-    #3 this is heading 3
-    #4 this is heading 4
-    #5 this is heading 5
-    #6 this is heading 6
+    #1 heading 1
+    #2 heading 2
+    #3 heading 3
+    #4 heading 4
+    #5 heading 5
+    #6 heading 6
    
     =line=
     
@@ -89,7 +92,7 @@ val MDX_TEST = """
     a    |b    |result
     true |true |true  
     true |false|false 
-    false|false|false 
+    &false&|false|false 
     ]
     
     * unordered item
