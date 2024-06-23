@@ -1,8 +1,8 @@
 package com.naulian.glow_core
 
-import com.naulian.glow_core.mdx.MdxNode2
-import com.naulian.glow_core.mdx.MdxParser2
-import com.naulian.glow_core.mdx.MdxType2
+import com.naulian.glow_core.mdx.MdxNode
+import com.naulian.glow_core.mdx.MdxParser
+import com.naulian.glow_core.mdx.MdxType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -11,12 +11,12 @@ class MdxParserTest {
     @Test
     fun plainTextTest() {
         val source = "plain text"
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.PARAGRAPH,
+            MdxNode(
+                type = MdxType.PARAGRAPH,
                 children = listOf(
-                    MdxNode2(type = MdxType2.TEXT, literal = "plain text")
+                    MdxNode(type = MdxType.TEXT, literal = "plain text")
                 )
             )
         )
@@ -26,16 +26,16 @@ class MdxParserTest {
     @Test
     fun headerTest() {
         val source = "#1 header"
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.H1,
+            MdxNode(
+                type = MdxType.H1,
                 literal = "",
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "header")
+                            MdxNode(type = MdxType.TEXT, literal = "header")
                         )
                     )
                 )
@@ -50,28 +50,28 @@ class MdxParserTest {
             #1 header 1
             #2 header 2
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.H1,
+            MdxNode(
+                type = MdxType.H1,
                 literal = "",
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "header 1")
+                            MdxNode(type = MdxType.TEXT, literal = "header 1")
                         )
                     )
                 )
             ),
-            MdxNode2(
-                type = MdxType2.H2,
+            MdxNode(
+                type = MdxType.H2,
                 literal = "",
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "header 2")
+                            MdxNode(type = MdxType.TEXT, literal = "header 2")
                         )
                     )
                 )
@@ -83,19 +83,19 @@ class MdxParserTest {
     @Test
     fun headerWithStyleTest() {
         val source = "#1 ~header underline~"
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.H1,
+            MdxNode(
+                type = MdxType.H1,
                 literal = "",
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH, children = listOf(
-                            MdxNode2(
-                                type = MdxType2.STRIKE,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH, children = listOf(
+                            MdxNode(
+                                type = MdxType.STRIKE,
                                 children = listOf(
-                                    MdxNode2(
-                                        type = MdxType2.TEXT,
+                                    MdxNode(
+                                        type = MdxType.TEXT,
                                         literal = "header underline"
                                     )
                                 )
@@ -113,19 +113,19 @@ class MdxParserTest {
         val source = """
             "this is a quote text &-author&"
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.QUOTATION,
+            MdxNode(
+                type = MdxType.QUOTATION,
                 literal = "",
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH, children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "this is a quote text "),
-                            MdxNode2(
-                                type = MdxType2.BOLD,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH, children = listOf(
+                            MdxNode(type = MdxType.TEXT, literal = "this is a quote text "),
+                            MdxNode(
+                                type = MdxType.BOLD,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "-author")
+                                    MdxNode(type = MdxType.TEXT, literal = "-author")
                                 )
                             )
                         )
@@ -148,10 +148,10 @@ class MdxParserTest {
                 main()
             }
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.CODE,
+            MdxNode(
+                type = MdxType.CODE,
                 literal = """
                     .py
                     def main():
@@ -170,10 +170,10 @@ class MdxParserTest {
         val source = """
             =line=
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.DIVIDER,
+            MdxNode(
+                type = MdxType.DIVIDER,
                 literal = "line"
             )
         )
@@ -188,57 +188,57 @@ class MdxParserTest {
             true |false|true
             ]
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.TABLE,
+            MdxNode(
+                type = MdxType.TABLE,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.TABLE_COLOMN,
+                    MdxNode(
+                        type = MdxType.TABLE_COLOMN,
                         children = listOf(
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "a    ")
+                                    MdxNode(type = MdxType.TEXT, literal = "a    ")
                                 )
                             ),
-                            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(type = MdxType.PIPE, literal = "|"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "b    ")
+                                    MdxNode(type = MdxType.TEXT, literal = "b    ")
                                 )
                             ),
-                            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(type = MdxType.PIPE, literal = "|"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "c"),
+                                    MdxNode(type = MdxType.TEXT, literal = "c"),
                                 )
                             )
                         )
                     ),
-                    MdxNode2(
-                        type = MdxType2.TABLE_COLOMN,
+                    MdxNode(
+                        type = MdxType.TABLE_COLOMN,
                         children = listOf(
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "true "),
+                                    MdxNode(type = MdxType.TEXT, literal = "true "),
                                 )
                             ),
-                            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(type = MdxType.PIPE, literal = "|"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "false"),
+                                    MdxNode(type = MdxType.TEXT, literal = "false"),
                                 )
                             ),
-                            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-                            MdxNode2(
-                                type = MdxType2.PARAGRAPH,
+                            MdxNode(type = MdxType.PIPE, literal = "|"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
                                 children = listOf(
-                                    MdxNode2(type = MdxType2.TEXT, literal = "true"),
+                                    MdxNode(type = MdxType.TEXT, literal = "true"),
                                 )
                             )
                         )
@@ -254,16 +254,16 @@ class MdxParserTest {
         val source = """
             <color this text#FF0000>
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.PARAGRAPH,
+            MdxNode(
+                type = MdxType.PARAGRAPH,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.COLORED,
+                    MdxNode(
+                        type = MdxType.COLORED,
                         literal = "#FF0000",
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "color this text"),
+                            MdxNode(type = MdxType.TEXT, literal = "color this text"),
                         )
                     )
                 )
@@ -277,13 +277,13 @@ class MdxParserTest {
         val source = """
             `the syntax ~should~ be ignore here`
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.PARAGRAPH,
+            MdxNode(
+                type = MdxType.PARAGRAPH,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.IGNORE,
+                    MdxNode(
+                        type = MdxType.IGNORE,
                         literal = "the syntax ~should~ be ignore here",
                     )
                 )
@@ -300,37 +300,37 @@ class MdxParserTest {
             *o unchecked item
             *x checked item
         """.trimIndent()
-        val actual = MdxParser2(source).parse().children
+        val actual = MdxParser(source).parse().children
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.ELEMENT_BULLET,
+            MdxNode(
+                type = MdxType.ELEMENT_BULLET,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "unordered item"),
+                            MdxNode(type = MdxType.TEXT, literal = "unordered item"),
                         )
                     )
                 )
             ),
-            MdxNode2(
-                type = MdxType2.ELEMENT_UNCHECKED,
+            MdxNode(
+                type = MdxType.ELEMENT_UNCHECKED,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "unchecked item"),
+                            MdxNode(type = MdxType.TEXT, literal = "unchecked item"),
                         )
                     )
                 )
             ),
-            MdxNode2(
-                type = MdxType2.ELEMENT_CHECKED,
+            MdxNode(
+                type = MdxType.ELEMENT_CHECKED,
                 children = listOf(
-                    MdxNode2(
-                        type = MdxType2.PARAGRAPH,
+                    MdxNode(
+                        type = MdxType.PARAGRAPH,
                         children = listOf(
-                            MdxNode2(type = MdxType2.TEXT, literal = "checked item"),
+                            MdxNode(type = MdxType.TEXT, literal = "checked item"),
                         )
                     )
                 )

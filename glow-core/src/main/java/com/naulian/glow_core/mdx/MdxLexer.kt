@@ -1,18 +1,139 @@
 package com.naulian.glow_core.mdx
 
+object MdxType {
+    const val HEADER = "header"
+    const val BLOCK_SYMBOL = "block_symbol"
+    const val COLOR_START = "color_start"
+    const val COLOR_END = "color_end"
+    const val COLOR_HEX = "color_hex"
+    const val ELEMENT_BULLET = "element_bullet"
+    const val ELEMENT_UNCHECKED = "element_unchecked"
+    const val ELEMENT_CHECKED = "element_checked"
+    const val ELEMENT = "element"
+    const val TABLE_END = "table_end"
+    const val TABLE_START = "table_start"
+    const val PIPE = "pipe"
+    const val TABLE = "table"
+    const val TABLE_COLOMN = "table_column"
+    const val BOLD = "bold"
+    const val ITALIC = "italic"
+    const val UNDERLINE = "underline"
+    const val STRIKE = "strike"
+    const val TEXT = "text"
+    const val PARAGRAPH = "paragraph"
+    const val COMPONENT = "component"
+    const val IMAGE = "image"
+    const val VIDEO = "video"
+    const val YOUTUBE = "youtube"
+    const val LINK = "link"
+    const val HYPER_LINK = "hyper_link"
+    const val WHITESPACE = "whitespace"
+    const val NEWLINE = "newline"
+    const val QUOTATION = "quotation"
+    const val CODE = "code"
+    const val DATETIME = "datetime"
+    const val ESCAPE = "escape"
+    const val IGNORE = "ignore"
+    const val COLORED = "colored"
+    const val DIVIDER = "divider"
+    const val ILLEGAL = "illegal"
+    const val EOF = "eof"
+    const val ROOT = "root"
+    const val H1 = "h1"
+    const val H2 = "h2"
+    const val H3 = "h3"
+    const val H4 = "h4"
+    const val H5 = "h5"
+    const val H6 = "h6"
+}
+
+data class MdxNode(
+    val type: String = MdxType.ROOT,
+    val literal: String = "",
+    val children: List<MdxNode> = emptyList()
+) {
+    companion object {
+        val EOF = MdxNode(MdxType.EOF, "")
+
+        fun create(type: String, literal: CharSequence) = MdxNode(type, literal.toString())
+    }
+
+    fun isBlankText() = type == MdxType.TEXT && literal.isBlank()
+    fun getHyperLink(): Pair<String, String> {
+        if (literal.contains("@")) {
+            val index = literal.indexOf("@")
+            val hyper = literal.take(index)
+            val link = literal.replace("$hyper@", "")
+
+            return hyper to link
+        }
+        return "" to literal
+    }
+
+    fun getTableItemPairs(): Pair<List<String>, List<List<String>>> {
+        val lines = literal.split("\n")
+
+        if (lines.isEmpty()) {
+            return emptyList<String>() to emptyList()
+        }
+
+        var columns = emptyList<String>()
+        if (lines.first().isNotBlank()) {
+            columns = lines.first().split("|")
+                .map { it.trim() }
+        }
+
+        if (lines.size > 1) {
+            val rows = lines.drop(1)
+            return columns to rows.map { row ->
+                row.split("|").map { it.trim() }
+            }
+        }
+        return columns to emptyList()
+    }
+
+    fun getTextColorPair(): Pair<String, String> {
+        if (literal.contains("#")) {
+            val index = literal.indexOf("#")
+            val value = literal.take(index)
+            val hexColor = literal.drop(index).trim()
+            return value to hexColor
+        }
+        return literal to "#222222"
+    }
+
+    fun getLangCodePair(): Pair<String, String> {
+        if (literal.contains("\n")) {
+            val index = literal.indexOf("\n")
+            val lang = literal.take(index)
+            val code = literal.drop(index).trim()
+
+            if (lang.contains('.')) {
+                return lang.replace(".", "") to code
+            }
+        }
+
+        return "txt" to literal
+    }
+}
+
+private const val MDX_END_CHAR = Char.MIN_VALUE
+private const val MDX_TEXT_CHARS =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789- .,;:!?"
+private const val MDX_SYMBOL_CHARS = "\"</>&`|{%}[~]\\(-)_\n"
+private const val MDX_WHITESPACES = " \n"
+
 class MdxLexer(input: String) {
     private var cursor = 0
     private val source = input
-    private val endChar = Char.MIN_VALUE
-    private val isNotEndChar get() = char() != endChar
-    private val isNotNewLine get() = char() != '\n'
-    private val symbolChars = "\"</>&`{%}[~]\\(-)_\n"
-    private val charIsNotSymbol get() = char() !in symbolChars
-    private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 
-    private fun skipWhiteSpace() {
-        while (char().isWhitespace()) advance()
-    }
+    private val Char.isNotSpaceChar get() = this != ' '
+    private val Char.isNotEndChar get() = this != MDX_END_CHAR
+    private val Char.isNotSymbols get() = this !in MDX_SYMBOL_CHARS
+
+    private val charNotEndChar get() = char() != MDX_END_CHAR
+
+    private fun char() = source.getOrElse(cursor) { Char.MIN_VALUE }
 
     fun tokenize(): List<MdxNode> {
         val tokens = mutableListOf<MdxNode>()
@@ -30,50 +151,86 @@ class MdxLexer(input: String) {
 
     fun next(): MdxNode {
         return when (val char = char()) {
-            '&' -> createBlockToken(MdxType.BOLD, char)
-            '/' -> createBlockToken(MdxType.ITALIC, char)
-            '_' -> createBlockToken(MdxType.UNDERLINE, char)
-            '"' -> createBlockToken(MdxType.QUOTE, char)
+            in MDX_WHITESPACES -> createWhiteSpaceToken()
+            '&' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
+            '/' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
+            '_' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
+            '"' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
+            '~' -> createSymbolToken(MdxType.BLOCK_SYMBOL)
+
+            '[' -> createSymbolToken(MdxType.TABLE_START)
+            ']' -> createSymbolToken(MdxType.TABLE_END)
+            '|' -> createSymbolToken(MdxType.PIPE)
+
+            '<' -> createSymbolToken(MdxType.COLOR_START)
+            '>' -> createSymbolToken(MdxType.COLOR_END)
+
             '=' -> createBlockToken(MdxType.DIVIDER, char)
-            '`' -> createBlockToken(MdxType.ESCAPE, char)
-            '~' -> createBlockToken(MdxType.STRIKE, char)
+            '`' -> {
+                advance()
+                val start = cursor
+                while (char() != '`' && charNotEndChar) advance()
+                val end = cursor
+                advance()
+                val value = source.subSequence(start, end)
+                MdxNode(MdxType.IGNORE, value.toString())
+            }
+
             '%' -> createBlockToken(MdxType.DATETIME, char)
-            '[' -> createTableToken()
-            '<' -> createColoredToken()
-            '#' -> createHeaderToken()
-            '{' -> createCodeToken()
-            '*' -> createElementToken()
             '(' -> createLinkToken()
+            '{' -> createCodeToken()
+            '#' -> createHeaderToken()
+            '*' -> createElementToken()
             '\\' -> createEscapedToken()
-            '\n' -> {
-                advance()
-                MdxNode(MdxType.WHITESPACE, "\n")
-            }
-
-            in symbolChars -> {
-                advance()
-                MdxNode(MdxType.TEXT, char.toString())
-            }
-
+            in MDX_TEXT_CHARS -> createTextToken()
             Char.MIN_VALUE -> MdxNode.EOF
-            else -> createTextToken()
+            else -> createSymbolToken(MdxType.ILLEGAL)
+        }
+    }
+
+    private fun createWhiteSpaceToken(): MdxNode {
+        val start = cursor
+        while (char().isWhitespace()) {
+            advance()
+        }
+        val end = cursor
+        return when (val literal = source.subSequence(start, end)) {
+            "\n" -> MdxNode.create(MdxType.NEWLINE, literal)
+            "\n\n" -> MdxNode.create(MdxType.NEWLINE, literal)
+            else -> MdxNode.create(MdxType.WHITESPACE, literal)
+        }
+    }
+
+    private fun createHeaderToken(): MdxNode {
+        advance()
+        if (char() == MDX_END_CHAR) {
+            // early return
+            return MdxNode(MdxType.TEXT, "#")
+        }
+
+        val start = cursor
+        advanceWhile { it.isNotSpaceChar && it.isNotEndChar && it.isNotSymbols }
+        return when (val value = source.subSequence(start, cursor)) {
+            in "123456" -> MdxNode(MdxType.HEADER, "#$value")
+            else -> MdxNode(MdxType.COLOR_HEX, "#$value")
         }
     }
 
     private fun createEscapedToken(): MdxNode {
         advance()
-        val escapedChar = char()
-        return if (escapedChar in symbolChars) {
-            advance()
-            MdxNode(MdxType.TEXT, escapedChar.toString())
-        } else createTextToken()
+        if (char() == MDX_END_CHAR) {
+            return MdxNode.EOF
+        }
+        val literal = char().toString()
+        advance()
+        return MdxNode(MdxType.ESCAPE, literal)
     }
 
     private fun createCodeToken(): MdxNode {
         advance() //skip opening bracket
         val start = cursor
         var level = 0
-        while (isNotEndChar) {
+        while (charNotEndChar) {
             if (char() == '{') {
                 level++
             }
@@ -98,7 +255,7 @@ class MdxLexer(input: String) {
     private fun createLinkToken(): MdxNode {
         advance() //skip opening parenthesis
         val start = cursor
-        while (char() != ')' && isNotEndChar) {
+        while (char() != ')' && charNotEndChar) {
             advance()
         }
 
@@ -127,35 +284,35 @@ class MdxLexer(input: String) {
 
     private fun createElementToken(): MdxNode {
         advance()
-        skipWhiteSpace()
-        val start = cursor
-        while (charIsNotSymbol && isNotEndChar) {
-            advance()
+        if (char() == MDX_END_CHAR) {
+            // early return
+            return MdxNode(MdxType.TEXT, "*")
         }
-        val text = source.subSequence(start, cursor).toString()
 
-        return MdxNode(MdxType.ELEMENT, text)
+        val start = cursor
+        advanceWhile { it.isNotSpaceChar && it.isNotEndChar && it.isNotSymbols }
+        val value = source.subSequence(start, cursor)
+        return MdxNode(MdxType.ELEMENT, "*$value")
     }
 
     private fun createTextToken(): MdxNode {
         val start = cursor
-        while (charIsNotSymbol && isNotEndChar) {
-            advance()
-        }
-        val value = source.subSequence(start, cursor).toString()
-
-        var text = value
-        mdxAdhocMap.forEach {
-            text = text.replace(it.key, it.value)
-        }
-        return MdxNode(MdxType.TEXT, text)
+        advanceWhile { it in MDX_TEXT_CHARS }
+        val literal = source.subSequence(start, cursor).toString()
+        return MdxNode.create(MdxType.TEXT, literal)
     }
 
-    private fun createBlockToken(type: MdxType, char: Char): MdxNode {
+    private fun createSymbolToken(type: String): MdxNode {
+        val value = char().toString()
+        advance()
+        return MdxNode(type, value)
+    }
+
+    private fun createBlockToken(type: String, char: Char): MdxNode {
         advance() //skip the opening char
         val start = cursor
         var prevChar = char()
-        while (!(char() == char && prevChar != '\\') && isNotEndChar) {
+        while (!(char() == char && prevChar != '\\') && charNotEndChar) {
             prevChar = char()
             advance()
         }
@@ -177,49 +334,9 @@ class MdxLexer(input: String) {
         }
     }
 
-    private fun createHeaderToken(): MdxNode {
-        advance()
-        val type = when (char()) {
-            '1' -> MdxType.H1
-            '2' -> MdxType.H2
-            '3' -> MdxType.H3
-            '4' -> MdxType.H4
-            '5' -> MdxType.H5
-            '6' -> MdxType.H6
-            Char.MIN_VALUE -> MdxType.EOF
-            else -> MdxType.TEXT
-        }
-        advance()
-        skipWhiteSpace()
-        val start = cursor
-        while (isNotNewLine && isNotEndChar) {
+    private fun advanceWhile(condition: (Char) -> Boolean) {
+        while (condition(char())) {
             advance()
         }
-        val text = source.subSequence(start, cursor)
-        return MdxNode(type, text.str())
-    }
-
-    private fun createTableToken(): MdxNode {
-        advance() //skip opening bracket
-        val start = cursor
-        while (char() != ']' && isNotEndChar) {
-            advance()
-        }
-        val end = cursor
-        advance() //skip closing bracket
-        val value = source.subSequence(start, end)
-        return MdxNode(MdxType.TABLE, value.str())
-    }
-
-    private fun createColoredToken(): MdxNode {
-        advance() //skip opening bracket
-        val start = cursor
-        while (char() != '>' && isNotEndChar) {
-            advance()
-        }
-        val end = cursor
-        advance() //skip closing bracket
-        val value = source.subSequence(start, end).str()
-        return MdxNode(MdxType.COLORED, value)
     }
 }

@@ -13,7 +13,7 @@ import com.naulian.anhance.readStringAsset
 import com.naulian.anhance.showToast
 import com.naulian.glow.CodeTheme
 import com.naulian.glow.setCodeTheme
-import com.naulian.glow_compose.mdx.MdxBlock2
+import com.naulian.glow_compose.mdx.MdxBlock
 import com.naulian.glow_core.mdx.MDX_TEST
 
 
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                         val context = LocalContext.current
                         Column {
                             //AtxBlock(modifier = Modifier.padding(16.dp), source = ATX_SAMPLE)
-                            MdxBlock2(
+                            MdxBlock(
                                 modifier = Modifier.padding(16.dp),
                                 source = MDX_TEST,
                                 onClickLink = {

@@ -1,8 +1,8 @@
 package com.naulian.glow_core
 
-import com.naulian.glow_core.mdx.MdxLexer2
-import com.naulian.glow_core.mdx.MdxNode2
-import com.naulian.glow_core.mdx.MdxType2
+import com.naulian.glow_core.mdx.MdxLexer
+import com.naulian.glow_core.mdx.MdxNode
+import com.naulian.glow_core.mdx.MdxType
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -15,15 +15,15 @@ class MdxLexerTest {
     
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.TEXT,
+            MdxNode(
+                type = MdxType.TEXT,
                 literal = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             ),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n\n"),
-            MdxNode2(
-                type = MdxType2.TEXT,
+            MdxNode(type = MdxType.NEWLINE, literal = "\n\n"),
+            MdxNode(
+                type = MdxType.TEXT,
                 literal = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             )
         )
@@ -38,38 +38,38 @@ class MdxLexerTest {
             this is _underline_ text
             this is ~strikethrough~ text
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.TEXT, literal = "this is "),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "&"),
-            MdxNode2(type = MdxType2.TEXT, literal = "bold"),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "&"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "text"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "this is "),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "&"),
+            MdxNode(type = MdxType.TEXT, literal = "bold"),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "&"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "text"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
 
-            MdxNode2(type = MdxType2.TEXT, literal = "this is "),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "/"),
-            MdxNode2(type = MdxType2.TEXT, literal = "italic"),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "/"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "text"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "this is "),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "/"),
+            MdxNode(type = MdxType.TEXT, literal = "italic"),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "/"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "text"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
 
-            MdxNode2(type = MdxType2.TEXT, literal = "this is "),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "_"),
-            MdxNode2(type = MdxType2.TEXT, literal = "underline"),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "_"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "text"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "this is "),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "_"),
+            MdxNode(type = MdxType.TEXT, literal = "underline"),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "_"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "text"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
 
-            MdxNode2(type = MdxType2.TEXT, literal = "this is "),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "~"),
-            MdxNode2(type = MdxType2.TEXT, literal = "strikethrough"),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "~"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "text")
+            MdxNode(type = MdxType.TEXT, literal = "this is "),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "~"),
+            MdxNode(type = MdxType.TEXT, literal = "strikethrough"),
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "~"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "text")
         )
         assertEquals(expected, actual)
     }
@@ -79,9 +79,9 @@ class MdxLexerTest {
         val source = """
             =line=
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.DIVIDER, literal = "line")
+            MdxNode(type = MdxType.DIVIDER, literal = "line")
         )
         assertEquals(expected, actual)
     }
@@ -91,9 +91,9 @@ class MdxLexerTest {
         val source = """
             `ignore ~syntax~ here`
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.IGNORE, literal = "ignore ~syntax~ here")
+            MdxNode(type = MdxType.IGNORE, literal = "ignore ~syntax~ here")
         )
         assertEquals(expected, actual)
     }
@@ -103,12 +103,12 @@ class MdxLexerTest {
         val source = """
             <color this text#FF0000>
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.COLOR_START, literal = "<"),
-            MdxNode2(type = MdxType2.TEXT, literal = "color this text"),
-            MdxNode2(type = MdxType2.COLOR_HEX, literal = "#FF0000"),
-            MdxNode2(type = MdxType2.COLOR_END, literal = ">")
+            MdxNode(type = MdxType.COLOR_START, literal = "<"),
+            MdxNode(type = MdxType.TEXT, literal = "color this text"),
+            MdxNode(type = MdxType.COLOR_HEX, literal = "#FF0000"),
+            MdxNode(type = MdxType.COLOR_END, literal = ">")
         )
         assertEquals(expected, actual)
     }
@@ -119,12 +119,12 @@ class MdxLexerTest {
             (https://www.google.com)
             Search (here@http://www.google.com)
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.LINK, literal = "https://www.google.com"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.TEXT, literal = "Search "),
-            MdxNode2(type = MdxType2.HYPER_LINK, literal = "here@http://www.google.com")
+            MdxNode(type = MdxType.LINK, literal = "https://www.google.com"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "Search "),
+            MdxNode(type = MdxType.HYPER_LINK, literal = "here@http://www.google.com")
         )
         assertEquals(expected, actual)
     }
@@ -135,12 +135,12 @@ class MdxLexerTest {
             (img@https://picsum.photos/id/67/300/200)
             (ytb@https://www.youtube.com/watch?v=dQw4w9WgXcQ)
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.IMAGE, literal = "https://picsum.photos/id/67/300/200"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(
-                type = MdxType2.YOUTUBE,
+            MdxNode(type = MdxType.IMAGE, literal = "https://picsum.photos/id/67/300/200"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(
+                type = MdxType.YOUTUBE,
                 literal = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             )
         )
@@ -152,11 +152,11 @@ class MdxLexerTest {
         val source = """
             \"this should not show as quote\"
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.ESCAPE, literal = "\""),
-            MdxNode2(type = MdxType2.TEXT, literal = "this should not show as quote"),
-            MdxNode2(type = MdxType2.ESCAPE, literal = "\"")
+            MdxNode(type = MdxType.ESCAPE, literal = "\""),
+            MdxNode(type = MdxType.TEXT, literal = "this should not show as quote"),
+            MdxNode(type = MdxType.ESCAPE, literal = "\"")
         )
         assertEquals(expected, actual)
     }
@@ -167,15 +167,15 @@ class MdxLexerTest {
             #1 heading 1
             #2 heading 2
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.HEADER, literal = "#1"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "heading 1"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.HEADER, literal = "#2"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "heading 2")
+            MdxNode(type = MdxType.HEADER, literal = "#1"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "heading 1"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.HEADER, literal = "#2"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "heading 2")
         )
         assertEquals(expected, actual)
     }
@@ -192,10 +192,10 @@ class MdxLexerTest {
                 main()
             }
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(
-                type = MdxType2.CODE,
+            MdxNode(
+                type = MdxType.CODE,
                 literal = """
                     .py
                     def main():
@@ -214,14 +214,14 @@ class MdxLexerTest {
         val source = """
             "this is quote text -author"
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "\""),
-            MdxNode2(
-                type = MdxType2.TEXT,
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "\""),
+            MdxNode(
+                type = MdxType.TEXT,
                 literal = "this is quote text -author".trimIndent()
             ),
-            MdxNode2(type = MdxType2.BLOCK_SYMBOL, literal = "\"")
+            MdxNode(type = MdxType.BLOCK_SYMBOL, literal = "\"")
         )
         assertEquals(expected, actual)
     }
@@ -233,19 +233,19 @@ class MdxLexerTest {
             *o unchecked item
             *x checked item
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.ELEMENT, literal = "*"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "unordered item"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.ELEMENT, literal = "*o"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "unchecked item"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.ELEMENT, literal = "*x"),
-            MdxNode2(type = MdxType2.WHITESPACE, literal = " "),
-            MdxNode2(type = MdxType2.TEXT, literal = "checked item"),
+            MdxNode(type = MdxType.ELEMENT, literal = "*"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "unordered item"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.ELEMENT, literal = "*o"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "unchecked item"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.ELEMENT, literal = "*x"),
+            MdxNode(type = MdxType.WHITESPACE, literal = " "),
+            MdxNode(type = MdxType.TEXT, literal = "checked item"),
         )
         assertEquals(expected, actual)
     }
@@ -258,23 +258,23 @@ class MdxLexerTest {
             true |true |true
             ]
         """.trimIndent()
-        val actual = MdxLexer2(source).tokenize()
+        val actual = MdxLexer(source).tokenize()
         val expected = listOf(
-            MdxNode2(type = MdxType2.TABLE_START, literal = "["),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.TEXT, literal = "a    "),
-            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-            MdxNode2(type = MdxType2.TEXT, literal = "b    "),
-            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-            MdxNode2(type = MdxType2.TEXT, literal = "result"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.TEXT, literal = "true "),
-            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-            MdxNode2(type = MdxType2.TEXT, literal = "true "),
-            MdxNode2(type = MdxType2.PIPE, literal = "|"),
-            MdxNode2(type = MdxType2.TEXT, literal = "true"),
-            MdxNode2(type = MdxType2.NEWLINE, literal = "\n"),
-            MdxNode2(type = MdxType2.TABLE_END, literal = "]"),
+            MdxNode(type = MdxType.TABLE_START, literal = "["),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "a    "),
+            MdxNode(type = MdxType.PIPE, literal = "|"),
+            MdxNode(type = MdxType.TEXT, literal = "b    "),
+            MdxNode(type = MdxType.PIPE, literal = "|"),
+            MdxNode(type = MdxType.TEXT, literal = "result"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TEXT, literal = "true "),
+            MdxNode(type = MdxType.PIPE, literal = "|"),
+            MdxNode(type = MdxType.TEXT, literal = "true "),
+            MdxNode(type = MdxType.PIPE, literal = "|"),
+            MdxNode(type = MdxType.TEXT, literal = "true"),
+            MdxNode(type = MdxType.NEWLINE, literal = "\n"),
+            MdxNode(type = MdxType.TABLE_END, literal = "]"),
         )
         assertEquals(expected, actual)
     }
