@@ -2,7 +2,10 @@ package com.naulian.glow_core.mdx
 
 
 val MDX_SAMPLE = """
-    #3 Mdx Example
+    #4 Mdx Example
+    
+    
+    "the quick brown fox jumps over the lazy dog - author" 
     
     =line=
     

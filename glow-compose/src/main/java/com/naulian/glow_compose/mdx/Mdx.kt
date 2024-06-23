@@ -56,7 +56,7 @@ fun MdxBlock(
     modifier: Modifier = Modifier,
     source: String,
     onClickLink: (String) -> Unit = {},
-    components: MdxComponents2 = mdxComponents2(),
+    components: MdxComponents = mdxComponents(),
     contentSpacing: Dp = 12.dp
 ) {
     var node by remember {
@@ -76,7 +76,7 @@ fun MdxBlock(
 }
 
 @Composable
-fun HandleNode(node: MdxNode, components: MdxComponents2, onClickLink: (String) -> Unit) {
+fun HandleNode(node: MdxNode, components: MdxComponents, onClickLink: (String) -> Unit) {
     node.children.forEach {
         when (it.type) {
             MdxType.PARAGRAPH -> components.paragraph(it, onClickLink)
@@ -145,7 +145,7 @@ fun AnnotatedString.Builder.handleText(
     return map
 }
 
-data class MdxComponents2(
+data class MdxComponents(
     val fontFamily: FontFamily,
     val text: @Composable (
         node: MdxNode,
@@ -179,7 +179,7 @@ data class MdxParagraphContent(
     val linkMap: Map<String, String> = emptyMap()
 )
 
-fun mdxComponents2(
+fun mdxComponents(
     fontFamily: FontFamily = FontFamily.Default,
     text: @Composable (
         node: MdxNode,
@@ -380,7 +380,7 @@ fun mdxComponents2(
             }
         }
     }
-) = MdxComponents2(
+) = MdxComponents(
     fontFamily = fontFamily,
     text = text,
     paragraph = paragraph,

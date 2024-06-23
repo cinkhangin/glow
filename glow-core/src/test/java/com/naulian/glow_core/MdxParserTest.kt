@@ -303,34 +303,39 @@ class MdxParserTest {
         val actual = MdxParser(source).parse().children
         val expected = listOf(
             MdxNode(
-                type = MdxType.ELEMENT_BULLET,
+                type = MdxType.ELEMENT,
                 children = listOf(
                     MdxNode(
-                        type = MdxType.PARAGRAPH,
+                        type = MdxType.ELEMENT_BULLET,
                         children = listOf(
-                            MdxNode(type = MdxType.TEXT, literal = "unordered item"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
+                                children = listOf(
+                                    MdxNode(type = MdxType.TEXT, literal = "unordered item"),
+                                )
+                            )
                         )
-                    )
-                )
-            ),
-            MdxNode(
-                type = MdxType.ELEMENT_UNCHECKED,
-                children = listOf(
+                    ),
                     MdxNode(
-                        type = MdxType.PARAGRAPH,
+                        type = MdxType.ELEMENT_UNCHECKED,
                         children = listOf(
-                            MdxNode(type = MdxType.TEXT, literal = "unchecked item"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
+                                children = listOf(
+                                    MdxNode(type = MdxType.TEXT, literal = "unchecked item"),
+                                )
+                            )
                         )
-                    )
-                )
-            ),
-            MdxNode(
-                type = MdxType.ELEMENT_CHECKED,
-                children = listOf(
+                    ),
                     MdxNode(
-                        type = MdxType.PARAGRAPH,
+                        type = MdxType.ELEMENT_CHECKED,
                         children = listOf(
-                            MdxNode(type = MdxType.TEXT, literal = "checked item"),
+                            MdxNode(
+                                type = MdxType.PARAGRAPH,
+                                children = listOf(
+                                    MdxNode(type = MdxType.TEXT, literal = "checked item"),
+                                )
+                            )
                         )
                     )
                 )

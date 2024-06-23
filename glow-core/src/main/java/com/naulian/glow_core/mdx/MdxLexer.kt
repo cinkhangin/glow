@@ -194,9 +194,9 @@ class MdxLexer(input: String) {
             advance()
         }
         val end = cursor
-        return when (val literal = source.subSequence(start, end)) {
-            "\n" -> MdxNode.create(MdxType.NEWLINE, literal)
-            "\n\n" -> MdxNode.create(MdxType.NEWLINE, literal)
+        val literal = source.subSequence(start, end)
+        return when {
+            literal.contains("\n") -> MdxNode.create(MdxType.NEWLINE, literal)
             else -> MdxNode.create(MdxType.WHITESPACE, literal)
         }
     }
