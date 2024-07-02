@@ -68,6 +68,12 @@ data class MdxNode(
         return "" to literal
     }
 
+    fun getTableData(): List<List<MdxNode>> {
+        return children.map { col ->
+            col.children.filterNot { it.type == MdxType.PIPE }
+        }
+    }
+
     fun getLangCodePair(): Pair<String, String> {
         if (literal.contains("\n")) {
             val index = literal.indexOf("\n")

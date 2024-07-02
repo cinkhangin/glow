@@ -297,7 +297,7 @@ class ASTBuilder(private val nodes: List<MdxNode>) {
 
 
 fun main() {
-    val node = MdxParser(MDX_SAMPLE).parse()
+    val node = MdxParser(MDX_TEST).parse()
     printNode(node)
 }
 

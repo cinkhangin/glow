@@ -57,7 +57,7 @@ fun LinkComponent(tokens: List<AtxToken>) {
     }
 }
 
-@Preview
+@Preview(heightDp = 1200)
 @Composable
 private fun AtxBlockPreview() {
     MaterialTheme {

@@ -49,6 +49,7 @@ import com.naulian.glow_core.mdx.MDX_TEST
 import com.naulian.glow_core.mdx.MdxNode
 import com.naulian.glow_core.mdx.MdxParser
 import com.naulian.glow_core.mdx.MdxType
+import com.naulian.modify.table.Table
 
 @Composable
 fun MdxBlock(
@@ -325,17 +326,12 @@ fun mdxComponents(
         }
     },
     table: @Composable (MdxNode) -> Unit = { node ->
-        Column(modifier = Modifier.fillMaxWidth()) {
-            node.children.forEach { cols ->
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    cols.children.forEach { child ->
-                        when (child.type) {
-                            MdxType.PARAGRAPH -> {
-                                Box(modifier = Modifier.weight(1f)) {
-                                    text(child, textStyle) {}
-                                }
-                            }
-                        }
+        val data = node.getTableData()
+        Table(data = data) { child ->
+            when (child.type) {
+                MdxType.PARAGRAPH -> {
+                    Box(modifier = Modifier.padding(horizontal = 12.dp)) {
+                        text(child, textStyle) {}
                     }
                 }
             }
