@@ -4,7 +4,7 @@ class MdxParser(private val source: String) {
 
     fun parse(): MdxNode {
         val nodes = MdxLexer(source).tokenize()
-        nodes.forEach(::println)
+        //nodes.forEach(::println)
         val astBuilder = ASTBuilder(nodes)
         val treeNode = astBuilder.build()
         val typedNode = astBuilder.buildTyped(treeNode)

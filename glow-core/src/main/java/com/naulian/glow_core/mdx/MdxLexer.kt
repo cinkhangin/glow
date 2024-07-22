@@ -120,7 +120,7 @@ class MdxLexer(input: String) {
     }
 
     fun next(): MdxNode {
-        println(char())
+        //println(char())
         return when (val char = char()) {
             in MDX_WHITESPACES -> createWhiteSpaceToken()
             '&' -> createSymbolToken(MdxType.BLOCK_SYMBOL)

@@ -13,7 +13,7 @@ constraintCompose = "1.0.1"
 coilCompose = "2.6.0"
 
 # plugins
-gradle = "8.5.0"
+gradle = "8.5.1"
 kotlin = "2.0.0"
 
 [libraries]
