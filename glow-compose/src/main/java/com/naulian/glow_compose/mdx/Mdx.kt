@@ -195,18 +195,23 @@ fun mdxComponents(
             node.children.isEmpty() && node.literal.isBlank() -> {}
             else -> {
                 val paragraphContent = buildContentPair(node)
-                ClickableText(
-                    text = paragraphContent.annotatedString,
-                    style = style,
-                ) { offset ->
-                    paragraphContent.annotatedString.getStringAnnotations(
-                        start = offset,
-                        end = offset
-                    ).firstOrNull()?.let {
-                        paragraphContent.linkMap[it.tag]?.let { url ->
-                            onClickLink?.invoke(url)
+                onClickLink?.let { onClick ->
+                    ClickableText(
+                        text = paragraphContent.annotatedString,
+                        style = style,
+                    ) { offset ->
+                        paragraphContent.annotatedString.getStringAnnotations(
+                            start = offset,
+                            end = offset
+                        ).firstOrNull()?.let {
+                            paragraphContent.linkMap[it.tag]?.let(onClick)
                         }
                     }
+                } ?: run {
+                    Text(
+                        text = paragraphContent.annotatedString,
+                        style = style
+                    )
                 }
             }
         }
