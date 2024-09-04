@@ -1,7 +1,7 @@
 package com.naulian.glow_core.lang.kotlin
 
+import com.naulian.glow_core.Lexer
 import com.naulian.glow_core.Token
-import com.naulian.glow_core.Tokenizer
 import com.naulian.glow_core.Type
 
 private val kotlinKeywords = listOf(
@@ -14,8 +14,8 @@ private val kotlinKeywords = listOf(
     "typealias", "typeof", "val", "var", "when", "where", "while"
 )
 
-class KTokenizer(input: String) {
-    private var basicTokens: List<Token> = Tokenizer(input).tokenize()
+class KtLexer(input: String) {
+    private var basicTokens: List<Token> = Lexer(input).tokenize()
     private var cursor = 0
 
     fun tokenize(): List<Token> {
@@ -99,16 +99,16 @@ class KTokenizer(input: String) {
         val subList = basicTokens.subList(from, cursor)
         return Token(Type.STRING, subList.joinToString(""))
     }
-}
 
-private fun argumentToken(token: Token): Token {
-    return if (token.type != Type.IDENTIFIER) token
-    else token.copy(type = Type.ARGUMENT)
-}
+    private fun argumentToken(token: Token): Token {
+        return if (token.type != Type.IDENTIFIER) token
+        else token.copy(type = Type.ARGUMENT)
+    }
 
-private fun numberToken(token: Token): Token {
-    if (token.type != Type.NUMBER) return token
-    return if (token.value.contains("L")) token.copy(type = Type.VALUE_LONG)
-    else if (token.value.contains("f")) token.copy(type = Type.VALUE_FLOAT)
-    else token.copy(type = Type.VALUE_INT)
+    private fun numberToken(token: Token): Token {
+        if (token.type != Type.NUMBER) return token
+        return if (token.value.contains("L")) token.copy(type = Type.VALUE_LONG)
+        else if (token.value.contains("f")) token.copy(type = Type.VALUE_FLOAT)
+        else token.copy(type = Type.VALUE_INT)
+    }
 }

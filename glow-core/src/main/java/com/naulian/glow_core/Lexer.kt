@@ -6,9 +6,26 @@ private val symbols = listOf(
     '<', ';', '+', '=', '[', ']', '/', '\'', '\"',
 )
 
+abstract class BaseLexer {
+    abstract fun tokenize(): List<Token>
+    abstract fun next(): Token
+}
+
 class Lexer(private val source: CharSequence) {
     private var cursor: Int = 0
     private fun char() = if (cursor < source.length) source[cursor] else Char.MIN_VALUE
+
+    fun tokenize(): List<Token> {
+        val tokens = mutableListOf<Token>()
+        var token = nextToken()
+
+        while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
+            tokens.add(token)
+            token = nextToken()
+        }
+
+        return tokens
+    }
 
     fun nextToken(): Token {
         return when (val c = char()) {

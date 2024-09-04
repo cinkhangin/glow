@@ -55,7 +55,7 @@ import com.naulian.modify.table.Table
 fun MdxBlock(
     modifier: Modifier = Modifier,
     source: String,
-    onClickLink: (String) -> Unit = {},
+    onClickLink: ((String) -> Unit)? = null,
     components: MdxComponents = mdxComponents(),
     contentSpacing: Dp = 12.dp
 ) {
@@ -76,7 +76,7 @@ fun MdxBlock(
 }
 
 @Composable
-fun HandleNode(node: MdxNode, components: MdxComponents, onClickLink: (String) -> Unit) {
+fun HandleNode(node: MdxNode, components: MdxComponents, onClickLink: ((String) -> Unit)?) {
     node.children.forEach {
         when (it.type) {
             MdxType.PARAGRAPH -> components.paragraph(it, onClickLink)
@@ -153,7 +153,7 @@ data class MdxComponents(
         style: TextStyle,
         onClickLink: (String) -> Unit
     ) -> Unit,
-    val paragraph: @Composable (MdxNode, onClickLink: (String) -> Unit) -> Unit,
+    val paragraph: @Composable (MdxNode, onClickLink: ((String) -> Unit)?) -> Unit,
     val header: @Composable (MdxNode) -> Unit,
     val quote: @Composable (MdxNode) -> Unit,
     val codeBlock: @Composable (MdxNode) -> Unit,
@@ -189,7 +189,7 @@ fun mdxComponents(
     text: @Composable (
         node: MdxNode,
         style: TextStyle,
-        onClickLink: (String) -> Unit
+        onClickLink: ((String) -> Unit)?
     ) -> Unit = { node, style, onClickLink ->
         when {
             node.children.isEmpty() && node.literal.isBlank() -> {}
@@ -202,12 +202,16 @@ fun mdxComponents(
                     paragraphContent.annotatedString.getStringAnnotations(
                         start = offset,
                         end = offset
-                    ).firstOrNull()?.let { paragraphContent.linkMap[it.tag]?.let(onClickLink) }
+                    ).firstOrNull()?.let {
+                        paragraphContent.linkMap[it.tag]?.let { url ->
+                            onClickLink?.invoke(url)
+                        }
+                    }
                 }
             }
         }
     },
-    paragraph: @Composable (MdxNode, onClickLink: (String) -> Unit) -> Unit = { node, onClickLink ->
+    paragraph: @Composable (MdxNode, onClickLink: ((String) -> Unit)?) -> Unit = { node, onClickLink ->
         text(node, textStyle, onClickLink)
     },
     header: @Composable (MdxNode) -> Unit = { node ->
