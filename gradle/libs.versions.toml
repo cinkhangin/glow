@@ -1,8 +1,8 @@
 [versions]
 anhance = "2024.3.0"
-modify = "0.0.1"
+modify = "0.0.2"
 appcompat = "1.7.0"
-composeBom = "2024.06.00"
+composeBom = "2024.09.01"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
 espressoCore = "3.6.1"
@@ -13,7 +13,7 @@ constraintCompose = "1.0.1"
 coilCompose = "2.6.0"
 
 # plugins
-gradle = "8.5.1"
+gradle = "8.6.0"
 kotlin = "2.0.0"
 
 [libraries]

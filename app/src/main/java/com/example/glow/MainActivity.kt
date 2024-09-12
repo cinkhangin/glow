@@ -2,19 +2,23 @@ package com.example.glow
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.example.glow.databinding.ActivityMainBinding
 import com.naulian.anhance.readStringAsset
-import com.naulian.anhance.showToast
 import com.naulian.glow.CodeTheme
+import com.naulian.glow.glowSyntax
 import com.naulian.glow.setCodeTheme
-import com.naulian.glow_compose.mdx.MdxBlock
-import com.naulian.glow_core.mdx.MDX_TEST
+import com.naulian.glow.tokens.StrTokens
+import com.naulian.glow_compose.Glow
+import com.naulian.glow_compose.hexToColor
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,34 +40,26 @@ class MainActivity : AppCompatActivity() {
             textOutput.setCodeTheme(lightTheme.normal)
             readStringAsset(filename) { result ->
                 result.onSuccess { source ->
-                    /*textInput.setText(source)
+                    textInput.setText(source)
                     val highlighted = glowSyntax(source, language, lightTheme)
                     textSource.text = highlighted.raw
-                    textOutput.text = highlighted.spanned*/
+                    textOutput.text = highlighted.spanned
+
                     textSource.isVisible = false
                     textInput.isVisible = false
                     textOutput.isVisible = false
 
-                    //val highLightedCompose = Glow.highlight(source, language, darkTheme)
+                    val highLightedCompose = Glow.highlight(source, language, darkTheme)
 
                     composeView.setContent {
-                        val context = LocalContext.current
                         Column {
-                            //AtxBlock(modifier = Modifier.padding(16.dp), source = ATX_SAMPLE)
-                            MdxBlock(
-                                modifier = Modifier.padding(16.dp),
-                                source = MDX_TEST,
-                                onClickLink = {
-                                    context.showToast(it)
-                                }
-                            )
-                            /*LazyRow(
+                            LazyRow(
                                 modifier = Modifier
                                     .background(darkTheme.background.hexToColor())
                                     .padding(16.dp)
                             ) {
                                 item { Text(text = highLightedCompose.value) }
-                            }*/
+                            }
                         }
                     }
                 }
@@ -72,17 +68,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            /*textInput.doAfterTextChanged {
+            textInput.doAfterTextChanged {
 
                 val text = it?.toString() ?: ""
 
-                *//*val strTokens = StrTokens(text).tokenize()
-                textSource.text = strTokens.toString()*//*
+                val strTokens = StrTokens(text).tokenize()
+                textSource.text = strTokens.toString()
 
                 val highlighted = glowSyntax(text, language, lightTheme)
                 textSource.text = highlighted.raw
                 textOutput.text = highlighted.spanned
-            }*/
+            }
         }
     }
 }
