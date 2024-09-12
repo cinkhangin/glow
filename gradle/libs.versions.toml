@@ -1,6 +1,6 @@
 [versions]
 anhance = "2024.3.0"
-modify = "0.0.2"
+modify = "0.0.2-rc"
 appcompat = "1.7.0"
 composeBom = "2024.09.01"
 constraintlayout = "2.1.4"

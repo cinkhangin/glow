@@ -42,12 +42,13 @@ class MainActivity : AppCompatActivity() {
                 result.onSuccess { source ->
                     textInput.setText(source)
                     val highlighted = glowSyntax(source, language, lightTheme)
+
                     textSource.text = highlighted.raw
                     textOutput.text = highlighted.spanned
 
-                    textSource.isVisible = false
-                    textInput.isVisible = false
-                    textOutput.isVisible = false
+                    textSource.isVisible = true
+                    textInput.isVisible = true
+                    textOutput.isVisible = true
 
                     val highLightedCompose = Glow.highlight(source, language, darkTheme)
 
