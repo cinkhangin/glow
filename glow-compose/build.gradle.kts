@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.plugin)
-    `maven-publish`
 }
 
 android {
@@ -78,17 +77,4 @@ dependencies {
 
     implementation(project(":glow"))
     implementation(project(":glow-core"))
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-                groupId = "com.naulian"
-                artifactId = "glow-compose"
-                version = "1.7.0"
-            }
-        }
-    }
 }

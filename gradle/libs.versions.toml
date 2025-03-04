@@ -1,19 +1,20 @@
 [versions]
-anhance = "2024.3.0"
-modify = "0.0.2-rc"
+
+anhance = "2025.3.0"
+modify = "0.1.2"
 appcompat = "1.7.0"
-composeBom = "2024.09.01"
-constraintlayout = "2.1.4"
-coreKtx = "1.13.1"
+composeBom = "2025.02.00"
+constraintlayout = "2.2.1"
+coreKtx = "1.15.0"
 espressoCore = "3.6.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 material = "1.12.0"
-constraintCompose = "1.0.1"
+constraintCompose = "1.1.1"
 coilCompose = "2.6.0"
 
 # plugins
-gradle = "8.6.0"
+gradle = "8.8.2"
 kotlin = "2.0.0"
 
 [libraries]

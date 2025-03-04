@@ -2,9 +2,6 @@
 
 package com.naulian.glow
 
-import android.content.Context
-import com.naulian.anhance.isNightMode
-
 @Suppress("MemberVisibilityCanBePrivate")
 object CodeTheme {
 
@@ -22,8 +19,7 @@ object CodeTheme {
         property = "#871094"
     )
 
-    fun default(context: Context) =
-        if (context.isNightMode()) defaultDark else defaultLight
+    fun default() = defaultLight
 }
 
 val RosePine = Theme(
