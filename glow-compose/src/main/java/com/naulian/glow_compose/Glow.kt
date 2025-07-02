@@ -1,23 +1,32 @@
 package com.naulian.glow_compose
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
-import com.naulian.anhance.logError
+import com.naulian.anhance.toColorInt
 import com.naulian.glow.Theme
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.PTokens
 import com.naulian.glow_compose.kotlin.tokenizeKt
-import android.graphics.Color as LegacyColor
+import com.naulian.modify.Fonts
 
-val font = FontFamily(Font(R.font.jetbrains_mono))
+//Date April 13, 2025
+@Deprecated(
+    message = "Use Fonts.JetBrainsMono instead",
+    replaceWith = ReplaceWith(
+        expression = "Fonts.JetBrainsMono",
+        imports = ["com.naulian.glow_compose.Fonts"]
+    )
+)
+val font = Fonts.JetBrainsMono
+
+
 fun spanStyle(color: Color) = SpanStyle(
-    color = color, fontFamily = font
+    color = color, fontFamily = Fonts.JetBrainsMono
 )
 
 fun String.toAnnotatedString(): AnnotatedString {
@@ -28,15 +37,16 @@ fun String.toAnnotatedString(): AnnotatedString {
 
 fun String.hexToColor(): Color {
     return if (startsWith("#")) {
-        val legacyColor = LegacyColor.parseColor(this)
+        val legacyColor = this.toColorInt()
         Color(legacyColor)
     } else {
-        logError("GLow: toComposeColor", "color should start with #. at $this")
+        Log.i("Glow","hexToColor: color should start with #. for $this")
         Color.Black
     }
 }
 
 object Glow {
+    @Suppress("unused")
     private val TAG = Glow::class.java.simpleName
 
     fun highlight(source: String, language: String, theme: Theme = Theme()): HighLight {
