@@ -1,7 +1,7 @@
-package com.naulian.glow.tokens
+package com.naulian.glow.lexer.language.text
 
-import com.naulian.glow.Token
-import com.naulian.glow.Type
+import com.naulian.glow.lexer.Token
+import com.naulian.glow.lexer.Type
 
 internal class StrTokens(private val str: String) {
     @Suppress("unused")

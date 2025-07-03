@@ -1,8 +1,8 @@
-package com.naulian.glow.language.kotlin
+package com.naulian.glow.lexer.language.kotlin
 
-import com.naulian.glow.tokens.StrTokens
-import com.naulian.glow.Token
-import com.naulian.glow.Type
+import com.naulian.glow.lexer.language.text.StrTokens
+import com.naulian.glow.lexer.Token
+import com.naulian.glow.lexer.Type
 
 
 internal fun tokenizeKt(input: String): List<Token> {

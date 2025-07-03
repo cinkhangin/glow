@@ -1,4 +1,4 @@
-package com.naulian.glow
+package com.naulian.glow.theme
 
 data class Theme(
     //dark

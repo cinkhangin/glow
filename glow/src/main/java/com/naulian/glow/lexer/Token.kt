@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.naulian.glow
+package com.naulian.glow.lexer
 
 data class Token(
     val type: Type,

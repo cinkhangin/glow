@@ -85,7 +85,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.naulian",
         artifactId = "glow",
-        version = "1.8.0-beta02"
+        version = "1.8.0-rc"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 

@@ -3,10 +3,12 @@
 package com.naulian.glow
 
 import androidx.core.graphics.toColorInt
-import com.naulian.glow.language.kotlin.tokenizeKt
-import com.naulian.glow.tokens.JTokens
-import com.naulian.glow.tokens.JsTokens
-import com.naulian.glow.tokens.PTokens
+import com.naulian.glow.lexer.Type
+import com.naulian.glow.lexer.language.kotlin.tokenizeKt
+import com.naulian.glow.lexer.language.java.JTokens
+import com.naulian.glow.lexer.language.javascript.JsTokens
+import com.naulian.glow.lexer.language.python.PTokens
+import com.naulian.glow.theme.Theme
 
 fun color(hex: String): Int {
     return hex.toColorInt()

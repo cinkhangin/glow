@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.naulian.glow
+package com.naulian.glow.theme
 
 import android.util.Log
 import androidx.compose.ui.graphics.Color

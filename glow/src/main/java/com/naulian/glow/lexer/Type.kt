@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.naulian.glow
+package com.naulian.glow.lexer
 
 enum class Type {
     //BaseTypes
