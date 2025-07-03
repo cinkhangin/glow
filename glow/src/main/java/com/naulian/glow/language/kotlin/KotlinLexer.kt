@@ -1,101 +1,28 @@
-package com.naulian.glow.tokens
+package com.naulian.glow.language.kotlin
 
+import com.naulian.glow.Lexer
 import com.naulian.glow.Token
 import com.naulian.glow.Type
 import kotlin.math.min
 
-internal object JsTokens {
-
-    @Suppress("unused")
-    private val TAG = JsTokens::class.java.simpleName
-
-    fun tokenize(input: String): List<Token> {
-        val lexer = JsLexer(input)
-        val tokens = mutableListOf<Token>()
-        var token = lexer.nextToken()
-        var prevToken = Token(Type.NONE)
-        var prevIndex = 0
-
-        while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
-            //logDebug(TAG, token)
-
-            if (token.type == Type.SPACE) {
-                tokens.add(token)
-                token = lexer.nextToken()
-                continue
-            }
-
-            //based on previous
-            val modified = when (prevToken.type) {
-                Type.EQUAL_TO -> numberToken(token)
-                Type.L_PAREN -> argumentToken(token)
-                Type.FUNCTION -> token.copy(type = Type.FUNC_NAME)
-                Type.CLASS -> token.copy(type = Type.CLASS_NAME)
-                Type.COLON -> token.copy(type = Type.DATA_TYPE)
-                Type.VARIABLE -> token.copy(type = Type.VAR_NAME)
-                else -> token
-            }
-
-            //based on next
-            when (modified.type) {
-                Type.COLON -> {
-                    if (prevToken.type == Type.ARGUMENT) {
-                        tokens[prevIndex] = prevToken.copy(type = Type.PARAM)
-                    }
-                }
-
-                Type.L_PAREN -> {
-                    tokens.getOrNull(prevIndex - 1)?.let {
-                        if (it.type == Type.DOT) {
-                            tokens[prevIndex] = prevToken.copy(type = Type.FUNC_CALL)
-                        }
-                    }
-                }
-
-                else -> Unit
-            }
-
-            //tracking
-            prevIndex = tokens.size
-            prevToken = modified
-
-            tokens.add(modified)
-            token = lexer.nextToken()
-        }
-
-        return tokens
-    }
-
-    private fun argumentToken(token: Token): Token {
-        return if (token.type != Type.IDENTIFIER) token
-        else token.copy(type = Type.ARGUMENT)
-    }
-
-    private fun numberToken(token: Token): Token {
-        if (token.type != Type.NUMBER) return token
-        return if (token.value.contains("L")) token.copy(type = Type.VALUE_LONG)
-        else if (token.value.contains("f")) token.copy(type = Type.VALUE_FLOAT)
-        else token.copy(type = Type.VALUE_INT)
-    }
-}
-
-private class JsLexer(private val input: String) {
+internal class KotlinLexer(private val input: String) : Lexer {
     private var position: Int = 0
     private val keywords = listOf(
-        "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default",
-        "delete", "do", "else", "export", "extends", "false", "finally", "for", "function", "if",
-        "import", "in", "instanceof", "new", "null", "return", "super", "switch", "this", "throw",
-        "true", "try", "typeof", "var", "void", "while", "with", "yield"
+        "abstract", "annotation", "as", "break", "by", "catch", "class", "companion", "const",
+        "constructor", "continue", "crossinline", "data", "do", "else", "enum", "external", "false",
+        "final", "finally", "for", "fun", "if", "in", "infix", "init", "inline", "inner",
+        "interface", "internal", "is", "it", "lateinit", "noinline", "null", "object", "open",
+        "operator", "out", "import", "override", "package", "private", "protected", "public",
+        "reified", "return", "sealed", "super", "suspend", "this", "throw", "to", "true", "try",
+        "typealias", "typeof", "val", "var", "when", "where", "while"
     )
 
     private fun currentChar() = if (position < input.length) input[position] else Char.MIN_VALUE
 
-    fun nextToken(): Token {
-        if (currentChar().isWhitespace()) {
-            return whitespaceToken()
-        }
-
+    override fun nextToken(): Token {
         return when (val char = currentChar()) {
+            ' ' -> whitespaceToken()
+            '\n' -> createToken(Type.NEWLINE, "\n")
             '*' -> createToken(Type.STAR, char.toString())
             '.' -> createToken(Type.DOT, char.toString())
             '-' -> createToken(Type.DASH, char.toString())
@@ -130,9 +57,8 @@ private class JsLexer(private val input: String) {
                 }
             }
 
-            '\'' -> readString1()
-            '\"' -> readString2()
-            '`' -> readString()
+            '\'' -> readChar()
+            '\"' -> readString()
             in 'a'..'z', in 'A'..'Z', '_' -> readIdentifier()
             in '0'..'9' -> readNumber()
             Char.MIN_VALUE -> createToken(Type.EOF, char.toString())
@@ -169,12 +95,12 @@ private class JsLexer(private val input: String) {
 
     private fun whitespaceToken(): Token {
         val start = position
-        while (currentChar().isWhitespace()) {
+        while (currentChar() == ' ') {
             position++
         }
 
-        val indentifier = input.substring(start, position)
-        return Token(Type.SPACE, indentifier)
+        val identifier = input.substring(start, position)
+        return Token(Type.SPACE, identifier)
     }
 
     private fun readIdentifier(): Token {
@@ -184,30 +110,15 @@ private class JsLexer(private val input: String) {
         }
 
         return when (val identifier = input.substring(start, position)) {
-            "var" -> Token(Type.VARIABLE, identifier)
-            "const" -> Token(Type.VARIABLE, identifier)
-            "let" -> Token(Type.VARIABLE, identifier)
-            "function" -> Token(Type.FUNCTION, identifier)
+            "var", "val" -> Token(Type.VARIABLE, identifier)
+            "fun" -> Token(Type.FUNCTION, identifier)
             "class" -> Token(Type.CLASS, identifier)
             in keywords -> Token(Type.KEYWORD, identifier)
             else -> Token(Type.IDENTIFIER, identifier)
         }
     }
 
-    private fun readString1(): Token {
-        val start = position
-        position++
-        while (currentChar() != '\'' && currentChar() != Char.MIN_VALUE) {
-            position++
-        }
-        position++
-
-        position = min(position, input.length)
-        val identifier = input.substring(start, position)
-        return Token(Type.CHAR, identifier)
-    }
-
-    private fun readString2(): Token {
+    private fun readString(): Token {
         val start = position
         position++
         while (currentChar() != '\"' && currentChar() != Char.MIN_VALUE) {
@@ -220,17 +131,17 @@ private class JsLexer(private val input: String) {
         return Token(Type.STRING, identifier)
     }
 
-    private fun readString(): Token {
+    private fun readChar(): Token {
         val start = position
         position++
-        while (currentChar() != '`' && currentChar() != Char.MIN_VALUE) {
+        while (currentChar() != '\'' && currentChar() != Char.MIN_VALUE) {
             position++
         }
         position++
 
         position = min(position, input.length)
         val identifier = input.substring(start, position)
-        return Token(Type.STRING, identifier)
+        return Token(Type.CHAR, identifier)
     }
 
     private fun readNumber(): Token {

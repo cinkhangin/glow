@@ -17,8 +17,8 @@ import com.naulian.glow.CodeTheme
 import com.naulian.glow.glowSyntax
 import com.naulian.glow.setCodeTheme
 import com.naulian.glow.tokens.StrTokens
-import com.naulian.glow_compose.Glow
-import com.naulian.glow_compose.hexToColor
+import com.naulian.glow.compose.Glow
+import com.naulian.glow.compose.hexToColor
 
 
 class MainActivity : AppCompatActivity() {
@@ -53,15 +53,7 @@ class MainActivity : AppCompatActivity() {
                     val highLightedCompose = Glow.highlight(source, language, darkTheme)
 
                     composeView.setContent {
-                        Column {
-                            LazyRow(
-                                modifier = Modifier
-                                    .background(darkTheme.background.hexToColor())
-                                    .padding(16.dp)
-                            ) {
-                                item { Text(text = highLightedCompose.value) }
-                            }
-                        }
+
                     }
                 }
                 result.onFailure {

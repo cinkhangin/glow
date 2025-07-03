@@ -2,15 +2,14 @@
 
 package com.naulian.glow
 
-import com.naulian.anhance.html
+import androidx.core.graphics.toColorInt
 import com.naulian.glow.language.kotlin.tokenizeKt
 import com.naulian.glow.tokens.JTokens
 import com.naulian.glow.tokens.JsTokens
 import com.naulian.glow.tokens.PTokens
-import com.naulian.glow_core.Type
 
 fun color(hex: String): Int {
-    return android.graphics.Color.parseColor(hex)
+    return hex.toColorInt()
 }
 
 fun String.color(color: String) =
@@ -42,7 +41,7 @@ fun glowSyntax(
 object Glow {
     private val TAG = Glow::class.java.simpleName
 
-    fun highlight(source: String, language: String, theme: Theme = Theme()): HighLight {
+    fun highlight(source: String, language: String, theme: Theme = Theme()): HighLighted {
         return when (language.lowercase()) {
             "java" -> hlJava(source, theme)
             "python", "py" -> hlPython(source, theme)
@@ -52,17 +51,16 @@ object Glow {
         }
     }
 
-    fun hlText(input: String): HighLight {
+    fun hlText(input: String): HighLighted {
         val raw = input
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = raw.html()
-        return HighLight(spanned, raw)
+        return HighLighted(raw)
     }
 
 
-    fun hlJava(input: String, theme: Theme = Theme()): HighLight {
+    fun hlJava(input: String, theme: Theme = Theme()): HighLighted {
         val tokens = JTokens.tokenize(input)
 
         val builder = StringBuilder()
@@ -73,6 +71,7 @@ object Glow {
                         .replace("<", "&lt")
                         .color(theme.normal)
                 }
+
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.VARIABLE -> it.value.color(theme.keyword)
@@ -99,11 +98,10 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = output.html()
-        return HighLight(spanned, output)
+        return HighLighted(output)
     }
 
-    fun hlJavaScript(input: String, theme: Theme = Theme()): HighLight {
+    fun hlJavaScript(input: String, theme: Theme = Theme()): HighLighted {
         val tokens = JsTokens.tokenize(input)
 
         val builder = StringBuilder()
@@ -139,11 +137,10 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = output.html()
-        return HighLight(spanned, output)
+        return HighLighted(output)
     }
 
-    fun hlPython(input: String, theme: Theme = Theme()): HighLight {
+    fun hlPython(input: String, theme: Theme = Theme()): HighLighted {
         val tokens = PTokens.tokenize(input)
 
         val builder = StringBuilder()
@@ -154,6 +151,7 @@ object Glow {
                         .replace("<", "&lt")
                         .color(theme.normal)
                 }
+
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.PROPERTY -> it.value.color(theme.property)
                 Type.CLASS -> it.value.color(theme.keyword)
@@ -176,11 +174,10 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = output.html()
-        return HighLight(spanned, output)
+        return HighLighted(output)
     }
 
-    fun hlKotlin(input: String, theme: Theme = Theme()): HighLight {
+    fun hlKotlin(input: String, theme: Theme = Theme()): HighLighted {
         val tokens = tokenizeKt(input)
 
         val builder = StringBuilder()
@@ -191,6 +188,7 @@ object Glow {
                         .replace("<", "&lt")
                         .color(theme.normal)
                 }
+
                 Type.KEYWORD -> it.value.color(theme.keyword)
                 Type.VARIABLE -> it.value.color(theme.keyword)
                 Type.VAR_NAME -> it.value.color(theme.variable)
@@ -220,7 +218,6 @@ object Glow {
             .replace("  ", "&nbsp;&nbsp;")
             .replace("\n", "<br>")
 
-        val spanned = output.html()
-        return HighLight(spanned, output)
+        return HighLighted(output)
     }
 }

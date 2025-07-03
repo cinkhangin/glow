@@ -10,13 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/example" />
             <option value="$PROJECT_DIR$/glow" />
-            <option value="$PROJECT_DIR$/glow-compose" />
-            <option value="$PROJECT_DIR$/glow-core" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

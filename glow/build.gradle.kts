@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.plugin)
     id("com.vanniktech.maven.publish")
 }
 
@@ -30,6 +31,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 kotlin {
@@ -42,12 +53,28 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    implementation(libs.naulian.anhance)
+    implementation(libs.naulian.modify)
+
+    //compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphic)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.constraintlayout.compose)
+
+    //coil
+    implementation(libs.coil.compose)
+
+    //test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(libs.naulian.anhance)
-    api(project(":glow-core"))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.tooling.preview)
 }
 
 mavenPublishing {
@@ -58,7 +85,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.naulian",
         artifactId = "glow",
-        version = "1.8.0-beta01"
+        version = "1.8.0-beta02"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 

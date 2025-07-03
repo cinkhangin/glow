@@ -1,9 +1,10 @@
 package com.naulian.glow.tokens
 
-import com.naulian.glow_core.Token
-import com.naulian.glow_core.Type
+import com.naulian.glow.Token
+import com.naulian.glow.Type
 
-class StrTokens(private val str: String) {
+internal class StrTokens(private val str: String) {
+    @Suppress("unused")
     private val tag = StrTokens::class.java.simpleName
 
     private var position = 0

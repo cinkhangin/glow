@@ -1,12 +1,12 @@
 package com.naulian.glow.language.kotlin
 
 import com.naulian.glow.tokens.StrTokens
-import com.naulian.glow_core.Token
-import com.naulian.glow_core.Type
+import com.naulian.glow.Token
+import com.naulian.glow.Type
 
 
-fun tokenizeKt(input: String): List<Token> {
-    val lexer = KtLexer(input)
+internal fun tokenizeKt(input: String): List<Token> {
+    val lexer = KotlinLexer(input)
     val tokens = mutableListOf<Token>()
     var token = lexer.nextToken()
     var prevToken = Token(Type.NONE)

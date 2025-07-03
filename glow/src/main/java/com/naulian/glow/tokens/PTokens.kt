@@ -1,11 +1,10 @@
 package com.naulian.glow.tokens
 
-import com.naulian.anhance.logInfo
-import com.naulian.glow_core.Token
-import com.naulian.glow_core.Type
+import com.naulian.glow.Token
+import com.naulian.glow.Type
 import kotlin.math.min
 
-object PTokens {
+internal object PTokens {
     @Suppress("unused")
     private val TAG = PTokens::class.java.simpleName
 
@@ -14,7 +13,6 @@ object PTokens {
         val lexer = PLexer(input)
         var token = lexer.nextToken()
         while (token.type != Type.EOF && token.type != Type.ILLEGAL) {
-            logInfo(TAG, token)
             token = lexer.nextToken()
         }
     }

@@ -1,11 +1,10 @@
 package com.naulian.glow.tokens
 
-import com.naulian.anhance.logDebug
-import com.naulian.glow_core.Token
-import com.naulian.glow_core.Type
+import com.naulian.glow.Token
+import com.naulian.glow.Type
 import kotlin.math.min
 
-object JTokens {
+internal object JTokens {
 
     @Suppress("unused")
     private val TAG = JTokens::class.java.simpleName
@@ -172,7 +171,6 @@ private class JLexer(private val input: String) {
         position++
 
         val identifier = input.substring(start, position)
-        logDebug(identifier)
         return Token(Type.M_COMMENT, identifier)
     }
 
