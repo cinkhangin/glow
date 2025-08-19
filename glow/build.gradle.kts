@@ -85,15 +85,15 @@ mavenPublishing {
     coordinates(
         groupId = "com.naulian",
         artifactId = "glow",
-        version = "1.8.0-rc"
+        version = "1.8.0"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 
     pom {
-        name.set("Composer")
-        description.set("a markup language for compose inspired by markdown")
-        inceptionYear.set("2024")
-        url.set("https://github.com/cinkhangin/composer/")
+        name.set("Glow")
+        description.set("A simple syntax highlighter for android")
+        inceptionYear.set("2023")
+        url.set("https://github.com/cinkhangin/glow/")
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")
@@ -110,9 +110,9 @@ mavenPublishing {
             }
         }
         scm {
-            url.set("https://github.com/cinkhangin/composer/")
-            connection.set("scm:git:git://github.com/cinkhangin/composer.git")
-            developerConnection.set("scm:git:ssh://git@github.com/cinkhangin/composer.git")
+            url.set("https://github.com/cinkhangin/glow/")
+            connection.set("scm:git:git://github.com/cinkhangin/glow.git")
+            developerConnection.set("scm:git:ssh://git@github.com/cinkhangin/glow.git")
         }
     }
 }
