@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.plugin)
-    id("com.vanniktech.maven.publish")
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -85,7 +85,7 @@ mavenPublishing {
     coordinates(
         groupId = "com.naulian",
         artifactId = "glow",
-        version = "1.8.0"
+        version = "1.8.1"
     )
     //./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 

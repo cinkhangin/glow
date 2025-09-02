@@ -3,6 +3,8 @@
 package com.naulian.glow.lexer
 
 enum class Type {
+    ANNOTATION,
+
     //BaseTypes
     SPACE,
     SYMBOL,

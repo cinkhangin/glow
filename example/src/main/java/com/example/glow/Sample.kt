@@ -86,6 +86,7 @@ object Sample {
         import java.util.Locale
         import kotlin.random.Random
 
+        @Annotation
         fun main() {
             val coin = "Coin"
             println("Welcome to the ${"$"}coin Flipping Game!")
@@ -122,6 +123,8 @@ object Sample {
             } else {
                 println("Sorry, you guessed incorrectly.")
             }
+            
+            val color = Color(0xFFFFFFFF)
         }
     """.trimIndent()
 

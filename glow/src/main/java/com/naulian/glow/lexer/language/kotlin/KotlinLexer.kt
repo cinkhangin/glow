@@ -26,7 +26,7 @@ internal class KotlinLexer(private val input: String) : Lexer {
             '*' -> createToken(Type.STAR, char.toString())
             '.' -> createToken(Type.DOT, char.toString())
             '-' -> createToken(Type.DASH, char.toString())
-            '@' -> createToken(Type.AT, char.toString())
+            '@' -> readAtIdentifier()
             '#' -> createToken(Type.HASH, char.toString())
             '$' -> createToken(Type.DOLLAR, char.toString())
             '%' -> createToken(Type.MODULO, char.toString())
@@ -118,6 +118,17 @@ internal class KotlinLexer(private val input: String) : Lexer {
         }
     }
 
+    private fun readAtIdentifier(): Token {
+        val start = position
+        do {
+            position++
+        } while (currentChar().isLetter() || currentChar() == '_' || currentChar().isDigit())
+
+        return when (val identifier = input.substring(start, position)) {
+            else -> Token(Type.ANNOTATION, identifier)
+        }
+    }
+
     private fun readString(): Token {
         val start = position
         position++
@@ -150,10 +161,12 @@ internal class KotlinLexer(private val input: String) : Lexer {
         while (
             currentChar().isDigit() || currentChar() == '_' ||
             currentChar() == 'L' || currentChar() == 'f' ||
-            currentChar() == '.'
+            currentChar() == '.' || currentChar() == 'x' ||
+            currentChar() in 'a'..'f' || currentChar() in 'A'..'F'
         ) {
             position++
         }
+
         return Token(Type.NUMBER, input.substring(start, position))
     }
 }

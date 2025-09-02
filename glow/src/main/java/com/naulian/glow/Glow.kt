@@ -191,26 +191,34 @@ object Glow {
                         .color(theme.normal)
                 }
 
-                Type.KEYWORD -> it.value.color(theme.keyword)
+                Type.KEYWORD,
+                Type.CLASS,
+                Type.FUNCTION,
+                Type.ANNOTATION,
+                Type.STRING_BRACE,
+                Type.B_SCAPE,
                 Type.VARIABLE -> it.value.color(theme.keyword)
+
                 Type.VAR_NAME -> it.value.color(theme.variable)
-                Type.CLASS -> it.value.color(theme.keyword)
-                Type.FUNCTION -> it.value.color(theme.keyword)
-                Type.FUNC_NAME -> it.value.color(theme.method)
+                Type.FUNC_NAME,
                 Type.FUNC_CALL -> it.value.color(theme.method)
-                Type.NUMBER -> it.value.color(theme.number)
-                Type.VALUE_INT -> it.value.color(theme.number)
-                Type.VALUE_LONG -> it.value.color(theme.number)
+
+                Type.NUMBER,
+                Type.VALUE_INT,
+                Type.VALUE_LONG,
                 Type.VALUE_FLOAT -> it.value.color(theme.number)
-                Type.CHAR -> it.value.color(theme.string)
-                Type.PROPERTY -> it.value.color(theme.property)
+
+                Type.CHAR,
                 Type.STRING -> it.value.color(theme.string)
-                Type.STRING_BRACE -> it.value.color(theme.keyword)
+
+                Type.PROPERTY,
                 Type.INTERPOLATION -> it.value.color(theme.property)
+
                 Type.EQUAL_TO -> it.value.color(theme.normal)
-                Type.B_SCAPE -> it.value.color(theme.keyword)
-                Type.M_COMMENT -> it.value.color(theme.comment)
+
+                Type.M_COMMENT,
                 Type.S_COMMENT -> it.value.color(theme.comment)
+
                 else -> it.value
             }
             builder.append(code)
